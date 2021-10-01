@@ -6,7 +6,8 @@ const isAuth = require('../../middleware/isAuth.js');
 const router = express.Router();
 
 router.get('/local', (req, res) => {
-  res.send('Maybe try posting some credentials!');
+  const body = "{\n  username: ...,\n  password: ...,\n}";
+  res.send(`Expecting a POST request with body:\n${body}`);
 });
 
 router.post(
@@ -20,6 +21,11 @@ router.post(
     res.status(200).send(req.user);
   }
 );
+
+router.get('/local/register', (req, res) => {
+  const body = "{\n  username: ...,\n  password: ...,\n  email: ...,\n displayName: [OPTIONAL]\n}";
+  res.send(`Expecting a POST request with body:\n${body}`);
+})
 
 router.post(
   '/local/register',
