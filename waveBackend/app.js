@@ -1,12 +1,12 @@
 require('dotenv').config();
 const express = require('express');
 
+const apiRouter = require('./routes/api/api.js');
+
 const app = express();
 const PORT = 3000;
 
-app.get('/api', (req, res) => {
-  res.send('Hello World');
-});
+app.use('/api', apiRouter);
 
 app.get('/', (req, res) => { res.redirect('/api'); })
 
