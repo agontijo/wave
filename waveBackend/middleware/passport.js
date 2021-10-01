@@ -45,3 +45,17 @@ passport.use(
     }
   )
 );
+
+passport.use(
+  'register',
+  new LocalStrategy(
+    {
+      usernameField: 'username',
+      passwordField: 'password',
+      passReqToCallback: true,
+    },
+    async (req, uname, pswrd, done) => {
+      // TODO: sort this out by tomorrow!!
+    }
+  )
+);
