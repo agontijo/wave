@@ -10,19 +10,19 @@ router.get('/', (req, res) => {
 
 
 // Get a user of with username = uname
-router.get('/:uname', async (req, res) => {
-  const dc = new AWS.DynamoDB.DocumentClient();
-  await dc.get(
-    {
-      TableName: "WVUsers",
-      Key: { uname: req.params.uname }
-    },
-    (err, data) => {
-      if (err) { res.status(500).send(err.message); }
-      else if (!('Item' in data)) { res.status(500).send(null) }
-      else { res.send(data); }
-    }
-  );
+router.get('/:uname', (req, res) => {
+  // const dc = new AWS.DynamoDB.DocumentClient();
+  // dc.get(
+  //   {
+  //     TableName: "WVUsers",
+  //     Key: { uname: req.params.uname }
+  //   },
+  //   (err, data) => {
+  //     if (err) { res.status(500).send(err.message); }
+  //     else if (!('Item' in data)) { res.status(500).send(null) }
+  //     else { res.send(data); }
+  //   }
+  // );
 });
 
 module.exports = router;
