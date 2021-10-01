@@ -54,8 +54,32 @@ passport.use(
       passwordField: 'password',
       passReqToCallback: true,
     },
-    async (req, uname, pswrd, done) => {
-      // TODO: sort this out by tomorrow!!
+    async (req, uname, pswd, done) => {
+      let user = null;
+      try {
+        if (
+          !uname ||
+          !pswd ||
+          !req?.body?.email
+        ) {
+          throw 'Malformed User Object!';
+        }
+        user = {
+          uname,
+          pswd,
+          email: req.body.email,
+          displayName: req.body?.displayName ?? 'Wave User'
+        };
+        const dc = new AWS.DynamoDB.DocumentClient();
+        inserted = await dc.put({
+          TableName: 'WVUsers',
+          ConditionExpression: 'attribute_not_exists(uname)',
+          Item: user,
+        }).promise();
+      } catch (err) {
+        return done(err, false);
+      }
+      return done(null, user)
     }
   )
 );

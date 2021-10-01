@@ -16,21 +16,21 @@ router.get(
   isAuth.isLoggedIn,
   (req, res) => {
     if (req.params.uname !== req.user.uname) {
-      res.status(401).send('Not Authorized!');
+      res.status(403).send('Forbidden!');
+    } else {
+      const dc = new AWS.DynamoDB.DocumentClient();
+      dc.get(
+        {
+          TableName: "WVUsers",
+          Key: { uname: req.params.uname }
+        },
+        (err, data) => {
+          if (err) { res.status(500).send(err.message); }
+          else if (!('Item' in data)) { res.status(500).send(null) }
+          else { res.send(data); }
+        }
+      );
     }
-
-    const dc = new AWS.DynamoDB.DocumentClient();
-    dc.get(
-      {
-        TableName: "WVUsers",
-        Key: { uname: req.params.uname }
-      },
-      (err, data) => {
-        if (err) { res.status(500).send(err.message); }
-        else if (!('Item' in data)) { res.status(500).send(null) }
-        else { res.send(data); }
-      }
-    );
   });
 
 module.exports = router;
