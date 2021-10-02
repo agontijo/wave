@@ -1,6 +1,5 @@
 const express = require('express');
 
-const AWS = require('../../../database/awsconfig.js');
 const userActions = require('../../../database/userActions.js');
 const isAuth = require('../../../middleware/isAuth.js');
 
@@ -15,22 +14,15 @@ router.get('/', (req, res) => {
 router.get(
   '/:uname',
   isAuth.isLoggedIn,
-  (req, res) => {
+  async (req, res) => {
     if (req.params.uname !== req.user.uname) {
       res.status(403).send('Forbidden!');
     } else {
-      const dc = new AWS.DynamoDB.DocumentClient();
-      dc.get(
-        {
-          TableName: "WVUsers",
-          Key: { uname: req.params.uname }
-        },
-        (err, data) => {
-          if (err) { res.status(500).send(err.message); }
-          else if (!data?.Item) { res.status(500).send(null) }
-          else { res.send(data); }
-        }
-      );
+      let data = null;
+      try { data = await userActions.getUser(req.user.uname); }
+      catch (err) { res.send(500).send(err.message); }
+      if (!data?.Item) { res.status(500).send('Could not find user in Database'); }
+      res.status(200).send(data.Item);
     }
   }
 );
