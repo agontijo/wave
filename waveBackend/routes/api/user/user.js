@@ -1,6 +1,7 @@
 const express = require('express');
 
 const AWS = require('../../../database/awsconfig.js');
+const userActions = require('../../../database/userActions.js');
 const isAuth = require('../../../middleware/isAuth.js');
 
 const router = express.Router();
@@ -26,11 +27,33 @@ router.get(
         },
         (err, data) => {
           if (err) { res.status(500).send(err.message); }
-          else if (!('Item' in data)) { res.status(500).send(null) }
+          else if (!data?.Item) { res.status(500).send(null) }
           else { res.send(data); }
         }
       );
     }
-  });
+  }
+);
+
+router.post(
+  '/:uname/displayname',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    if (req.params.uname !== req.user.uname) {
+      res.status(403).send('Forbidden!');
+      return
+    }
+    try {
+      const data = await userActions.setUserDisplayName(
+        req.user.uname,
+        req.body.displayName
+      );
+      if (data?.Attributes) { res.status(200).send(data); }
+      else { res.status(500).send(null); }
+    } catch (err) {
+      res.status(500).send(err.message)
+    }
+  }
+);
 
 module.exports = router;
