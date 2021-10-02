@@ -1,22 +1,13 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 
-const AWS = require('../database/awsconfig.js');
+const userActions = require('../database/userActions.js');
 
 passport.serializeUser((user, done) => done(null, user.uname));
 passport.deserializeUser(async (uname, done) => {
-  const dc = new AWS.DynamoDB.DocumentClient();
   let found = null;
-  try {
-    found = await dc.get(
-      {
-        TableName: 'WVUsers',
-        Key: { uname }
-      },
-    ).promise();
-  } catch (err) {
-    return done(err, false);
-  }
+  try { found = await userActions.getUser(uname); }
+  catch (err) { return done(err, false); }
   if (found?.Item) { return done(null, found.Item) }
   return done(null, false);
 });
@@ -27,20 +18,11 @@ passport.use(
       usernameField: 'username',
       passwordField: 'password',
     },
-    async (uname, pswrd, done) => {
-      const dc = new AWS.DynamoDB.DocumentClient();
+    async (username, password, done) => {
       let found = null;
-      try {
-        found = await dc.get({
-          TableName: 'WVUsers',
-          Key: { uname }
-        }).promise();
-      } catch (err) {
-        return done(err, false);
-      }
-      if (found?.Item?.pswd === pswrd) {
-        return done(null, found.Item);
-      }
+      try { found = await userActions.getUser(username); }
+      catch (err) { return done(err, false); }
+      if (found?.Item?.pswd === password) { return done(null, found.Item); }
       return done(null, false);
     }
   )
@@ -54,31 +36,16 @@ passport.use(
       passwordField: 'password',
       passReqToCallback: true,
     },
-    async (req, uname, pswd, done) => {
+    async (req, username, password, done) => {
       let user = null;
       try {
-        if (
-          !uname ||
-          !pswd ||
-          !req?.body?.email
-        ) {
-          throw 'Malformed User Object!';
-        }
-        user = {
-          uname,
-          pswd,
-          email: req.body.email,
-          displayName: req.body?.displayName ?? 'Wave User'
-        };
-        const dc = new AWS.DynamoDB.DocumentClient();
-        inserted = await dc.put({
-          TableName: 'WVUsers',
-          ConditionExpression: 'attribute_not_exists(uname)',
-          Item: user,
-        }).promise();
-      } catch (err) {
-        return done(err, false);
-      }
+        user = await userActions.createUser({
+          username,
+          password,
+          email: req?.body?.email,
+          displayName: req?.body?.displayName,
+        })
+      } catch (err) { return done(err, false); }
       return done(null, user)
     }
   )
