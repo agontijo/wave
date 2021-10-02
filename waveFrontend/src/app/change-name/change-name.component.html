@@ -4,5 +4,21 @@
 <div><span>Display Name: </span>{{user1.displayname}}</div>
 <div>
     <label for="displayname">Display Name: </label>
-    <input id="displayname" [(ngModel)]="user1.displayname" placeholder="displayname">
-  </div>
+    <input type="text" id="editName" [(ngModel)]="editName" placeholder="name"/>
+    <br>
+    <div>
+        <button (click)="save()">Save</button>
+        <button (click)="cancel()">Cancel</button>
+    </div>
+</div>
+
+<!-- <div *ngIf="crisis">
+    <h3>{{ editName }}</h3>
+    <p>Id: {{ crisis.id }}</p>
+    <label for="crisis-name">Crisis name: </label>
+    <input type="text" id="crisis-name" [(ngModel)]="editName" placeholder="name"/>
+    <div>
+      <button (click)="save()">Save</button>
+      <button (click)="cancel()">Cancel</button>
+    </div>
+  </div> -->
