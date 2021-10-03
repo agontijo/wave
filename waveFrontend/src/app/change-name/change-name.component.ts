@@ -30,18 +30,15 @@ export class ChangeNameComponent implements OnInit {
   }
 
   cancel() {
-    this.gotoCrises();
+    this.gotoHomepage();
   }
 
   save() {
     this.user1.displayname = this.editName;
   }
 
-  gotoCrises() {
-    // Pass along the crisis id if available
-    // so that the CrisisListComponent can select that crisis.
-    // Add a totally useless `foo` parameter for kicks.
-    // Relative navigation back to the crises
+  gotoHomepage() {
+
     this.router.navigate(['../',], { relativeTo: this.route });
   }
 
