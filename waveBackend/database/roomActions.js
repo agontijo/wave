@@ -1,4 +1,5 @@
 const AWS = require('./awsconfig.js');
+const generate = require('../utils/generators.js');
 
 async function _getRoom(params) {
   const dc = new AWS.DynamoDB.DocumentClient();
@@ -21,7 +22,7 @@ async function createRoom(params) {
   }
 
   const room = { 
-    roomID: "TODO", // TODO: Fix this
+    roomID: generate.eightDigitHexID(),
     host: params.host,
     queue: params.queue ?? [],
     user: params.users ?? [],
@@ -38,4 +39,11 @@ async function createRoom(params) {
   });
 
   return room;
+}
+
+module.exports = {
+  _getRoom,
+  _updateRoom,
+  _createRoom,
+  createRoom,
 }
