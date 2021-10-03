@@ -2,6 +2,7 @@ const express = require("express");
 const passport = require("passport");
 
 const isAuth = require('../../middleware/isAuth.js');
+const loginPreProc = require('../../middleware/loginPreProcess.js');
 
 const router = express.Router();
 
@@ -13,6 +14,7 @@ router.get('/local', (req, res) => {
 router.post(
   '/local',
   isAuth.isNotLoggedIn,
+  loginPreProc.resolveUname,
   passport.authenticate('local'),
   (req, res) => {
     if (!req.user) {

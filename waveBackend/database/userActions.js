@@ -1,4 +1,5 @@
-const AWS = require('./awsconfig.js')
+const AWS = require('./awsconfig.js');
+const emailMapActions = require('./emailMapActions.js');
 
 // Protected helper functions
 async function _updateUser(params) {
@@ -59,6 +60,10 @@ async function createUser(params) {
     throw 'Malformed User Object!';
   }
 
+  if (!(await emailMapActions.isEmailAvailble(params.email, params.uname))) {
+    throw 'Email is alread in use!';
+  }
+
   const user = {
     uname: params.username,
     pswd: params.password,
@@ -66,6 +71,7 @@ async function createUser(params) {
     displayName: params.displayName ?? 'Wave User'
   };
 
+  await emailMapActions.setEmailMap(user.email, user.uname);
   await _createUser({
     TableName: 'WVUsers',
     ConditionExpression: 'attribute_not_exists(uname)',
