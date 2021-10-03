@@ -81,6 +81,18 @@ async function createUser(params) {
   return user;
 }
 
+async function setUserSpotifyKey(uname, key) {
+  return await _updateUser({
+    TableName: 'WVUsers',
+    Key: { uname },
+    UpdateExpression: 'set spotifyKey = :k',
+    ExpressionAttributeValues: {
+      ':k': key,
+    },
+    ReturnValues: 'UPDATED_NEW'
+  });
+}
+
 module.exports = {
   _updateUser,
   _getUser,
@@ -89,4 +101,5 @@ module.exports = {
   setUserDisplayName,
   setUserPassword,
   createUser,
+  setUserSpotifyKey,
 };

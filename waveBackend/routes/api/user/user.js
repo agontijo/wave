@@ -69,4 +69,25 @@ router.post(
   }
 );
 
+router.post(
+  '/:uname/spotifykey',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    if (req.params.uname !== req.user.uname) {
+      res.status(403).send('Forbidden!');
+      return
+    }
+    try {
+      const data = await userActions.setUserSpotifyKey(
+        req.user.uname,
+        req.body.spotifyKey
+      );
+      if (data?.Attributes) { res.status(200).send(data); }
+      else { res.status(500).send(null); }
+    } catch (err) {
+      res.status(500).send(err.message)
+    }
+  }
+);
+
 module.exports = router;
