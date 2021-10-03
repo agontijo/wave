@@ -70,7 +70,7 @@ router.post(
 );
 
 router.post(
-  '/:uname/spotifykey',
+  '/:uname/spotifytok',
   isAuth.isLoggedIn,
   async (req, res) => {
     if (req.params.uname !== req.user.uname) {
@@ -78,9 +78,9 @@ router.post(
       return
     }
     try {
-      const data = await userActions.setUserSpotifyKey(
+      const data = await userActions.setUserSpotifyTok(
         req.user.uname,
-        req.body.spotifyKey
+        req.body.spotifyTok
       );
       if (data?.Attributes) { res.status(200).send(data); }
       else { res.status(500).send(null); }
