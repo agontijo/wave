@@ -10,6 +10,11 @@ async function _updateRoom(params) {
   return await dc.get(params).promise();
 }
 
+async function _createRoom(params) {
+  const dc = new AWS.DynamoDB.DocumentClient();
+  await dc.put(params).promise();
+}
+
 async function createRoom(params) {
   if (params?.host) {
     throw 'Malformed Room Object';
@@ -17,7 +22,20 @@ async function createRoom(params) {
 
   const room = { 
     roomID: "TODO", // TODO: Fix this
+    host: params.host,
     queue: params.queue ?? [],
-    name: params.name ?? "New Listening Room!"
-  }
+    user: params.users ?? [],
+    name: params.name ?? "New Listening Room!",
+    allowExplicit: params.allowExplicit ?? true,
+    generesAllowed: params.generesAllowed ?? [],
+    songThreshold: params.songThreshold ?? 0.5,
+  };
+
+  await _createRoom({
+    TableName: 'WVRooms',
+    ConditionExpression: 'attribute_not_exists(roomID)',
+    Item: room,
+  });
+
+  return room;
 }
