@@ -68,7 +68,8 @@ async function createUser(params) {
     uname: params.username,
     pswd: params.password,
     email: params.email,
-    displayName: params.displayName ?? 'Wave User'
+    displayName: params.displayName ?? 'Wave User',
+    spotifyTok: params.spotifyTok ?? null,
   };
 
   await emailMapActions.setEmailMap(user.email, user.uname);
