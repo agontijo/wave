@@ -69,7 +69,7 @@ async function createUser(params) {
     pswd: params.password,
     email: params.email,
     displayName: params.displayName ?? 'Wave User',
-    spotifyTok: params.spotifyTok ?? null,
+    spotifyTok: params.spotifyTok ?? {},
   };
 
   await emailMapActions.setEmailMap(user.email, user.uname);
@@ -82,14 +82,18 @@ async function createUser(params) {
   return user;
 }
 
-async function setUserSpotifyTok(uname, accessToken, refreshToken) {
+async function setSpotifyToks(uname, accessToken, refreshToken) {
+  // TODO: Make this its own queriy for faster write time
+  return await _setSpotifyToksObject(uname, { accessToken, refreshToken });
+}
+async function clearSpotifyToks(uname) { return await _setSpotifyToksObject(uname, {}); }
+async function _setSpotifyToksObject(uname, toks) {
   return await _updateUser({
     TableName: 'WVUsers',
     Key: { uname },
-    UpdateExpression: 'set spotifyTok.accessToken = :a spotifyTok.refreshToken = :r',
+    UpdateExpression: 'set spotifyTok = :t',
     ExpressionAttributeValues: {
-      ":a": accessToken,
-      ":r": refreshToken,
+      ":t": toks,
     },
     ReturnValues: 'UPDATED_NEW'
   });
@@ -103,5 +107,6 @@ module.exports = {
   setUserDisplayName,
   setUserPassword,
   createUser,
-  setUserSpotifyTok,
+  setSpotifyToks,
+  clearSpotifyToks
 };

@@ -63,7 +63,7 @@ passport.use(
     async (req, accessToken, refreshToken, expires_in, profile, done) => {
       if (req?.user) { throw 'No user signed in to attach credentials'; }
       req.user.spotifyTok = { accessToken, refreshToken };
-      try { await userActions.setUserSpotifyTok(req.user.uname, accessToken, refreshToken); }
+      try { await userActions.setSpotifyToks(req.user.uname, accessToken, refreshToken); }
       catch (err) { return done(err, false); }
       return done(null, req.user)
     }
