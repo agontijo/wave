@@ -1,13 +1,26 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 
-const userActions = require('../database/userActions.js');
+const uA = require('../database/userActions');
+
+const SpotifyStrategy = require('passport-spotify').Strategy;
+
+const AWS = require('../database/awsconfig.js');
 
 passport.serializeUser((user, done) => done(null, user.uname));
 passport.deserializeUser(async (uname, done) => {
+  const dc = new AWS.DynamoDB.DocumentClient();
   let found = null;
-  try { found = await userActions.getUser(uname); }
-  catch (err) { return done(err, false); }
+  try {
+    found = await dc.get(
+      {
+        TableName: 'WVUsers',
+        Key: { uname }
+      },
+    ).promise();
+  } catch (err) {
+    return done(err, false);
+  }
   if (found?.Item) { return done(null, found.Item) }
   return done(null, false);
 });
@@ -18,11 +31,20 @@ passport.use(
       usernameField: 'username',
       passwordField: 'password',
     },
-    async (username, password, done) => {
+    async (uname, pswrd, done) => {
+      const dc = new AWS.DynamoDB.DocumentClient();
       let found = null;
-      try { found = await userActions.getUser(username); }
-      catch (err) { return done(err, false); }
-      if (found?.Item?.pswd === password) { return done(null, found.Item); }
+      try {
+        found = await dc.get({
+          TableName: 'WVUsers',
+          Key: { uname }
+        }).promise();
+      } catch (err) {
+        return done(err, false);
+      }
+      if (found?.Item?.pswd === pswrd) {
+        return done(null, found.Item);
+      }
       return done(null, false);
     }
   )
@@ -36,17 +58,51 @@ passport.use(
       passwordField: 'password',
       passReqToCallback: true,
     },
-    async (req, username, password, done) => {
+    async (req, uname, pswd, done) => {
       let user = null;
       try {
-        user = await userActions.createUser({
-          username,
-          password,
-          email: req?.body?.email,
-          displayName: req?.body?.displayName,
-        });
-      } catch (err) { return done(err, false); }
+        if (
+          !uname ||
+          !pswd ||
+          !req?.body?.email
+        ) {
+          throw 'Malformed User Object!';
+        }
+        user = {
+          uname,
+          pswd,
+          email: req.body.email,
+          displayName: req.body?.displayName ?? 'Wave User'
+        };
+        const dc = new AWS.DynamoDB.DocumentClient();
+        inserted = await dc.put({
+          TableName: 'WVUsers',
+          ConditionExpression: 'attribute_not_exists(uname)',
+          Item: user,
+        }).promise();
+      } catch (err) {
+        return done(err, false);
+      }
       return done(null, user)
     }
   )
 );
+
+passport.use(
+    new SpotifyStrategy(
+      {
+        clientID: process.env.clientID,
+        clientSecret: process.env.CLIENT_SECRET,
+        callbackURL: 'http://localhost:' + port + authCallbackPath,
+        passReqToCallback: true,
+      },
+
+      function(req, accessToken, refreshToken, expires_in, profile, done) {
+        // asynchronous verification, for effect...
+        //process.nextTick(function () {})
+        console.log(req.user)
+        
+      })
+
+    )
+)

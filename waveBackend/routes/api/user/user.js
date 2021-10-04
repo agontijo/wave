@@ -72,6 +72,7 @@ router.post(
 router.post(
   '/:uname/spotifytok',
   isAuth.isLoggedIn,
+  passport.authenticate('spotify'),
   async (req, res) => {
     if (req.params.uname !== req.user.uname) {
       res.status(403).send('Forbidden!');
