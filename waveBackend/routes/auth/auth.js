@@ -3,6 +3,7 @@ const passport = require("passport");
 
 const isAuth = require('../../middleware/isAuth.js');
 const loginPreProc = require('../../middleware/loginPreProcess.js');
+const userActions = require('../../database/userActions.js');
 
 const router = express.Router();
 
@@ -43,11 +44,21 @@ router.post(
 );
 
 // SPOTIFY
-router.get('/spotify', passport.authenticate('spotify'));
+router.get(
+  '/spotify',
+  // isAuth.isLoggedIn,
+  passport.authenticate('spotify')
+);
+
 router.get(
   '/spotify/callback',
-  passport.authenticate('spotify', { failureRedirect: '/auth/failure'}),
-  (req, res) => res.send('successfully got spotify stuff!!')
+  passport.authenticate('spotify', { failureRedirect: '/auth/failure' }),
+  (req, res) => {
+    if (!req.user) {
+      res.status(500).send('Failded to attach spotify credentials to user');
+    }
+    res.status(200).send(req.user);
+  }
 );
 
 // BORING STUFF

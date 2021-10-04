@@ -81,13 +81,14 @@ async function createUser(params) {
   return user;
 }
 
-async function setUserSpotifyTok(uname, key) {
+async function setUserSpotifyTok(uname, accessToken, refreshToken) {
   return await _updateUser({
     TableName: 'WVUsers',
     Key: { uname },
-    UpdateExpression: 'set spotifyTok = :k',
+    UpdateExpression: 'set spotifyTok.accessToken = :a spotifyTok.refreshToken = :r',
     ExpressionAttributeValues: {
-      ':k': key,
+      ":a": accessToken,
+      ":r": refreshToken,
     },
     ReturnValues: 'UPDATED_NEW'
   });
