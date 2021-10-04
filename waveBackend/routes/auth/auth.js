@@ -46,7 +46,7 @@ router.post(
 // SPOTIFY
 router.get(
   '/spotify',
-  // isAuth.isLoggedIn,
+  isAuth.isLoggedIn,
   passport.authenticate('spotify')
 );
 
