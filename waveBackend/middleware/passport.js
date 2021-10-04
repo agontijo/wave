@@ -89,20 +89,17 @@ passport.use(
 );
 
 passport.use(
-    new SpotifyStrategy(
-      {
-        clientID: process.env.clientID,
-        clientSecret: process.env.CLIENT_SECRET,
-        callbackURL: 'http://localhost:' + port + authCallbackPath,
-        passReqToCallback: true,
-      },
-
-      function(req, accessToken, refreshToken, expires_in, profile, done) {
-        // asynchronous verification, for effect...
-        //process.nextTick(function () {})
-        console.log(req.user)
-        
-      })
-
-    )
-)
+  new SpotifyStrategy(
+    {
+      clientID: process.env.SPOTIFY_CLIENT_ID,
+      clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+      callbackURL: 'http://localhost:3000/api/user/spotcallback',
+      passReqToCallback: true,
+    },
+    function (req, accessToken, refreshToken, expires_in, profile, done) {
+      // asynchronous verification, for effect...
+      //process.nextTick(function () {})
+      console.log(req.user);
+    }
+  )
+);

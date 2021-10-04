@@ -32,6 +32,13 @@ app.get('/', (req, res) => { res.redirect('/api'); })
 
 module.exports = app;
 
+
+
+// TODO: REMOVE BELLOW
+app.get('/spot', passport.authenticate('spotify'));
+app.get('/callback', (req, res) => res.send(':)'));
+// TODO: REMOVE ABOVE
+
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`)
 });
