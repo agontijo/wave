@@ -93,13 +93,13 @@ passport.use(
     {
       clientID: process.env.SPOTIFY_CLIENT_ID,
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-      callbackURL: 'http://localhost:3000/api/user/spotcallback',
+      callbackURL: `${process.env.SPOTIFY_CALLBACK_URI}/auth/spotify/callback`,
       passReqToCallback: true,
     },
     function (req, accessToken, refreshToken, expires_in, profile, done) {
       // asynchronous verification, for effect...
       //process.nextTick(function () {})
-      console.log(req.user);
+      console.log(req);
     }
   )
 );

@@ -6,6 +6,7 @@ const loginPreProc = require('../../middleware/loginPreProcess.js');
 
 const router = express.Router();
 
+// LOCAL ACCOUNTS
 router.get('/local', (req, res) => {
   const body = "{\n  username: ...,\n  password: ...,\n}";
   res.send(`Expecting a POST request with body:\n${body}`);
@@ -41,6 +42,16 @@ router.post(
   }
 );
 
+// SPOTIFY
+router.get('/spotify', passport.authenticate('spotify'));
+router.get(
+  '/spotify/callback',
+  passport.authenticate('spotify', { failureRedirect: '/auth/failure'}),
+  (req, res) => res.send('successfully got spotify stuff!!')
+);
+
+// BORING STUFF
+router.get('/failure', (req, res) => res.status(401).send("Not Authenticated!"));
 router.get('/logout', (req, res) => {
   req.session = null;
   req.logout();
