@@ -104,7 +104,7 @@ async function removeUser(user, roomID) {
 
 }
 
-async function destroyRoom(roomID, user) {
+async function destroyRoom(user, roomID) {
   // Fetch room object
   let room = await _getRoom({
     TableName: 'WVRooms',
