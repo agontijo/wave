@@ -3,6 +3,7 @@ const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
 const cookieSession = require('cookie-session');
+const CORS = require('cors');
 
 const apiRouter = require('./routes/api/api.js');
 const authRouter = require('./routes/auth/auth.js');
@@ -14,6 +15,10 @@ const PORT = 3000;
 // parse things
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// init cross origin scripting
+// TODO: Make more restrictive
+app.use(CORS({ origin: '*' }));
 
 // init cookies
 app.use(cookieSession({
