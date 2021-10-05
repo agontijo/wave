@@ -1,11 +1,19 @@
 <h1>{{title}}</h1>
 <a href="/auth/spotify"></a>
 <nav>
-    <button class="nav-item nav-link-edit" [routerLink]="['/change-name']">Change Display Name</button >
+    <button class="nav-item nav-link-edit" [routerLink]="['/change-name']">Change Display Name</button>
     <br>
-    <br> 
-    <button class="nav-item nav-link-edit" *ngIf="this.isSpotifyButtonVisible" (click)="spotifyRoute()">Spotify</button >
-    <button class="nav-item nav-link-edit" *ngIf="this.isNonSpotifyButtonVisible" [routerLink]="['/spotify-connect']"> Disconnet Spotify</button >
+    <br>
+    <button class="nav-item nav-link-edit" *ngIf="this.isSpotifyButtonVisible" (click)="spotifyRoute()">Spotify</button>
+    <button class="nav-item nav-link-edit" *ngIf="this.isNonSpotifyButtonVisible" [routerLink]="['/spotify-connect']">
+        Disconnet Spotify</button>
+
+    <div>
+        Matt's grabage
+        <br />
+        <a href="/auth/spotify">Connect Spotify</a>
+        <br />
+        <a href="/auth/spotify/disconnect">Disconnect Spotify</a>
+    </div>
 </nav>
 <router-outlet></router-outlet>
-
