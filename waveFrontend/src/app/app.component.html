@@ -6,6 +6,8 @@
     <br> 
     <button class="nav-item nav-link-edit" *ngIf="this.isSpotifyButtonVisible" (click)="spotifyRoute()">Spotify</button >
     <button class="nav-item nav-link-edit" *ngIf="this.isNonSpotifyButtonVisible" [routerLink]="['/spotify-connect']"> Disconnet Spotify</button >
+
+    <a href="/auth/spotify">My cool link</a>
 </nav>
 <router-outlet></router-outlet>
 
