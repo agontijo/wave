@@ -14,13 +14,13 @@ router.get('/', (req, res) => {
 // FIXME: Lock this down!!!
 router.get(
   '/:uname',
-  // isAuth.isLoggedIn,
+  isAuth.isLoggedIn,
   async (req, res) => {
-    if (/*req.params.uname !== req.user.uname*/ false) {
+    if (req.params.uname !== req.user.uname) {
       res.status(403).send('Forbidden!');
     } else {
       let data = null;
-      try { data = await userActions.getUser(/*req.user.uname*/ req.params.uname); }
+      try { data = await userActions.getUser(req.user.uname); }
       catch (err) { res.send(500).send(err.message); }
       if (!data?.Item) { res.status(500).send('Could not find user in Database'); }
       res.status(200).send(data.Item);
@@ -30,7 +30,7 @@ router.get(
 
 router.post(
   '/:uname/displayname',
-  //isAuth.isLoggedIn,
+  isAuth.isLoggedIn,
   async (req, res) => {
     if (req.params.uname !== req.user.uname) {
       res.status(403).send('Forbidden!');
@@ -51,7 +51,7 @@ router.post(
 
 router.post(
   '/:uname/password',
-  //isAuth.isLoggedIn,
+  isAuth.isLoggedIn,
   async (req, res) => {
     if (req.params.uname !== req.user.uname) {
       res.status(403).send('Forbidden!');
