@@ -14,13 +14,13 @@ router.get('/', (req, res) => {
 // FIXME: Lock this down!!!
 router.get(
   '/:uname',
-  // isAuth.isLoggedIn,
+  isAuth.isLoggedIn,
   async (req, res) => {
-    if (/*req.params.uname !== req.user.uname*/ false) {
+    if (req.params.uname !== req.user.uname) {
       res.status(403).send('Forbidden!');
     } else {
       let data = null;
-      try { data = await userActions.getUser(/*req.user.uname*/ req.params.uname); }
+      try { data = await userActions.getUser(req.user.uname); }
       catch (err) { res.send(500).send(err.message); }
       if (!data?.Item) { res.status(500).send('Could not find user in Database'); }
       res.status(200).send(data.Item);
@@ -69,5 +69,30 @@ router.post(
     }
   }
 );
+
+// TODO: Fix or remove!!
+
+// router.get(
+//   '/:uname/spotifytok',
+//   isAuth.isLoggedIn,
+//   // passport.authenticate('spotify'),
+//   async (req, res) => {
+//     if (req.params.uname !== req.user.uname) {
+//       res.status(403).send('Forbidden!');
+//       return
+//     }
+//     try {
+//       const data = await userActions.setSpotifyToks(
+//         req.user.uname,
+//         'tokA',
+//         'tokB'
+//       );
+//       if (data?.Attributes) { res.status(200).send(data); }
+//       else { res.status(500).send(null); }
+//     } catch (err) {
+//       res.status(500).send(err.message)
+//     }
+//   }
+// );
 
 module.exports = router;
