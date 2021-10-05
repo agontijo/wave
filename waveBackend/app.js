@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const session = require('express-session');
 const passport = require('passport');
 const cookieSession = require('cookie-session');
 
@@ -22,6 +23,11 @@ app.use(cookieSession({
 }));
 
 // init passport
+app.use(session({
+  secret: 'WaveSessionSecretString',
+  resave: false,
+  saveUninitialized: false,
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 

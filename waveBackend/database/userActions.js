@@ -68,7 +68,8 @@ async function createUser(params) {
     uname: params.username,
     pswd: params.password,
     email: params.email,
-    displayName: params.displayName ?? 'Wave User'
+    displayName: params.displayName ?? 'Wave User',
+    spotifyTok: params.spotifyTok ?? {},
   };
 
   await emailMapActions.setEmailMap(user.email, user.uname);
@@ -81,6 +82,23 @@ async function createUser(params) {
   return user;
 }
 
+async function setSpotifyToks(uname, accessToken, refreshToken) {
+  // TODO: Make this its own queriy for faster write time
+  return await _setSpotifyToksObject(uname, { accessToken, refreshToken });
+}
+async function clearSpotifyToks(uname) { return await _setSpotifyToksObject(uname, {}); }
+async function _setSpotifyToksObject(uname, toks) {
+  return await _updateUser({
+    TableName: 'WVUsers',
+    Key: { uname },
+    UpdateExpression: 'set spotifyTok = :t',
+    ExpressionAttributeValues: {
+      ":t": toks,
+    },
+    ReturnValues: 'UPDATED_NEW'
+  });
+}
+
 module.exports = {
   _updateUser,
   _getUser,
@@ -89,4 +107,6 @@ module.exports = {
   setUserDisplayName,
   setUserPassword,
   createUser,
+  setSpotifyToks,
+  clearSpotifyToks
 };

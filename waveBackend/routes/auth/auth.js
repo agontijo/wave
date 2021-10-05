@@ -3,9 +3,11 @@ const passport = require("passport");
 
 const isAuth = require('../../middleware/isAuth.js');
 const loginPreProc = require('../../middleware/loginPreProcess.js');
+const userActions = require('../../database/userActions.js');
 
 const router = express.Router();
 
+// LOCAL ACCOUNTS
 router.get('/local', (req, res) => {
   const body = "{\n  username: ...,\n  password: ...,\n}";
   res.send(`Expecting a POST request with body:\n${body}`);
@@ -41,6 +43,26 @@ router.post(
   }
 );
 
+// SPOTIFY
+router.get(
+  '/spotify',
+  isAuth.isLoggedIn,
+  passport.authenticate('spotify')
+);
+
+router.get(
+  '/spotify/callback',
+  passport.authenticate('spotify', { failureRedirect: '/auth/failure' }),
+  (req, res) => {
+    if (!req.user) {
+      res.status(500).send('Failded to attach spotify credentials to user');
+    }
+    res.status(200).send(req.user);
+  }
+);
+
+// BORING STUFF
+router.get('/failure', (req, res) => res.status(401).send("Not Authenticated!"));
 router.get('/logout', (req, res) => {
   req.session = null;
   req.logout();
