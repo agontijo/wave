@@ -52,6 +52,7 @@ import { User } from '../user';
 import { UserService } from './../user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsoleLogger } from '@aws-amplify/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-change-name',
@@ -64,25 +65,36 @@ export class ChangeNameComponent implements OnInit {
 
   editName = ""
 
-  constructor(private _userServive: UserService) { }
+
+
+  constructor(private _userServive: UserService, private http:HttpClient ,private route: ActivatedRoute,private router: Router) { }
 
   ngOnInit() {
-    this._userServive.getUsers().subscribe(data => {this.users = data; 
-      console.log(this.users.displayName);});
+    this._userServive.getUsers().subscribe(data => this.users = data);
   // this._userServive.getUsers().subscribe((res) => console.log(res.displayName))
     }
 
 
-  // cancel() {
-  //   this.gotoHomepage();
-  // }
+  cancel() {
+    this.gotoHomepage();
+  }
 
-  // save() {
-  //   this.user1.displayname = this.editName;
-  // }
+  save() {
 
-  // gotoHomepage() {
-  //   this.router.navigate(['../',], { relativeTo: this.route });
-  // }
+    this.users.displayName = this.editName;
+    const newNameData = {displayName: this.users.displayName,
+      pswd: this.users.pswd,
+      email: this.users.email,
+      spotifyTok: this.users.spotifyTok,
+      uname: this.users.uname};
+
+    let url = "/api/user/" + this.users.uname + "/displayname";
+    this._userServive.changeDisplayName(newNameData, url).subscribe(data => {this.users = data; 
+      console.log(data);})
+  }
+
+  gotoHomepage() {
+    this.router.navigate(['../',], { relativeTo: this.route });
+  }
 
 }

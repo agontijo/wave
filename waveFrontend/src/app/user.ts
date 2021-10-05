@@ -7,7 +7,7 @@
 // }
 
 export interface User {
-    displayName: number;
+    displayName: string;
     pswd: string;
     email: string;
     spotifyTok: Map<String, String>;

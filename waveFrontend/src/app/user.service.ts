@@ -16,4 +16,9 @@ export class UserService {
     return this.http.get<User>(this._url);
   }
 
+  changeDisplayName(createBody: any, url: any): Observable<User> {
+    console.log(createBody);
+      return this.http.post<User>(url, createBody);
+  }
+
 }
