@@ -60,17 +60,23 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./change-name.component.css']
 })
 export class ChangeNameComponent implements OnInit {
-
+  public tempusers!: User;
   public users!: User;
 
   editName = ""
-
+  
 
 
   constructor(private _userServive: UserService, private http:HttpClient ,private route: ActivatedRoute,private router: Router) { }
 
   ngOnInit() {
-    this._userServive.getUsers().subscribe(data => this.users = data);
+    this._userServive.getCurrUser().subscribe(data => {this.tempusers = data;
+      let _url = "/api/user/" + this.tempusers?.uname;
+      this._userServive.getUsers("/api/user/a").subscribe(data => this.users = data);});
+    //this._userServive.getCurrUser().subscribe((res) => console.log(res));
+    //console.log(this.tempusers.displayName);
+    //let _url = "/api/user/" + this.tempusers?.uname;
+    //this._userServive.getUsers("/api/user/a").subscribe(data => this.users = data);
   // this._userServive.getUsers().subscribe((res) => console.log(res.displayName))
     }
 
@@ -89,8 +95,7 @@ export class ChangeNameComponent implements OnInit {
       uname: this.users.uname};
 
     let url = "/api/user/" + this.users.uname + "/displayname";
-    this._userServive.changeDisplayName(newNameData, url).subscribe(data => {this.users = data; 
-      console.log(data);})
+    this._userServive.changeDisplayName(newNameData, url).subscribe(data => this.users = data)
       this.router.navigate(['../',], { relativeTo: this.route });
   }
 
