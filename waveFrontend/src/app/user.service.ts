@@ -23,4 +23,9 @@ export class UserService {
       return this.http.post<User>(url, createBody);
   }
 
+  spotifyConnect(): Observable<User>{
+    
+    return this.http.get<User>("/auth/spotify");
+  }
+
 }
