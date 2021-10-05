@@ -91,6 +91,7 @@ export class ChangeNameComponent implements OnInit {
     let url = "/api/user/" + this.users.uname + "/displayname";
     this._userServive.changeDisplayName(newNameData, url).subscribe(data => {this.users = data; 
       console.log(data);})
+      this.router.navigate(['../',], { relativeTo: this.route });
   }
 
   gotoHomepage() {
