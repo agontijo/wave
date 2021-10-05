@@ -1,5 +1,6 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const SpotifyStrategy = require('passport-spotify').Strategy;
 
 const userActions = require('../database/userActions.js');
 
@@ -47,6 +48,25 @@ passport.use(
         });
       } catch (err) { return done(err, false); }
       return done(null, user)
+    }
+  )
+);
+
+passport.use(
+  new SpotifyStrategy(
+    {
+      clientID: process.env.SPOTIFY_CLIENT_ID,
+      clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+      callbackURL: `${process.env.SPOTIFY_CALLBACK_URI}/auth/spotify/callback`,
+      passReqToCallback: true,
+    },
+    async (req, accessToken, refreshToken, expires_in, profile, done) => {
+      try {
+        if (!req?.user) { throw 'No user signed in to attach credentials'; }
+        req.user.spotifyTok = { accessToken, refreshToken };
+        await userActions.setSpotifyToks(req.user.uname, accessToken, refreshToken);
+      } catch (err) { return done(err, false); }
+      return done(null, req.user)
     }
   )
 );
