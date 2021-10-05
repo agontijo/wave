@@ -35,6 +35,8 @@ router.get('/', (req, res) => {
     }
   );
 
+  // Add/remove from lists in the room object
+
   router.post(
     '/:roomid/join',
     isAuth.isLoggedIn,
@@ -64,11 +66,85 @@ router.get('/', (req, res) => {
   );
 
   router.post(
+    '/:roomid/addGenre',
+    isAuth.isLoggedIn,
+    async (req, res) => {
+      try {
+        const data = await roomActions.addUser(req.user.uname, req.params.roomid, req.body.genre);
+        if (data?.Attributes) { res.status(200).send(data); }
+        else { res.status(500).send(null); }
+      } catch (err) {
+        res.status(500).send(err.message)
+      }
+    }
+  );
+
+  router.post(
+    '/:roomid/removeGenre',
+    isAuth.isLoggedIn,
+    async (req, res) => {
+      try {
+        const data = await roomActions.removeUser(req.user.uname, req.params.roomid, req.body.genre);
+        if (data?.Attributes) { res.status(200).send(data); }
+        else { res.status(500).send(null); }
+      } catch (err) {
+        res.status(500).send(err.message)
+      }
+    }
+  );
+
+  // Delete the room object from the DB
+
+  router.post(
     '/:roomid/remove',
     isAuth.isLoggedIn,
     async (req, res) => {
       try {
         const data = await roomActions.destroyRoom(req.user.uname, req.params.roomid);
+        if (data?.Attributes) { res.status(200).send(data); }
+        else { res.status(500).send(null); }
+      } catch (err) {
+        res.status(500).send(err.message)
+      }
+    }
+  );
+
+  // Setters for various field in the room object
+
+  router.post(
+    '/:roomid/roomname',
+    isAuth.isLoggedIn,
+    async (req, res) => {
+      try {
+        const data = await roomActions.setRoomName(req.user.uname, req.params.roomid, req.body.roomName);
+        if (data?.Attributes) { res.status(200).send(data); }
+        else { res.status(500).send(null); }
+      } catch (err) {
+        res.status(500).send(err.message)
+      }
+    }
+  );
+
+  router.post(
+    '/:roomid/songthreshold',
+    isAuth.isLoggedIn,
+    async (req, res) => {
+      try {
+        const data = await roomActions.setThreshold(req.user.uname, req.params.roomid, req.body.songThreshold);
+        if (data?.Attributes) { res.status(200).send(data); }
+        else { res.status(500).send(null); }
+      } catch (err) {
+        res.status(500).send(err.message)
+      }
+    }
+  );
+
+  router.post(
+    '/:roomid/allowexplicit',
+    isAuth.isLoggedIn,
+    async (req, res) => {
+      try {
+        const data = await roomActions.setAllowExplicit(req.user.uname, req.params.roomid, req.body.allowExplicit);
         if (data?.Attributes) { res.status(200).send(data); }
         else { res.status(500).send(null); }
       } catch (err) {
