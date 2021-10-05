@@ -30,7 +30,7 @@ router.get(
 
 router.post(
   '/:uname/displayname',
-  //isAuth.isLoggedIn,
+  isAuth.isLoggedIn,
   async (req, res) => {
     if (req.params.uname !== req.user.uname) {
       res.status(403).send('Forbidden!');
@@ -51,7 +51,7 @@ router.post(
 
 router.post(
   '/:uname/password',
-  //isAuth.isLoggedIn,
+  isAuth.isLoggedIn,
   async (req, res) => {
     if (req.params.uname !== req.user.uname) {
       res.status(403).send('Forbidden!');
