@@ -11,7 +11,6 @@ router.get('/', (req, res) => {
 
 
 // Get a user of with username = uname
-// FIXME: Lock this down!!!
 router.get('/', (req, res) => {
   if (req.user) { res.send(req.user); }
   else { res.send(null); }
