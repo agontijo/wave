@@ -1,8 +1,9 @@
 <h1>{{title}}</h1>
 <nav>
-    <a routerLink="/change-name" routerLinkActive="active">User Info</a>
+    <button class="nav-item nav-link-edit" [routerLink]="['/change-name']">Change Display Name</button >
     <br>
     <br>
-    <a routerLink="/spotify-connect" routerLinkActive="active">Connect Spotify Account</a>
-  </nav>
+    <button class="nav-item nav-link-edit" [routerLink]="['/spotify-connect']">Spotify</button >
+</nav>
 <router-outlet></router-outlet>
+

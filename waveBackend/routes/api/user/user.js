@@ -5,12 +5,11 @@ const isAuth = require('../../../middleware/isAuth.js');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.send("Add a user name to the path to look up a user");
-});
-
-
 // Get a user of with username = uname
+router.get('/', (req, res) => {
+  if (req.user) { res.send(req.user); }
+  else { res.send(null); }
+})
 router.get(
   '/:uname',
   isAuth.isLoggedIn,

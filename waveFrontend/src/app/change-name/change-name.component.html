@@ -1,13 +1,21 @@
+<!-- <h2>User Info</h2>
+<div><span>ID: </span>{{user.displayname}}</div> -->
 <h2>User Info</h2>
-<div><span>ID: </span>{{user1.id}}</div>
-<div><span>Username: </span>{{user1.username}}</div>
-<div><span>Display Name: </span>{{user1.displayname}}</div>
 <div>
-    <label for="displayname">Display Name: </label>
-    <input type="text" id="editName" [(ngModel)]="editName" placeholder="name"/>
-    <br>
+   <p> Username: {{users?.uname}} </p>
+   <p> Email: {{users?.email}} </p>
+   <p> DisplayName: {{users?.displayName}} </p>
+   <p> New Display Name: </p>
+   <input id="editName" [(ngModel)]="editName" placeholder="name"/>
+   <br>
     <div>
         <button (click)="save()">Save</button>
         <button (click)="cancel()">Cancel</button>
     </div>
 </div>
+
+<!-- <h2>Employee Detail</h2>
+    <h3>{{errorMsg}}</h3>    
+    <ul *ngFor="let employee of employees">
+      <li>{{employee.id}}. {{employee.name}} - {{employee.age}}</li>
+    </ul> -->
