@@ -10,6 +10,7 @@ import { ChangeNameComponent } from './change-name/change-name.component';
 import { SpotifyConnectComponent } from './spotify-connect/spotify-connect.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { UserService } from './user.service';
+import { ChangeRoomNameComponent } from './change-room-name/change-room-name.component';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import { UserService } from './user.service';
     ChangeNameComponent,
     SpotifyConnectComponent,
     PageNotFoundComponent,
+    ChangeRoomNameComponent,
   ],
   imports: [
     BrowserModule,
