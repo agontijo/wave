@@ -27,10 +27,11 @@ export class UserService {
   }
 
   getRoom(): Observable<Room>{
-    return this.http.get<Room>("/api/room/14066a");
+    return this.http.get<Room>("/api/room/f519ef77");
   }  
 
   changeRoomName(createBody: any, url: any): Observable<Room> {
+    console.log(createBody);
     return this.http.post<Room>(url, createBody);
 }
 

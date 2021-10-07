@@ -14,13 +14,16 @@ import { Room } from '../room';
 export class ChangeRoomNameComponent implements OnInit {
 
   public currroom!: Room;
-
+  public curruser!: User;
+  namechangebutton!: boolean;
   editName = ""
+  roomName = ""
 
   constructor(private _userServive: UserService, private http:HttpClient, private route: ActivatedRoute,private router: Router) { }
 
   ngOnInit() {
-    this._userServive.getRoom().subscribe(data => {this.currroom = data; console.log(data)});
+    this._userServive.getRoom().subscribe(data => {this.currroom = data; console.log(data);
+    });
    
   }
 
@@ -30,19 +33,21 @@ export class ChangeRoomNameComponent implements OnInit {
 
   save() {
 
-    this.currroom.name = this.editName;
+    this.currroom.roomname = this.editName;
+      // const newRoomName = {
+      //   songThreshold: this.currroom.songThreshold,
+      //   queue: this.currroom.queue,
+      //   RoomID: this.currroom.RoomID,
+      //   genresAllowed: this.currroom.genresAllowed,
+      //   host: this.currroom.host,
+      //   user: this.currroom.user,
+      //   allowExplicit: this.currroom.allowExplicit,
+      //   name: this.currroom.name};
       const newRoomName = {
-        songThreshold: this.currroom.songThreshold,
-        queue: this.currroom.queue,
-        RoomID: this.currroom.RoomID,
-        genresAllowed: this.currroom.genresAllowed,
-        host: this.currroom.host,
-        user: this.currroom.user,
-        allowExplicit: this.currroom.allowExplicit,
-        name: this.currroom.name};
-
+        name: this.currroom.roomname};
+    console.log(this.currroom.roomname)
     let url = "/api/room/" + this.currroom.RoomID + "/roomname";
-    this._userServive.changeRoomName(newRoomName, url).subscribe(data => this.currroom = data)
+    this._userServive.changeRoomName(newRoomName, url).subscribe(data => {this.currroom = data; console.log(data)});
       this.gotoHomepage();
   }
 

@@ -4,6 +4,7 @@ import { UserService } from './user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsoleLogger } from '@aws-amplify/core';
 import { HttpClient } from '@angular/common/http';
+import { ChangeRoomNameComponent } from './change-room-name/change-room-name.component';
 
 @Component({
   selector: 'app-root',

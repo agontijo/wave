@@ -128,7 +128,7 @@ router.post(
   isAuth.isLoggedIn,
   async (req, res) => {
     try {
-      const data = await roomActions.setRoomName(req.user.uname, req.params.roomid, req.body.roomName);
+      const data = await roomActions.setRoomName(req.user.uname, req.params.roomid, req.body.name);
       if (data?.Attributes) { res.status(200).send(data); }
       else { res.status(500).send(null); }
     } catch (err) {

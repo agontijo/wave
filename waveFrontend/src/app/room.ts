@@ -6,5 +6,5 @@ export interface Room {
     host: string;
     user: String[];
     allowExplicit: boolean;
-    name: String;
+    roomname: String;
 }
