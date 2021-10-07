@@ -23,7 +23,9 @@ export class ChangeNameComponent implements OnInit {
   ngOnInit() {
     this._userServive.getCurrUser().subscribe(data => {this.tempusers = data;
       let _url = "/api/user/" + this.tempusers?.uname;
-      this._userServive.getUsers("/api/user/a").subscribe(data => this.users = data);});
+      this._userServive.getUsers("/api/user").subscribe(data => this.users = data);
+      console.log(data);
+      });
     //this._userServive.getCurrUser().subscribe((res) => console.log(res));
     //console.log(this.tempusers.displayName);
     //let _url = "/api/user/" + this.tempusers?.uname;

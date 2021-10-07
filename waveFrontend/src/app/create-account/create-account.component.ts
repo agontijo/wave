@@ -32,12 +32,10 @@ export class CreateAccountComponent implements OnInit {
     }
     register() {
       let user = {
-        displayName:this.displayName,
-        pswd: this.password,
-        email: this.email,
-        spotifyTok: NONE_TYPE,
-        uname: this.username,
-        currRoom: "",
+        displayName:this.displayName.value,
+        password: this.password.value,
+        email: this.email.value,
+        username: this.username.value,
       }
       this._userServive.registerUser(user).subscribe((data: any) => {console.log(data)})
     }
