@@ -1,4 +1,5 @@
 const AWS = require('./awsconfig.js');
+const userActs = require('./userActions.js');
 const generate = require('../utils/generators.js');
 
 async function _getRoom(params) {
@@ -37,6 +38,8 @@ async function createRoom(params) {
     ConditionExpression: 'attribute_not_exists(RoomID)',
     Item: room,
   });
+
+  await userActs.setCurrRoom(params.host, room.RoomID);
 
   return room;
 }

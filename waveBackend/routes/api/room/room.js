@@ -28,9 +28,14 @@ router.post(
   isAuth.isLoggedIn,
   async (req, res) => {
     let data = null;
-    console.log('1')
-    try { data = await roomActions.createRoom(req.body); }
-    catch (err) { res.sendStatus(500); }
+    try {
+      // TODO: Make this if its own function
+      if (req.user.currRoom === "") {
+        try { roomActions.destroyRoom(req.user.uname, req.user.currRoom); }
+        catch (err) { console.error(err); }
+      }
+      data = await roomActions.createRoom(req.body);
+    } catch (err) { res.sendStatus(500); }
 
     if (data) { res.status(200).send(data); }
     else { res.sendStatus(500) }
@@ -44,6 +49,11 @@ router.post(
   isAuth.isLoggedIn,
   async (req, res) => {
     try {
+      // TODO: Make this if its own function
+      if (req.user.currRoom === "") {
+        try { await roomActions.destroyRoom(req.user.uname, req.user.currRoom); }
+        catch (err) { console.error(err); }
+      }
       const data = await roomActions.addUser(req.user.uname, req.params.roomid);
       if (data?.Attributes) { res.status(200).send(data); }
       else { res.status(500).send(null); }
