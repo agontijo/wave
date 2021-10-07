@@ -4,7 +4,6 @@ import { UserService } from '../user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 // import { ConsoleLogger } from '@aws-amplify/core';
 import { HttpClientModule } from '@angular/common/http';
-import { User } from '../user';
 import { NONE_TYPE } from '@angular/compiler';
 import {MatDialog} from '@angular/material/dialog';
 
@@ -17,8 +16,8 @@ export class CreateAccountComponent implements OnInit {
   title = 'Wave';
   hide = true;
   email = new FormControl('', [Validators.required, Validators.email]);
-  password = new FormControl('');
-  username = new FormControl('');
+  password = new FormControl('',[Validators.required, Validators.minLength(8),]);
+  username = new FormControl('', Validators.required);
   displayName = new FormControl('');
 
 
@@ -27,13 +26,23 @@ export class CreateAccountComponent implements OnInit {
     if (this.email.hasError('required')) {
       return 'You must enter a value';
     }
-    register() {
+    return this.email.hasError('email') ? 'Not a valid email' : '';
+  }
+    async register() {
       let user = {
         displayName:this.displayName.value,
         password: this.password.value,
         email: this.email.value,
         username: this.username.value,
       }
+      await fetch('/auth/local/register', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(user)
+      });
+  
       this._userServive.registerUser(user).subscribe((data: any) => {
         console.log(data)
         this.router.navigate(['storebuttons']);
