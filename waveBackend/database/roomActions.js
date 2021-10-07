@@ -9,7 +9,7 @@ async function _getRoom(params) {
 
 async function _updateRoom(params) {
   const dc = new AWS.DynamoDB.DocumentClient();
-  return await dc.get(params).promise();
+  return await dc.update(params).promise();
 }
 
 async function _createRoom(params) {
@@ -27,7 +27,7 @@ async function createRoom(params) {
     host: params.host,
     queue: params.queue ?? [],
     user: params.users ?? [],
-    name: params.name ?? "New Listening Room!",
+    roomname: params.name ?? "New Listening Room!",
     allowExplicit: params.allowExplicit ?? true,
     genresAllowed: params.genresAllowed ?? [],
     songThreshold: params.songThreshold ?? 0.5,
@@ -157,7 +157,7 @@ async function setRoomName(user, RoomID, roomName) {
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
-    UpdateExpression: 'set name = :n',
+    UpdateExpression: 'set roomname = :n',
     ExpressionAttributeValues: {
       ':n': roomName,
     },
