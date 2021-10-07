@@ -37,7 +37,10 @@ router.post(
   passport.authenticate('register'),
   (req, res) => {
     if (!req.user) {
-      res.status(500).send('Failded to create user');
+      res.status(500).send('My Send');
+    }
+    if (req.user.WVCustomError) {
+      res.status(409).send({message: req.user.WVCustomError})
     }
     res.status(200).send(req.user);
   }
