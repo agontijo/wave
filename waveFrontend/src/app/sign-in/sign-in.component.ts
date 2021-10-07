@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+// import { ConsoleLogger } from '@aws-amplify/core';
+import { HttpClientModule } from '@angular/common/http';
+import { User } from '../user';
+import { NONE_TYPE } from '@angular/compiler';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -8,10 +14,10 @@ import {FormControl, Validators} from '@angular/forms';
 })
 export class SignInComponent implements OnInit {
 
-  constructor() { }
+  constructor(private _userServive: UserService, private http:HttpClientModule) { }
   title = 'Wave';
   hide = true;
-  email = new FormControl('', [Validators.required, Validators.email]);
+  email = new FormControl('');
   password = new FormControl('');
 
     getErrorMessageEmail() {
@@ -20,6 +26,14 @@ export class SignInComponent implements OnInit {
       }
 
      return this.email.hasError('email') ? 'Not a valid email' : '';
+    }
+    signIn() {
+      const user = {
+        password: this.password.value,
+        username: this.email.value,
+      }
+      console.log(user);
+      this._userServive.signIn(user).subscribe(data => {console.log(data)})
     }
   ngOnInit(): void {
   }

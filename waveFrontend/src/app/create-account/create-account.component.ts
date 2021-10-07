@@ -3,7 +3,7 @@ import {FormControl, Validators} from '@angular/forms';
 import { UserService } from '../user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 // import { ConsoleLogger } from '@aws-amplify/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { User } from '../user';
 import { NONE_TYPE } from '@angular/compiler';
 
@@ -11,7 +11,7 @@ import { NONE_TYPE } from '@angular/compiler';
 @Component({
   selector: 'app-create-account',
   templateUrl: './create-account.component.html',
-  styleUrls: ['./create-account.component.css']
+  styleUrls: ['./create-account.component.css'],
 })
 export class CreateAccountComponent implements OnInit {
   title = 'Wave';
@@ -31,17 +31,15 @@ export class CreateAccountComponent implements OnInit {
      return this.email.hasError('email') ? 'Not a valid email' : '';
     }
     register() {
-      let user = {
-        displayName:this.displayName,
-        pswd: this.password,
-        email: this.email,
-        spotifyTok: NONE_TYPE,
-        uname: this.username,
-        currRoom: "",
+      const user = {
+        displayName:this.displayName.value,
+        password: this.password.value,
+        email: this.email.value,
+        username: this.username.value,
       }
       this._userServive.registerUser(user).subscribe(data => {console.log(data)})
     }
-  constructor(private _userServive: UserService, private http:HttpClient ,private route: ActivatedRoute,private router: Router) { }
+  constructor(private _userServive: UserService, private http:HttpClientModule) { }
 
   ngOnInit(): void {
   }

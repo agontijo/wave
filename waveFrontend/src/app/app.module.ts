@@ -12,6 +12,9 @@ import { HomepageComponent } from './homepage/homepage.component';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { UserService } from './user.service';
+
 // import { ConsoleLogger } from '@aws-amplify/core';
 @NgModule({
   declarations: [
@@ -30,11 +33,10 @@ import { ActivatedRoute, Router } from '@angular/router';
     FormsModule,
     MatIconModule,
     BrowserAnimationsModule,
-    ActivatedRoute,
-    Router,
+    HttpClientModule,
 
   ],
-  providers: [],
+  providers: [UserService],
   bootstrap: [AppComponent]
 })
 

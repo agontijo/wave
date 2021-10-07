@@ -22,8 +22,13 @@ export class UserService {
   }
 
   registerUser(userObj: any): Observable<User> {
-    return this.http.post<User>(this.url, userObj);
-}
+    console.log(userObj);
+    return this.http.post<User>(this.url + '/auth/local/register', userObj);
+  }
+  signIn(userObj: any): Observable<User> {
+    console.log(userObj);
+    return this.http.post<User>(this.url + '/auth/local', userObj);
+  }
 
   spotifyConnect(): Observable<User>{
     
