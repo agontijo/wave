@@ -10,6 +10,9 @@ import {MatIconModule} from '@angular/material/icon';
 import { CreateAccountComponent } from './create-account/create-account.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { SignInComponent } from './sign-in/sign-in.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ActivatedRoute, Router } from '@angular/router';
+// import { ConsoleLogger } from '@aws-amplify/core';
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,8 +29,13 @@ import { SignInComponent } from './sign-in/sign-in.component';
     ReactiveFormsModule,
     FormsModule,
     MatIconModule,
+    BrowserAnimationsModule,
+    ActivatedRoute,
+    Router,
+
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }
