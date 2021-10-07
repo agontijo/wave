@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { UserService } from '../user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 // import { ConsoleLogger } from '@aws-amplify/core';
@@ -23,12 +23,9 @@ export class CreateAccountComponent implements OnInit {
 
 
 
-    getErrorMessageEmail() {
-      if (this.email.hasError('required')) {
-        return 'You must enter a value';
-      }
-
-     return this.email.hasError('email') ? 'Not a valid email' : '';
+  getErrorMessageEmail() {
+    if (this.email.hasError('required')) {
+      return 'You must enter a value';
     }
     register() {
       let user = {

@@ -19,12 +19,15 @@ export class ChangeRoomNameComponent implements OnInit {
   editName = ""
   roomName = ""
 
-  constructor(private _userServive: UserService, private http:HttpClient, private route: ActivatedRoute,private router: Router) { }
+  constructor(private _userServive: UserService, private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
 
-  ngOnInit() {
-    this._userServive.getRoom().subscribe(data => {this.currroom = data; console.log(data);
+  async ngOnInit() {
+    const res = await fetch('/api/user');
+    const user = await res.json();
+    this._userServive.getRoom(user).subscribe(data => {
+      this.currroom = data; console.log(data);
     });
-   
+
   }
 
   cancel() {
@@ -34,26 +37,27 @@ export class ChangeRoomNameComponent implements OnInit {
   save() {
 
     this.currroom.roomname = this.editName;
-      // const newRoomName = {
-      //   songThreshold: this.currroom.songThreshold,
-      //   queue: this.currroom.queue,
-      //   RoomID: this.currroom.RoomID,
-      //   genresAllowed: this.currroom.genresAllowed,
-      //   host: this.currroom.host,
-      //   user: this.currroom.user,
-      //   allowExplicit: this.currroom.allowExplicit,
-      //   name: this.currroom.name};
-      const newRoomName = {
-        name: this.currroom.roomname};
+    // const newRoomName = {
+    //   songThreshold: this.currroom.songThreshold,
+    //   queue: this.currroom.queue,
+    //   RoomID: this.currroom.RoomID,
+    //   genresAllowed: this.currroom.genresAllowed,
+    //   host: this.currroom.host,
+    //   user: this.currroom.user,
+    //   allowExplicit: this.currroom.allowExplicit,
+    //   name: this.currroom.name};
+    const newRoomName = {
+      name: this.currroom.roomname
+    };
     console.log(this.currroom.roomname)
     let url = "/api/room/" + this.currroom.RoomID + "/roomname";
-    this._userServive.changeRoomName(newRoomName, url).subscribe(data => {this.currroom = data; console.log(data)});
-      this.gotoHomepage();
+    this._userServive.changeRoomName(newRoomName, url).subscribe(data => { this.currroom = data; console.log(data) });
+    this.gotoHomepage();
   }
 
 
   gotoHomepage() {
-    this.router.navigate(['../',], { relativeTo: this.route });
+    this.router.navigate(['../storebuttons',], { relativeTo: this.route });
   }
 
 

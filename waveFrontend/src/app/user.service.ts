@@ -8,41 +8,55 @@ import { Room } from './room';
 export class UserService {
 
 
-  constructor(private http:HttpClient) { }
-    url = "http://localhost:3000"
-  getCurrUser(): Observable<User>{
+  constructor(private http: HttpClient) { }
+  url = "http://localhost:3000"
+  getCurrUser(): Observable<User> {
     return this.http.get<User>("/api/user/");
   }
 
-  getUsers(_url: string): Observable<User>{
+  getUsers(_url: string): Observable<User> {
     return this.http.get<User>(_url);
-  }   
+  }
 
   changeDisplayName(createBody: any, url: any): Observable<User> {
-      return this.http.post<User>(url, createBody);
+    return this.http.post<User>(url, createBody);
+  }
+
+  changePassword(createBody: any, url: any): Observable<User> {
+    return this.http.post<User>(url, createBody);
   }
 
   registerUser(userObj: any): Observable<User> {
-    return this.http.post<User>(this.url 
-        + "/auth/local/register", userObj);
-}
+    return this.http.post<User>(this.url
+      + "/auth/local/", userObj);
+  }
 
-  spotifyConnect(): Observable<User>{
-    
+  spotifyConnect(): Observable<User> {
+
     return this.http.get<User>("/auth/spotify");
   }
 
-  getRoom(): Observable<Room>{
-    return this.http.get<Room>("/api/room/f519ef77");
-  }  
+  getRoom(user: any): Observable<Room> {
+    return this.http.get<Room>(`/api/room/${user.currRoom}`);
+  }
 
   changeRoomName(createBody: any, url: any): Observable<Room> {
     console.log(createBody);
     return this.http.post<Room>(url, createBody);
-}
+  }
 
   signIn(userObj: any): Observable<User> {
-    return this.http.post<User>(this.url + '/auth/local', userObj);
+    console.log(userObj);
+
+    fetch('/auth/local', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(userObj)
+    });
+
+    return this.http.post<any>(this.url + '/auth/local', userObj);
   }
 
 }

@@ -18,21 +18,21 @@ export class PageNotFoundComponent implements OnInit {
     Auth sign in the user for 
     TODO: Absolutly!!!! needs to be removed before production!!!!
     */
-    fetch(
-      '/auth/local',
-      {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          username: "a",
-          password: "a"
-        })
-      }
-    )
-      .then(res => res.json())
-      .then(data => console.log(data))
-      .catch(err => console.log(err));
+  //   fetch(
+  //     '/auth/local',
+  //     {
+  //       method: 'POST',
+  //       headers: {
+  //         "Content-Type": "application/json"
+  //       },
+  //       body: JSON.stringify({
+  //         username: "a",
+  //         password: "a"
+  //       })
+  //     }
+  //   )
+  //     .then(res => res.json())
+  //     .then(data => console.log(data))
+  //     .catch(err => console.log(err));
   }
 }
