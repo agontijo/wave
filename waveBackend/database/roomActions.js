@@ -164,7 +164,7 @@ async function addGenre(user, RoomID, genre) {
 
   return await _updateRoom({
     TableName: 'WVRooms',
-    Key: { uname },
+    Key: { RoomID },
     UpdateExpression: 'set genresAllowed = :g',
     ExpressionAttributeValues: {
       ':g': room.genresAllowed,
@@ -190,7 +190,7 @@ async function removeGenre(user, RoomID, genre) {
 
   return await _updateRoom({
     TableName: 'WVRooms',
-    Key: { uname },
+    Key: { RoomID },
     UpdateExpression: 'set genresAllowed = :g',
     ExpressionAttributeValues: {
       ':g': room.genresAllowed,
