@@ -6,6 +6,7 @@ const cookieSession = require('cookie-session');
 
 const apiRouter = require('./routes/api/api.js');
 const authRouter = require('./routes/auth/auth.js');
+const roomRouter = require('./routes/api/room/room.js')
 require('./middleware/passport.js');
 
 const app = express();
@@ -33,6 +34,7 @@ app.use(passport.session());
 
 app.use('/api', apiRouter);
 app.use('/auth', authRouter);
+app.use('/room', roomRouter);
 
 app.get('/', (req, res) => { res.redirect('/api'); })
 

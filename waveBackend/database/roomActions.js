@@ -126,6 +126,123 @@ async function _destroyRoom(params) {
   await dc.delete(params).promise();
 }
 
+// Set room name
+async function setRoomName(user, roomID, roomName) {
+  // Fetch room object
+  let room = await _getRoom({
+    TableName: 'WVRooms',
+    Key: { roomID },
+  });
+
+  // Check if user is the host of the room
+  _checkHost(user, room);
+
+  return await _updateUser({
+    TableName: 'WVRooms',
+    Key: { roomID },
+    UpdateExpression: 'set name = :n',
+    ExpressionAttributeValues: {
+      ':n': roomName,
+    },
+    ReturnValues: 'UPDATED_NEW'
+  });
+}
+
+// Add genre to allowed music genres
+async function addGenre(user, roomID, genre) {
+  // Fetch room object
+  let room = await _getRoom({
+    TableName: 'WVRooms',
+    Key: { roomID },
+  });
+
+  // Check if user is the host of the room
+  _checkHost(user, room);
+
+  // Add genre to allowed genre
+  room.generesAllowed.push(genre);
+
+  return await _updateUser({
+    TableName: 'WVRooms',
+    Key: { uname },
+    UpdateExpression: 'set generesAllowed = :g',
+    ExpressionAttributeValues: {
+      ':g': room.generesAllowed,
+    },
+    ReturnValues: 'UPDATED_NEW'
+  });
+}
+
+// Remove genre to allowed music genres
+async function removeGenre(user, roomID, genre) {
+  // Fetch room object
+  let room = await _getRoom({
+    TableName: 'WVRooms',
+    Key: { roomID },
+  });
+
+  // Check if user is the host of the room
+  _checkHost(user, room);
+
+  // Add genre to allowed genre
+  let index = room.users.indexOf(genre);
+  room.generesAllowed.splice(index, 1);
+
+  return await _updateUser({
+    TableName: 'WVRooms',
+    Key: { uname },
+    UpdateExpression: 'set generesAllowed = :g',
+    ExpressionAttributeValues: {
+      ':g': room.generesAllowed,
+    },
+    ReturnValues: 'UPDATED_NEW'
+  });
+}
+
+// Set allow expicit
+async function setAllowExplicit(user, roomID, allow) {
+  // Fetch room object
+  let room = await _getRoom({
+    TableName: 'WVRooms',
+    Key: { roomID },
+  });
+
+  // Check if user is the host of the room
+  _checkHost(user, room);
+
+  return await _updateUser({
+    TableName: 'WVRooms',
+    Key: { roomID },
+    UpdateExpression: 'set allowExplicit = :a',
+    ExpressionAttributeValues: {
+      ':a': allow,
+    },
+    ReturnValues: 'UPDATED_NEW'
+  });
+}
+
+// Set dislike threshold
+async function setThreshold(user, roomID, threshold) {
+  // Fetch room object
+  let room = await _getRoom({
+    TableName: 'WVRooms',
+    Key: { roomID },
+  });
+
+  // Check if user is the host of the room
+  _checkHost(user, room);
+
+  return await _updateUser({
+    TableName: 'WVRooms',
+    Key: { roomID },
+    UpdateExpression: 'set songThreshold = :t',
+    ExpressionAttributeValues: {
+      ':t': threshold,
+    },
+    ReturnValues: 'UPDATED_NEW'
+  });
+}
+
 module.exports = {
   _getRoom,
   _updateRoom,
@@ -137,4 +254,9 @@ module.exports = {
   addUser,
   removeUser,
   destroyRoom,
+  setRoomName,
+  addGenre,
+  removeGenre,
+  setAllowExplicit,
+  setThreshold,
 }
