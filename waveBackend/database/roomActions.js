@@ -67,6 +67,8 @@ async function addUser(user, RoomID) {
     Key: { RoomID },
   });
 
+  room = room.Item;
+
   // Add user to user list
   room.users.push(user);
 
@@ -89,6 +91,8 @@ async function removeUser(user, RoomID) {
     TableName: 'WVRooms',
     Key: { RoomID },
   });
+
+  room = room.Item;
 
   // Remove user from the user list
   let index = room.users.indexOf(user);
@@ -145,6 +149,8 @@ async function setRoomName(user, RoomID, roomName) {
     Key: { RoomID },
   });
 
+  room = room.Item;
+
   // Check if user is the host of the room
   _checkHost(user, room);
 
@@ -167,6 +173,8 @@ async function addGenre(user, RoomID, genre) {
     Key: { RoomID },
   });
 
+  room = room.Item;
+
   // Check if user is the host of the room
   _checkHost(user, room);
 
@@ -175,7 +183,7 @@ async function addGenre(user, RoomID, genre) {
 
   return await _updateRoom({
     TableName: 'WVRooms',
-    Key: { uname },
+    Key: { RoomID },
     UpdateExpression: 'set genresAllowed = :g',
     ExpressionAttributeValues: {
       ':g': room.genresAllowed,
@@ -192,6 +200,8 @@ async function removeGenre(user, RoomID, genre) {
     Key: { RoomID },
   });
 
+  room = room.Item;
+
   // Check if user is the host of the room
   _checkHost(user, room);
 
@@ -201,7 +211,7 @@ async function removeGenre(user, RoomID, genre) {
 
   return await _updateRoom({
     TableName: 'WVRooms',
-    Key: { uname },
+    Key: { RoomID },
     UpdateExpression: 'set genresAllowed = :g',
     ExpressionAttributeValues: {
       ':g': room.genresAllowed,
@@ -217,6 +227,8 @@ async function setAllowExplicit(user, RoomID, allow) {
     TableName: 'WVRooms',
     Key: { RoomID },
   });
+
+  room = room.Item;
 
   // Check if user is the host of the room
   _checkHost(user, room);
@@ -239,6 +251,8 @@ async function setThreshold(user, RoomID, threshold) {
     TableName: 'WVRooms',
     Key: { RoomID },
   });
+
+  room = room.Item;
 
   // Check if user is the host of the room
   _checkHost(user, room);
