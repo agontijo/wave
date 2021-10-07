@@ -1,52 +1,3 @@
-// import { Component, OnInit } from '@angular/core';
-// import { User } from '../user';
-// import { ActivatedRoute, Router } from '@angular/router';
-// import { Injectable } from '@angular/core';
-// import { HttpClient } from '@angular/common/http';
-
-// @Component({
-//   selector: 'app-change-name',
-//   templateUrl: './change-name.component.html',
-//   styleUrls: ['./change-name.component.css']
-// })
-// @Injectable()
-// export class ChangeNameComponent implements OnInit {
-
-//   // editName = '';
-
-//   // user1: User = {
-//   //   id: 1,
-//   //   username: "username",
-//   //   displayname: "DisplayName"
-//   // };
-
-//   // constructor(
-//   //   private route: ActivatedRoute,
-//   //   private router: Router
-//   // ) { }
-
-//   // ngOnInit() {
-//   //   this.route.data
-//   //   .subscribe(data => {
-//   //     this.editName = this.user1.displayname;
-//   //   });
-//   // }
-
-//   // cancel() {
-//   //   this.gotoHomepage();
-//   // }
-
-//   // save() {
-//   //   this.user1.displayname = this.editName;
-//   // }
-
-//   gotoHomepage() {
-
-//     this.router.navigate(['../',], { relativeTo: this.route });
-//   }
-
-// }
-
 import { Component, OnInit } from '@angular/core';
 import { User } from '../user';
 import { UserService } from './../user.service';
@@ -96,7 +47,7 @@ export class ChangeNameComponent implements OnInit {
 
     let url = "/api/user/" + this.users.uname + "/displayname";
     this._userServive.changeDisplayName(newNameData, url).subscribe(data => this.users = data)
-      this.router.navigate(['../',], { relativeTo: this.route });
+      this.gotoHomepage();
   }
 
   gotoHomepage() {

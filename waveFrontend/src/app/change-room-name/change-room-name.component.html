@@ -1,1 +1,12 @@
-<p>change-room-name works!</p>
+<h2>Room Info</h2>
+<div>
+   <p> Room ID: {{currroom?.RoomID}} </p>
+   <p> Room Name: {{currroom?.name}} </p>
+   <p> New Display Name: </p>
+   <input id="editName" [(ngModel)]="editName" placeholder="name"/>
+   <br>
+    <div>
+        <button (click)="save()">Save</button>
+        <button (click)="cancel()">Cancel</button>
+    </div>
+</div>
