@@ -42,7 +42,6 @@ export class UserService {
 }
 
   signIn(userObj: any): Observable<User> {
-    console.log(userObj);
     return this.http.post<User>(this.url + '/auth/local', userObj);
   }
 

@@ -23,7 +23,7 @@ import { HomepageComponent } from './homepage/homepage.component';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import {MatDialogModule} from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -48,6 +48,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     ReactiveFormsModule,
     MatIconModule,
     BrowserAnimationsModule,
+    MatDialogModule,
   ],
   providers: [UserService],
   bootstrap: [AppComponent]

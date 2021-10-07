@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { User } from '../user';
 import { NONE_TYPE } from '@angular/compiler';
-
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-create-account',
@@ -37,11 +37,33 @@ export class CreateAccountComponent implements OnInit {
         email: this.email.value,
         username: this.username.value,
       }
-      this._userServive.registerUser(user).subscribe((data: any) => {console.log(data)})
+      this._userServive.registerUser(user).subscribe((data: any) => {
+        console.log(data)
+        this.router.navigate(['storebuttons']);
+      
+      },
+      (error) => {
+        this.openDialog();
+      }
+    )
     }
-  constructor(private _userServive: UserService, private http:HttpClientModule ,private route: ActivatedRoute,private router: Router) { }
+  constructor(private _userServive: UserService, private http:HttpClientModule ,
+    private route: ActivatedRoute,private router: Router, public dialog:MatDialog) { }
 
   ngOnInit(): void {
   }
+  openDialog() {
+    this.dialog.open(DialogElementCA);
+  }
 
+}
+@Component({
+  selector: 'dialog-element-ca',
+  templateUrl: 'dialog-element-ca.html',
+})
+export class DialogElementCA {
+  constructor(public dialog: MatDialog) {}
+ close() {
+  this.dialog.closeAll();
+ }
 }
