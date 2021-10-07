@@ -18,7 +18,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     AppComponent,
     CreateAccountComponent,
     HomepageComponent,
-    SignInComponent
+    SignInComponent,
   ],
   imports: [
     BrowserModule,
@@ -30,8 +30,6 @@ import { ActivatedRoute, Router } from '@angular/router';
     FormsModule,
     MatIconModule,
     BrowserAnimationsModule,
-    ActivatedRoute,
-    Router,
 
   ],
   providers: [],
