@@ -1,4 +1,5 @@
 const AWS = require('./awsconfig.js');
+const userActs = require('./userActions.js');
 const generate = require('../utils/generators.js');
 
 async function _getRoom(params) {
@@ -21,7 +22,7 @@ async function createRoom(params) {
     throw 'Malformed Room Object';
   }
 
-  const room = { 
+  const room = {
     RoomID: generate.eightDigitHexID(),
     host: params.host,
     queue: params.queue ?? [],
@@ -38,12 +39,14 @@ async function createRoom(params) {
     Item: room,
   });
 
+  await userActs.setCurrRoom(params.host, room.RoomID);
+
   return room;
 }
 
 // Can call this function whenever room settings are about to be modified
 // Throws an error if the user trying to edit is not the host of the room
-async function _checkHost(user, room) {
+function _checkHost(user, room) {
   if (!(user === room.host)) {
     throw 'User Not Authorized to Edit Room';
   }
@@ -63,6 +66,8 @@ async function addUser(user, RoomID) {
     TableName: 'WVRooms',
     Key: { RoomID },
   });
+
+  room = room.Item;
 
   // Add user to user list
   room.users.push(user);
@@ -87,6 +92,8 @@ async function removeUser(user, RoomID) {
     Key: { RoomID },
   });
 
+  room = room.Item;
+
   // Remove user from the user list
   let index = room.users.indexOf(user);
   room.users.splice(index, 1);
@@ -105,14 +112,22 @@ async function removeUser(user, RoomID) {
 }
 
 async function destroyRoom(user, RoomID) {
+  console.log(`DESTROY ROOM ${RoomID}`);
+
   // Fetch room object
   let room = await _getRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
   });
 
+  // console.log(user)
+  // console.log(room)
+
   // Check if user is the host of the room
-  _checkHost(user, room);
+  _checkHost(user, room.Item);
+
+  // Set user's current room as a nothing
+  await userActs.setCurrRoom(user, '');
 
   return await _destroyRoom({
     TableName: 'WVRooms',
@@ -133,6 +148,8 @@ async function setRoomName(user, RoomID, roomName) {
     TableName: 'WVRooms',
     Key: { RoomID },
   });
+
+  room = room.Item;
 
   // Check if user is the host of the room
   _checkHost(user, room);
@@ -156,6 +173,8 @@ async function addGenre(user, RoomID, genre) {
     Key: { RoomID },
   });
 
+  room = room.Item;
+
   // Check if user is the host of the room
   _checkHost(user, room);
 
@@ -164,7 +183,7 @@ async function addGenre(user, RoomID, genre) {
 
   return await _updateRoom({
     TableName: 'WVRooms',
-    Key: { uname },
+    Key: { RoomID },
     UpdateExpression: 'set genresAllowed = :g',
     ExpressionAttributeValues: {
       ':g': room.genresAllowed,
@@ -181,6 +200,8 @@ async function removeGenre(user, RoomID, genre) {
     Key: { RoomID },
   });
 
+  room = room.Item;
+
   // Check if user is the host of the room
   _checkHost(user, room);
 
@@ -190,7 +211,7 @@ async function removeGenre(user, RoomID, genre) {
 
   return await _updateRoom({
     TableName: 'WVRooms',
-    Key: { uname },
+    Key: { RoomID },
     UpdateExpression: 'set genresAllowed = :g',
     ExpressionAttributeValues: {
       ':g': room.genresAllowed,
@@ -206,6 +227,8 @@ async function setAllowExplicit(user, RoomID, allow) {
     TableName: 'WVRooms',
     Key: { RoomID },
   });
+
+  room = room.Item;
 
   // Check if user is the host of the room
   _checkHost(user, room);
@@ -228,6 +251,8 @@ async function setThreshold(user, RoomID, threshold) {
     TableName: 'WVRooms',
     Key: { RoomID },
   });
+
+  room = room.Item;
 
   // Check if user is the host of the room
   _checkHost(user, room);

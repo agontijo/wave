@@ -70,6 +70,7 @@ async function createUser(params) {
     email: params.email,
     displayName: params.displayName ?? 'Wave User',
     spotifyTok: params.spotifyTok ?? {},
+    currRoom: params.currRoom ?? ""
   };
 
   await emailMapActions.setEmailMap(user.email, user.uname);
@@ -99,6 +100,19 @@ async function _setSpotifyToksObject(uname, toks) {
   });
 }
 
+
+async function setCurrRoom(uname, newRoomID) {
+  return await _updateUser({
+    TableName: 'WVUsers',
+    Key: { uname },
+    UpdateExpression: 'set currRoom = :r',
+    ExpressionAttributeValues: {
+      ':r': newRoomID,
+    },
+    ReturnValues: 'UPDATED_NEW'
+  });
+}
+
 module.exports = {
   _updateUser,
   _getUser,
@@ -108,5 +122,6 @@ module.exports = {
   setUserPassword,
   createUser,
   setSpotifyToks,
-  clearSpotifyToks
+  clearSpotifyToks,
+  setCurrRoom
 };
