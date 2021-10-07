@@ -11,6 +11,7 @@ import { SpotifyConnectComponent } from './spotify-connect/spotify-connect.compo
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { UserService } from './user.service';
 import { ChangeRoomNameComponent } from './change-room-name/change-room-name.component';
+import { StorebuttonsComponent } from './storebuttons/storebuttons.component';
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import { ChangeRoomNameComponent } from './change-room-name/change-room-name.com
     SpotifyConnectComponent,
     PageNotFoundComponent,
     ChangeRoomNameComponent,
+    StorebuttonsComponent,
   ],
   imports: [
     BrowserModule,

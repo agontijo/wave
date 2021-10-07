@@ -1,16 +1,11 @@
-<!-- <h1>{{title}}</h1>
+<h1>{{title}}</h1>
 <a href="/auth/spotify"></a>
 <nav>
     <button class="nav-item nav-link-edit" [routerLink]="['/change-name']">Change Display Name</button>
     <br>
-    <br> -->
+    <br>
 
-    <!--dont need
-         <button class="nav-item nav-link-edit" *ngIf="this.isSpotifyButtonVisible" (click)="spotifyRoute()">Spotify</button>
-    <button class="nav-item nav-link-edit" *ngIf="this.isNonSpotifyButtonVisible" [routerLink]="['/spotify-connect']">
-        Disconnet Spotify</button> -->
-
-    <!-- <div>
+    <div>
         <a href="/auth/spotify" *ngIf="this.isSpotifyButtonVisible">Connect Spotify</a>
         <br />
         <a href="/auth/spotify/disconnect" *ngIf="this.isNonSpotifyButtonVisible">Disconnect Spotify</a>
@@ -19,5 +14,4 @@
     <button class="nav-item nav-link-edit" *ngIf="this.roombutton" [routerLink]="['/change-room-name']">Go to Room</button>
 
 </nav>
-<router-outlet></router-outlet> -->
 <router-outlet></router-outlet>
