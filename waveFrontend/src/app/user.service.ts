@@ -32,8 +32,8 @@ export class UserService {
     return this.http.get<User>("/auth/spotify");
   }
 
-  getRoom(): Observable<Room> {
-    return this.http.get<Room>("/api/room/f519ef77");
+  getRoom(user: any): Observable<Room> {
+    return this.http.get<Room>(`/api/room/${user.currRoom}`);
   }
 
   changeRoomName(createBody: any, url: any): Observable<Room> {
@@ -43,7 +43,7 @@ export class UserService {
 
   signIn(userObj: any): Observable<User> {
     console.log(userObj);
-    
+
     fetch('/auth/local', {
       method: 'POST',
       headers: {

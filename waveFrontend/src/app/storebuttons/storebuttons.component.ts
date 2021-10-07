@@ -21,10 +21,11 @@ export class StorebuttonsComponent implements OnInit {
   roombutton!: boolean;
   public room!: Room;
 
-  constructor(private _userServive: UserService, private http:HttpClient ,private route: ActivatedRoute,private router: Router) { }
+  constructor(private _userServive: UserService, private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
-    this._userServive.getCurrUser().subscribe(data => {this.tempusers = data; 
+    this._userServive.getCurrUser().subscribe(data => {
+      this.tempusers = data;
       if (Object.keys(this.tempusers?.spotifyTok).length == 0) {
         this.isSpotifyButtonVisible = true;
       }
@@ -32,12 +33,14 @@ export class StorebuttonsComponent implements OnInit {
         this.isNonSpotifyButtonVisible = true;
       }
       if (this.tempusers.currRoom) {
-        this._userServive.getRoom().subscribe(res => {this.room = res
+        this._userServive.getRoom(this.tempusers).subscribe(res => {
+          this.room = res
           if (this.room.host === this.tempusers.uname) {
-              this.roombutton = true;
+            this.roombutton = true;
           }
         });
       }
+      // this.roombutton = true;
     });
   }
   spotifyRoute() {
