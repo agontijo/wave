@@ -32,7 +32,7 @@ export class PasswordChangeComponent implements OnInit {
 
   save() {
 
-    this.users.displayName = this.editName;
+    this.users.pswd = this.editName;
     const newPassData = {
       password: this.users.pswd,
       uname: this.users.uname,};
