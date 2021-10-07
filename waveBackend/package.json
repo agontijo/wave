@@ -1,0 +1,26 @@
+{
+  "name": "wavebackend",
+  "version": "1.0.0",
+  "description": "The backend for Wave (cs407)",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.998.0",
+    "cookie-session": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "passport": "^0.5.0",
+    "passport-local": "^1.0.0",
+    "passport-spotify": "^2.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.13"
+  }
+}
