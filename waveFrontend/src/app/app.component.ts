@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConsoleLogger } from '@aws-amplify/core';
 import { HttpClient } from '@angular/common/http';
 import { ChangeRoomNameComponent } from './change-room-name/change-room-name.component';
+import { Room } from './room';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,8 @@ export class AppComponent {
   public users!: User;
   isSpotifyButtonVisible!: boolean;
   isNonSpotifyButtonVisible!: boolean;
+  roombutton!: boolean;
+  public room!: Room;
 
   constructor(private _userServive: UserService, private http:HttpClient ,private route: ActivatedRoute,private router: Router) { }
 
@@ -28,6 +31,13 @@ export class AppComponent {
       }
       else {
         this.isNonSpotifyButtonVisible = true;
+      }
+      if (this.tempusers.currRoom) {
+        this._userServive.getRoom().subscribe(res => {this.room = res
+          if (this.room.host === this.tempusers.uname) {
+              this.roombutton = true;
+          }
+        });
       }
     });
   }

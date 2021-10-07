@@ -43,7 +43,8 @@ export class ChangeNameComponent implements OnInit {
       pswd: this.users.pswd,
       email: this.users.email,
       spotifyTok: this.users.spotifyTok,
-      uname: this.users.uname};
+      uname: this.users.uname,
+      currRoom: this.users.currRoom};
 
     let url = "/api/user/" + this.users.uname + "/displayname";
     this._userServive.changeDisplayName(newNameData, url).subscribe(data => this.users = data)

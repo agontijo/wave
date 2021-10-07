@@ -12,4 +12,5 @@ export interface User {
     email: string;
     spotifyTok: Map<String, String>;
     uname:string;
+    currRoom: string;
 }

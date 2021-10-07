@@ -14,7 +14,7 @@
         <a href="/auth/spotify/disconnect" *ngIf="this.isNonSpotifyButtonVisible">Disconnect Spotify</a>
     </div>
     <br>
-    <button class="nav-item nav-link-edit" [routerLink]="['/change-room-name']">Go to Room</button>
+    <button class="nav-item nav-link-edit" *ngIf="this.roombutton" [routerLink]="['/change-room-name']">Go to Room</button>
 
 </nav>
 <router-outlet></router-outlet>
