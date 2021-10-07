@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConsoleLogger } from '@aws-amplify/core';
 import { HttpClient } from '@angular/common/http';
 import { ChangeRoomNameComponent } from '../change-room-name/change-room-name.component';
+import { PasswordChangeComponent } from '../password-change/password-change.component';
 import { Room } from '../room';
 
 @Component({
