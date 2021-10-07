@@ -22,6 +22,10 @@ export class UserService {
     return this.http.post<User>(url, createBody);
   }
 
+  changePassword(createBody: any, url: any): Observable<User> {
+    return this.http.post<User>(url, createBody);
+  }
+
   registerUser(userObj: any): Observable<User> {
     return this.http.post<User>(this.url
       + "/auth/local/", userObj);

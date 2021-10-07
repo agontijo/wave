@@ -38,7 +38,7 @@ export class PasswordChangeComponent implements OnInit {
       uname: this.users.uname,};
 
     let url = "/api/user/" + this.users.uname + "/password";
-    this._userServive.changeDisplayName(newPassData, url).subscribe(data => this.users = data)
+    this._userServive.changePassword(newPassData, url).subscribe(data => this.users = data)
       this.gotoHomepage();
   }
 
