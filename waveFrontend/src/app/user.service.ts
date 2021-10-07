@@ -3,12 +3,13 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { User } from './user';
 import { Observable } from 'rxjs/Observable';
 import { Room } from './room';
+
 @Injectable()
 export class UserService {
 
 
   constructor(private http:HttpClient) { }
-
+    url = "http://localhost:3000"
   getCurrUser(): Observable<User>{
     return this.http.get<User>("/api/user/");
   }
@@ -20,6 +21,10 @@ export class UserService {
   changeDisplayName(createBody: any, url: any): Observable<User> {
       return this.http.post<User>(url, createBody);
   }
+
+  registerUser(userObj: any): Observable<User> {
+    return this.http.post<User>(this.url, userObj);
+}
 
   spotifyConnect(): Observable<User>{
     
@@ -35,5 +40,9 @@ export class UserService {
     return this.http.post<Room>(url, createBody);
 }
 
+  signIn(userObj: any): Observable<User> {
+    console.log(userObj);
+    return this.http.post<User>(this.url + '/auth/local', userObj);
+  }
 
 }

@@ -1,0 +1,42 @@
+<body>
+<mat-card>
+  <body>
+
+  <mat-card>
+    <h1>Wave</h1>
+    <p>Sign Up</p>
+    <mat-form-field appearance="legacy" style="color:white;">
+      <mat-label style="color:white;">Username</mat-label>
+      <input matInput [formControl]="username" required>
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="legacy" style="color:white;">
+      <mat-label style="color:white;">Display Name</mat-label>
+      <input matInput [formControl]="displayName">
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="legacy" style="color:white;">
+      <mat-label style="color:white;">Email</mat-label>
+      <input matInput [formControl]="email" required>
+      <mat-error *ngIf="email.invalid">{{getErrorMessageEmail()}}</mat-error>
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="legacy" style="color:white;">
+      <mat-label style="color:white;">Password</mat-label>
+      <input matInput [formControl]="password" required>
+      <button mat-icon-button matSuffix (click)="hide=!hide">
+      <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+<!--      <mat-error *ngIf="email.invalid">{{getErrorMessageEmail()}}</mat-error>-->
+    </mat-form-field>
+    <br>
+    <div class="create-account">
+      <button mat-flat-button matSuffix color="#6fd8b8" routerLink="/create-account">Link Spotify</button>
+      <br>
+      <button mat-flat-button matSuffix color="#6fd8b8" routerLink="/create-account">Sign Up</button>
+    </div>
+  </mat-card>
+  </body>
+
+</mat-card>
+</body>

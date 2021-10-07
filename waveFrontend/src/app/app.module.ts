@@ -13,6 +13,17 @@ import { UserService } from './user.service';
 import { ChangeRoomNameComponent } from './change-room-name/change-room-name.component';
 import { StorebuttonsComponent } from './storebuttons/storebuttons.component';
 
+import { MatCardModule } from '@angular/material/card';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatIconModule} from '@angular/material/icon';
+import { CreateAccountComponent } from './create-account/create-account.component';
+import { HomepageComponent } from './homepage/homepage.component';
+import { SignInComponent } from './sign-in/sign-in.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 @NgModule({
   declarations: [
@@ -22,14 +33,24 @@ import { StorebuttonsComponent } from './storebuttons/storebuttons.component';
     PageNotFoundComponent,
     ChangeRoomNameComponent,
     StorebuttonsComponent,
+    CreateAccountComponent,
+    HomepageComponent,
+    SignInComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatIconModule,
+    BrowserAnimationsModule,
   ],
   providers: [UserService],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

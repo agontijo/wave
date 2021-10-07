@@ -5,8 +5,14 @@ import { SpotifyConnectComponent } from './spotify-connect/spotify-connect.compo
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ChangeRoomNameComponent } from './change-room-name/change-room-name.component';
 import { StorebuttonsComponent } from './storebuttons/storebuttons.component';
+import {HomepageComponent} from './homepage/homepage.component';
+import {CreateAccountComponent} from './create-account/create-account.component';
+import {SignInComponent} from './sign-in/sign-in.component';
 
 const routes: Routes = [
+  { path: '', component: SignInComponent },
+  { path: 'create-account', component: CreateAccountComponent },
+  { path: 'homepage', component: HomepageComponent},
   { path: 'spotify-connect', component: SpotifyConnectComponent },
   { path: 'change-name', component: ChangeNameComponent },
   { path: 'change-room-name', component: ChangeRoomNameComponent },
