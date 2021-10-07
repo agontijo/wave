@@ -22,7 +22,7 @@ async function createRoom(params) {
     throw 'Malformed Room Object';
   }
 
-  const room = { 
+  const room = {
     RoomID: generate.eightDigitHexID(),
     host: params.host,
     queue: params.queue ?? [],
@@ -46,7 +46,7 @@ async function createRoom(params) {
 
 // Can call this function whenever room settings are about to be modified
 // Throws an error if the user trying to edit is not the host of the room
-async function _checkHost(user, room) {
+function _checkHost(user, room) {
   if (!(user === room.host)) {
     throw 'User Not Authorized to Edit Room';
   }
@@ -108,14 +108,22 @@ async function removeUser(user, RoomID) {
 }
 
 async function destroyRoom(user, RoomID) {
+  console.log(`DESTROY ROOM ${RoomID}`);
+
   // Fetch room object
   let room = await _getRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
   });
 
+  // console.log(user)
+  // console.log(room)
+
   // Check if user is the host of the room
-  _checkHost(user, room);
+  _checkHost(user, room.Item);
+
+  // Set user's current room as a nothing
+  await userActs.setCurrRoom(user, '');
 
   return await _destroyRoom({
     TableName: 'WVRooms',
