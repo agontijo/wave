@@ -6,7 +6,7 @@ const cookieSession = require('cookie-session');
 
 const apiRouter = require('./routes/api/api.js');
 const authRouter = require('./routes/auth/auth.js');
-const roomRouter = require('./routes/api/room.js')
+const roomRouter = require('./routes/api/room/room.js')
 require('./middleware/passport.js');
 
 const app = express();
