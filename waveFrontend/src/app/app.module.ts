@@ -23,6 +23,7 @@ import { HomepageComponent } from './homepage/homepage.component';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PasswordChangeComponent } from './password-change/password-change.component';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     CreateAccountComponent,
     HomepageComponent,
     SignInComponent,
+    PasswordChangeComponent,
   ],
   imports: [
     BrowserModule,
