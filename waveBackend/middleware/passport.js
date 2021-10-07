@@ -46,7 +46,9 @@ passport.use(
           email: req?.body?.email,
           displayName: req?.body?.displayName,
         });
-      } catch (err) { return done(err, false); }
+      } catch (err) {
+        return done(err, false);
+      }
       return done(null, user)
     }
   )

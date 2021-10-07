@@ -63,7 +63,7 @@ async function createUser(params) {
   if (!(await emailMapActions.isEmailAvailble(params.email, params.uname))) {
     throw 'Email is alread in use!';
   }
-
+  
   const user = {
     uname: params.username,
     pswd: params.password,
@@ -72,6 +72,9 @@ async function createUser(params) {
     spotifyTok: params.spotifyTok ?? {},
     currRoom: params.currRoom ?? ""
   };
+
+  const existing = await getUser(user.uname);
+  if (existing?.Item) { throw 'Username is already in use!' }
 
   await emailMapActions.setEmailMap(user.email, user.uname);
   await _createUser({
