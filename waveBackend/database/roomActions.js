@@ -17,7 +17,7 @@ async function _createRoom(params) {
 }
 
 async function createRoom(params) {
-  if (params?.host) {
+  if (!params?.host) {
     throw 'Malformed Room Object';
   }
 
@@ -28,7 +28,7 @@ async function createRoom(params) {
     user: params.users ?? [],
     name: params.name ?? "New Listening Room!",
     allowExplicit: params.allowExplicit ?? true,
-    generesAllowed: params.generesAllowed ?? [],
+    genresAllowed: params.genresAllowed ?? [],
     songThreshold: params.songThreshold ?? 0.5,
   };
 
@@ -160,14 +160,14 @@ async function addGenre(user, RoomID, genre) {
   _checkHost(user, room);
 
   // Add genre to allowed genre
-  room.generesAllowed.push(genre);
+  room.genresAllowed.push(genre);
 
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { uname },
-    UpdateExpression: 'set generesAllowed = :g',
+    UpdateExpression: 'set genresAllowed = :g',
     ExpressionAttributeValues: {
-      ':g': room.generesAllowed,
+      ':g': room.genresAllowed,
     },
     ReturnValues: 'UPDATED_NEW'
   });
@@ -185,15 +185,15 @@ async function removeGenre(user, RoomID, genre) {
   _checkHost(user, room);
 
   // Add genre to allowed genre
-  let index = room.generesAllowed.users.indexOf(genre);
-  room.generesAllowed.splice(index, 1);
+  let index = room.genresAllowed.users.indexOf(genre);
+  room.genresAllowed.splice(index, 1);
 
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { uname },
-    UpdateExpression: 'set generesAllowed = :g',
+    UpdateExpression: 'set genresAllowed = :g',
     ExpressionAttributeValues: {
-      ':g': room.generesAllowed,
+      ':g': room.genresAllowed,
     },
     ReturnValues: 'UPDATED_NEW'
   });
