@@ -33,7 +33,7 @@ export class SignInComponent implements OnInit {
         username: this.email.value,
       }
       console.log(user);
-      this._userServive.signIn(user).subscribe(data => {console.log(data)})
+      this._userServive.signIn(user).subscribe((data: any)=> {console.log(data)})
     }
   ngOnInit(): void {
   }

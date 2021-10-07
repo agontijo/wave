@@ -3,7 +3,7 @@ import {FormControl, Validators} from '@angular/forms';
 import { UserService } from '../user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 // import { ConsoleLogger } from '@aws-amplify/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { User } from '../user';
 import { NONE_TYPE } from '@angular/compiler';
 
@@ -39,9 +39,9 @@ export class CreateAccountComponent implements OnInit {
         uname: this.username,
         currRoom: "",
       }
-      this._userServive.registerUser(user).subscribe(data => {console.log(data)})
+      this._userServive.registerUser(user).subscribe((data: any) => {console.log(data)})
     }
-  constructor(private _userServive: UserService, private http:HttpClient ,private route: ActivatedRoute,private router: Router) { }
+  constructor(private _userServive: UserService, private http:HttpClientModule ,private route: ActivatedRoute,private router: Router) { }
 
   ngOnInit(): void {
   }
