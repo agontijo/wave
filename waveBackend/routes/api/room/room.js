@@ -28,10 +28,12 @@ router.post(
   isAuth.isLoggedIn,
   async (req, res) => {
     let data = null;
+    console.log('1')
     try { data = await roomActions.createRoom(req.body); }
-    catch (err) { res.send(500).send(err.message); }
+    catch (err) { res.sendStatus(500); }
+
     if (data) { res.status(200).send(data); }
-    else { res.status(500).send(null); }
+    else { res.sendStatus(500) }
   }
 );
 
