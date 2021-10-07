@@ -49,11 +49,11 @@ async function _checkHost(user, room) {
   }
 }
 
-async function getRoom(roomID) {
-
+async function getRoom(RoomID) {
+  console.log(RoomID)
   return await _getRoom({
     TableName: 'WVRooms',
-    Key: { roomID },
+    Key: { RoomID },
   });
 }
 
