@@ -18,7 +18,7 @@
     <mat-form-field appearance="legacy" style="color:white;">
       <mat-label style="color:white;">Email</mat-label>
       <input matInput [formControl]="email" required>
-      <mat-error *ngIf="email.invalid">{{getErrorMessageEmail()}}</mat-error>
+      <mat-error *ngIf="email.invalid"></mat-error>
     </mat-form-field>
     <br>
     <mat-form-field appearance="legacy" style="color:white;">
@@ -27,7 +27,7 @@
       <button mat-icon-button matSuffix (click)="hide=!hide">
       <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
-     <mat-error *ngIf="email.invalid">{{getErrorMessageEmail()}}</mat-error>
+     <mat-error *ngIf="password.invalid">Invalid Password</mat-error>
     </mat-form-field>
     <br>
     <div class="create-account">
