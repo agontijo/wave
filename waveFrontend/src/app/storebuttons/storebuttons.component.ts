@@ -8,6 +8,7 @@ import { ChangeRoomNameComponent } from '../change-room-name/change-room-name.co
 import { PasswordChangeComponent } from '../password-change/password-change.component';
 import { Room } from '../room';
 import { NONE_TYPE } from '@angular/compiler';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-storebuttons',
@@ -22,6 +23,7 @@ export class StorebuttonsComponent implements OnInit {
   isNonSpotifyButtonVisible!: boolean;
   roombutton!: boolean;
   public room!: Room;
+  roomName = new FormControl('New Listening Room');
 
   constructor(private _userServive: UserService, private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
 
@@ -52,7 +54,7 @@ export class StorebuttonsComponent implements OnInit {
       host: this.tempusers.uname,
       queue:NONE_TYPE,
       user: this.tempusers.uname,
-      roomname: NONE_TYPE,
+      name: this.roomName.value,
       allowExplicit: true,
       genresAllowed: NONE_TYPE,
       songThreshold: NONE_TYPE,
