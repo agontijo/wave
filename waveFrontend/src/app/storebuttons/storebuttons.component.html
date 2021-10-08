@@ -1,0 +1,29 @@
+<h1>{{title}}</h1>
+<a href="/auth/spotify"></a>
+<nav>
+    <mat-form-field appearance="legacy" style="color:white;">
+        <mat-label style="color:white;">Room Name:</mat-label>
+        <input matInput [formControl]="roomName" placeholder="default: New Listenig Room!">
+      </mat-form-field>
+    <button mat-flat-button matSuffix (click)="createRoom()">Create Listening Room</button>
+    <br>
+    <button mat-flat-button class="nav-item nav-link-edit" [routerLink]="['/change-name']">Change Display Name</button>
+    <br>
+    <br>
+    <button mat-flat-button class="nav-item nav-link-edit" [routerLink]="['/password-change']">Change Password</button>
+    <br>
+    <br>
+    <div>
+        <a href="/auth/spotify" *ngIf="this.isSpotifyButtonVisible">Connect Spotify</a>
+        <br />
+        <a href="/auth/spotify/disconnect" *ngIf="this.isNonSpotifyButtonVisible">Disconnect Spotify</a>
+    </div>
+    <br>
+    <button mat-flat-button class="nav-item nav-link-edit" *ngIf="this.roombutton" [routerLink]="['/change-room-name']">Go to Room</button>
+    <br>
+    <input id="editRoomID" [(ngModel)]="editRoomID" placeholder="Room ID"/>
+    <button mat-flat-button matSuffix (click)="joinRoom()">Join Listening Room</button>
+
+
+</nav>
+<router-outlet></router-outlet>
