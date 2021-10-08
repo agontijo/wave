@@ -4,20 +4,21 @@ import { UserService } from './../user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsoleLogger } from '@aws-amplify/core';
 import { HttpClient } from '@angular/common/http';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-change-name',
-  templateUrl: './change-name.component.html',
-  styleUrls: ['./change-name.component.css']
+  selector: 'app-password-change',
+  templateUrl: './password-change.component.html',
+  styleUrls: ['./password-change.component.css']
 })
-export class ChangeNameComponent implements OnInit {
+export class PasswordChangeComponent implements OnInit {
   public tempusers!: User;
   public users!: User;
+  hide = true;
 
   editName = ""
+  password = new FormControl('', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/)]);
   
-
-
   constructor(private _userServive: UserService, private http:HttpClient ,private route: ActivatedRoute,private router: Router) { }
 
   ngOnInit() {
@@ -26,13 +27,7 @@ export class ChangeNameComponent implements OnInit {
       this._userServive.getUsers("/api/user").subscribe(data => this.users = data);
       console.log(data);
       });
-    //this._userServive.getCurrUser().subscribe((res) => console.log(res));
-    //console.log(this.tempusers.displayName);
-    //let _url = "/api/user/" + this.tempusers?.uname;
-    //this._userServive.getUsers("/api/user/a").subscribe(data => this.users = data);
-  // this._userServive.getUsers().subscribe((res) => console.log(res.displayName))
-    }
-
+  }
 
   cancel() {
     this.gotoHomepage();
@@ -40,16 +35,13 @@ export class ChangeNameComponent implements OnInit {
 
   save() {
 
-    this.users.displayName = this.editName;
-    const newNameData = {displayName: this.users.displayName,
-      pswd: this.users.pswd,
-      email: this.users.email,
-      spotifyTok: this.users.spotifyTok,
-      uname: this.users.uname,
-      currRoom: this.users.currRoom};
+    this.users.pswd = this.editName;
+    const newPassData = {
+      password: this.users.pswd,
+      uname: this.users.uname,};
 
-    let url = "/api/user/" + this.users.uname + "/displayname";
-    this._userServive.changeDisplayName(newNameData, url).subscribe(data => this.users = data)
+    let url = "/api/user/" + this.users.uname + "/password";
+    this._userServive.changePassword(newPassData, url).subscribe(data => this.users = data)
       this.gotoHomepage();
   }
 
@@ -57,5 +49,6 @@ export class ChangeNameComponent implements OnInit {
     this.router.navigate(['../storebuttons',], { relativeTo: this.route });
   }
 }
+
 
 

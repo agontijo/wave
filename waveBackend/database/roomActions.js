@@ -1,4 +1,5 @@
 const AWS = require('./awsconfig.js');
+const userActs = require('./userActions.js');
 const generate = require('../utils/generators.js');
 
 async function _getRoom(params) {
@@ -8,7 +9,7 @@ async function _getRoom(params) {
 
 async function _updateRoom(params) {
   const dc = new AWS.DynamoDB.DocumentClient();
-  return await dc.get(params).promise();
+  return await dc.update(params).promise();
 }
 
 async function _createRoom(params) {
@@ -17,52 +18,56 @@ async function _createRoom(params) {
 }
 
 async function createRoom(params) {
-  if (params?.host) {
+  if (!params?.host) {
     throw 'Malformed Room Object';
   }
 
-  const room = { 
-    roomID: generate.eightDigitHexID(),
+  const room = {
+    RoomID: generate.eightDigitHexID(),
     host: params.host,
     queue: params.queue ?? [],
     user: params.users ?? [],
-    name: params.name ?? "New Listening Room!",
+    roomname: params.name ?? "New Listening Room!",
     allowExplicit: params.allowExplicit ?? true,
-    generesAllowed: params.generesAllowed ?? [],
+    genresAllowed: params.genresAllowed ?? [],
     songThreshold: params.songThreshold ?? 0.5,
   };
 
   await _createRoom({
     TableName: 'WVRooms',
-    ConditionExpression: 'attribute_not_exists(roomID)',
+    ConditionExpression: 'attribute_not_exists(RoomID)',
     Item: room,
   });
+
+  await userActs.setCurrRoom(params.host, room.RoomID);
 
   return room;
 }
 
 // Can call this function whenever room settings are about to be modified
 // Throws an error if the user trying to edit is not the host of the room
-async function _checkHost(user, room) {
+function _checkHost(user, room) {
   if (!(user === room.host)) {
     throw 'User Not Authorized to Edit Room';
   }
 }
 
-async function getRoom(roomID) {
-
+async function getRoom(RoomID) {
+  console.log(RoomID)
   return await _getRoom({
     TableName: 'WVRooms',
-    Key: { roomID },
+    Key: { RoomID },
   });
 }
 
-async function addUser(user, roomID) {
+async function addUser(user, RoomID) {
   // Fetch room object
   let room = await _getRoom({
     TableName: 'WVRooms',
-    Key: { roomID },
+    Key: { RoomID },
   });
+
+  room = room.Item;
 
   // Add user to user list
   room.users.push(user);
@@ -70,7 +75,7 @@ async function addUser(user, roomID) {
   // Update room in db
   return await _updateRoom({
     TableName: 'WVRooms',
-    Key: { roomID },
+    Key: { RoomID },
     UpdateExpression: 'set users = :u',
     ExpressionAttributeValues: {
       ':u': room.users,
@@ -80,12 +85,14 @@ async function addUser(user, roomID) {
 
 }
 
-async function removeUser(user, roomID) {
+async function removeUser(user, RoomID) {
   // Fetch room object
   let room = await _getRoom({
     TableName: 'WVRooms',
-    Key: { roomID },
+    Key: { RoomID },
   });
+
+  room = room.Item;
 
   // Remove user from the user list
   let index = room.users.indexOf(user);
@@ -94,7 +101,7 @@ async function removeUser(user, roomID) {
   // Update room in db
   return await _updateRoom({
     TableName: 'WVRooms',
-    Key: { roomID },
+    Key: { RoomID },
     UpdateExpression: 'set users = :u',
     ExpressionAttributeValues: {
       ':u': room.users,
@@ -104,19 +111,27 @@ async function removeUser(user, roomID) {
 
 }
 
-async function destroyRoom(user, roomID) {
+async function destroyRoom(user, RoomID) {
+  console.log(`DESTROY ROOM ${RoomID}`);
+
   // Fetch room object
   let room = await _getRoom({
     TableName: 'WVRooms',
-    Key: { roomID },
+    Key: { RoomID },
   });
 
+  // console.log(user)
+  // console.log(room)
+
   // Check if user is the host of the room
-  _checkHost(user, room);
+  _checkHost(user, room.Item);
+
+  // Set user's current room as a nothing
+  await userActs.setCurrRoom(user, '');
 
   return await _destroyRoom({
     TableName: 'WVRooms',
-    Key: { roomID }
+    Key: { RoomID }
   });
 
 }
@@ -127,20 +142,22 @@ async function _destroyRoom(params) {
 }
 
 // Set room name
-async function setRoomName(user, roomID, roomName) {
+async function setRoomName(user, RoomID, roomName) {
   // Fetch room object
   let room = await _getRoom({
     TableName: 'WVRooms',
-    Key: { roomID },
+    Key: { RoomID },
   });
+
+  room = room.Item;
 
   // Check if user is the host of the room
   _checkHost(user, room);
 
-  return await _updateUser({
+  return await _updateRoom({
     TableName: 'WVRooms',
-    Key: { roomID },
-    UpdateExpression: 'set name = :n',
+    Key: { RoomID },
+    UpdateExpression: 'set roomname = :n',
     ExpressionAttributeValues: {
       ':n': roomName,
     },
@@ -149,70 +166,76 @@ async function setRoomName(user, roomID, roomName) {
 }
 
 // Add genre to allowed music genres
-async function addGenre(user, roomID, genre) {
+async function addGenre(user, RoomID, genre) {
   // Fetch room object
   let room = await _getRoom({
     TableName: 'WVRooms',
-    Key: { roomID },
+    Key: { RoomID },
   });
+
+  room = room.Item;
 
   // Check if user is the host of the room
   _checkHost(user, room);
 
   // Add genre to allowed genre
-  room.generesAllowed.push(genre);
+  room.genresAllowed.push(genre);
 
-  return await _updateUser({
+  return await _updateRoom({
     TableName: 'WVRooms',
-    Key: { uname },
-    UpdateExpression: 'set generesAllowed = :g',
+    Key: { RoomID },
+    UpdateExpression: 'set genresAllowed = :g',
     ExpressionAttributeValues: {
-      ':g': room.generesAllowed,
+      ':g': room.genresAllowed,
     },
     ReturnValues: 'UPDATED_NEW'
   });
 }
 
 // Remove genre to allowed music genres
-async function removeGenre(user, roomID, genre) {
+async function removeGenre(user, RoomID, genre) {
   // Fetch room object
   let room = await _getRoom({
     TableName: 'WVRooms',
-    Key: { roomID },
+    Key: { RoomID },
   });
+
+  room = room.Item;
 
   // Check if user is the host of the room
   _checkHost(user, room);
 
   // Add genre to allowed genre
-  let index = room.users.indexOf(genre);
-  room.generesAllowed.splice(index, 1);
+  let index = room.genresAllowed.users.indexOf(genre);
+  room.genresAllowed.splice(index, 1);
 
-  return await _updateUser({
+  return await _updateRoom({
     TableName: 'WVRooms',
-    Key: { uname },
-    UpdateExpression: 'set generesAllowed = :g',
+    Key: { RoomID },
+    UpdateExpression: 'set genresAllowed = :g',
     ExpressionAttributeValues: {
-      ':g': room.generesAllowed,
+      ':g': room.genresAllowed,
     },
     ReturnValues: 'UPDATED_NEW'
   });
 }
 
 // Set allow expicit
-async function setAllowExplicit(user, roomID, allow) {
+async function setAllowExplicit(user, RoomID, allow) {
   // Fetch room object
   let room = await _getRoom({
     TableName: 'WVRooms',
-    Key: { roomID },
+    Key: { RoomID },
   });
+
+  room = room.Item;
 
   // Check if user is the host of the room
   _checkHost(user, room);
 
-  return await _updateUser({
+  return await _updateRoom({
     TableName: 'WVRooms',
-    Key: { roomID },
+    Key: { RoomID },
     UpdateExpression: 'set allowExplicit = :a',
     ExpressionAttributeValues: {
       ':a': allow,
@@ -222,19 +245,21 @@ async function setAllowExplicit(user, roomID, allow) {
 }
 
 // Set dislike threshold
-async function setThreshold(user, roomID, threshold) {
+async function setThreshold(user, RoomID, threshold) {
   // Fetch room object
   let room = await _getRoom({
     TableName: 'WVRooms',
-    Key: { roomID },
+    Key: { RoomID },
   });
+
+  room = room.Item;
 
   // Check if user is the host of the room
   _checkHost(user, room);
 
-  return await _updateUser({
+  return await _updateRoom({
     TableName: 'WVRooms',
-    Key: { roomID },
+    Key: { RoomID },
     UpdateExpression: 'set songThreshold = :t',
     ExpressionAttributeValues: {
       ':t': threshold,

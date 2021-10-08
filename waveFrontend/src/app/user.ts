@@ -1,5 +1,8 @@
 export interface User {
-    id: number;
-    username: string;
-    displayname: string;
+    displayName: string;
+    pswd: string;
+    email: string;
+    spotifyTok: Map<String, String>;
+    uname:string;
+    currRoom: string;
 }
