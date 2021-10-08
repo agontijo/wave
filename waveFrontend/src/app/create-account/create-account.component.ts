@@ -29,38 +29,45 @@ export class CreateAccountComponent implements OnInit {
     return this.email.hasError('email') ? 'Not a valid email' : '';
   }
   async register() {
-    let user = {
-      displayName: this.displayName.value,
-      password: this.password.value,
-      email: this.email.value,
-      username: this.username.value,
-    }
-    const res = await fetch('/auth/local/register', {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(user)
-    });
-
-    if (res.status === 409) {
-      this.message = await res.text();
-      console.log(this.message);
-    }
-
-    this._userServive.registerUser(user).subscribe(
-      (data: any) => {
-        console.log("at data")
-        console.log(data)
-        this.router.navigate(['storebuttons']);
-
-      },
-      (error) => {
-        console.log("at error")
-        console.log(error);
-        this.openDialog();
+    if (!this.password.valid) {
+      this.dialog.open(DialogElementPwd)
+    } else if (this.email.valid && this.password.valid) {
+      let user = {
+        displayName: this.displayName.value,
+        password: this.password.value,
+        email: this.email.value,
+        username: this.username.value,
       }
-    )
+      const res = await fetch('/auth/local/register', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(user)
+      });
+  
+      if (res.status === 409) {
+        this.message = await res.text();
+        console.log(this.message);
+        
+      }
+  
+      this._userServive.registerUser(user).subscribe(
+        (data: any) => {
+          console.log("at data")
+          console.log(data)
+          this.router.navigate(['storebuttons']);
+  
+        },
+        (error) => {
+          console.log("at error")
+          console.log(error);
+          this.openDialog();
+        }
+      )
+    } else {
+      this.openDialog();
+    }
   }
   constructor(private _userServive: UserService, private http: HttpClientModule,
     private route: ActivatedRoute, private router: Router, public dialog: MatDialog) { }
@@ -68,9 +75,15 @@ export class CreateAccountComponent implements OnInit {
   ngOnInit(): void {
   }
   openDialog() {
-    this.dialog.open(DialogElementCA);
+    if (this.message.includes('mail')) {
+      this.dialog.open(DialogElementEmail);
+    } else if (this.message.includes('sername')){
+      this.dialog.open(DialogElementUname)
+    } else {
+      this.dialog.open(DialogElementCA);
+    }
   }
-  getErrorMsg() {
+  public getErrorMsg() {
     return this.message
   }
 }
@@ -80,7 +93,41 @@ export class CreateAccountComponent implements OnInit {
 })
 export class DialogElementCA {
   constructor(public dialog: MatDialog) { }
-  // msg = CreateAccountComponent.
+  close() {
+    this.dialog.closeAll();
+  }
+}
+
+@Component({
+  selector: 'dialog-element-email',
+  templateUrl: 'dialog-element-email.html',
+})
+export class DialogElementEmail {
+  constructor(public dialog: MatDialog) { }
+
+  close() {
+    this.dialog.closeAll();
+  }
+}
+
+@Component({
+  selector: 'dialog-element-uname',
+  templateUrl: 'dialog-element-uname.html',
+})
+export class DialogElementUname {
+  constructor(public dialog: MatDialog) { }
+
+  close() {
+    this.dialog.closeAll();
+  }
+}
+@Component({
+  selector: 'dialog-element-pwd',
+  templateUrl: 'dialog-element-pwd.html',
+})
+export class DialogElementPwd {
+  constructor(public dialog: MatDialog) { }
+
   close() {
     this.dialog.closeAll();
   }

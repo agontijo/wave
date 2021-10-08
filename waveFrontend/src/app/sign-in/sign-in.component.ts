@@ -38,9 +38,9 @@ export class SignInComponent implements OnInit {
         password: this.password.value,
         username: this.email.value,
       }
-      console.log(user);
+      // console.log(user);
       this._userServive.signIn(user).subscribe(
-        (data: any)=> {
+        (data: any )=> {
           console.log(data)
           this.router.navigate(['storebuttons']);
         },
