@@ -10,6 +10,8 @@ import {CreateAccountComponent} from './create-account/create-account.component'
 import {SignInComponent} from './sign-in/sign-in.component';
 import { PasswordChangeComponent } from './password-change/password-change.component';
 import { CreateRoomComponent } from './create-room/create-room.component';
+import { DisplayRoomComponent } from './display-room/display-room.component';
+
 const routes: Routes = [
   { path: '', component: SignInComponent },
   { path: 'create-account', component: CreateAccountComponent },
@@ -18,6 +20,7 @@ const routes: Routes = [
   { path: 'change-name', component: ChangeNameComponent },
   { path: 'change-room-name', component: ChangeRoomNameComponent },
   { path: 'create-room', component: CreateRoomComponent},
+  { path: 'display-room', component: DisplayRoomComponent},
   { path: 'storebuttons', component: StorebuttonsComponent },
   { path: 'password-change', component: PasswordChangeComponent },
   { path: '**', component: PageNotFoundComponent }];
