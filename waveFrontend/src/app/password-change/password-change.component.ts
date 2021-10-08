@@ -4,6 +4,7 @@ import { UserService } from './../user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsoleLogger } from '@aws-amplify/core';
 import { HttpClient } from '@angular/common/http';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-password-change',
@@ -13,9 +14,11 @@ import { HttpClient } from '@angular/common/http';
 export class PasswordChangeComponent implements OnInit {
   public tempusers!: User;
   public users!: User;
+  hide = true;
 
   editName = ""
-
+  password = new FormControl('', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/)]);
+  
   constructor(private _userServive: UserService, private http:HttpClient ,private route: ActivatedRoute,private router: Router) { }
 
   ngOnInit() {

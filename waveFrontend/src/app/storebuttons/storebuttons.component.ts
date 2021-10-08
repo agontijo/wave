@@ -46,14 +46,12 @@ export class StorebuttonsComponent implements OnInit {
     });
   }
   createRoom() {
-    console.log(this.users)
+    console.log(this.tempusers)
     console.log("creatingRoom");
     let room = {
-      host:'abc',
-      // this.users.uname,
+      host: this.tempusers.uname,
       queue:NONE_TYPE,
-      user: "abc",
-      //this.users.uname,
+      user: this.tempusers.uname,
       roomname: NONE_TYPE,
       allowExplicit: true,
       genresAllowed: NONE_TYPE,
@@ -63,15 +61,16 @@ export class StorebuttonsComponent implements OnInit {
     this._userServive.createRoom(room).subscribe(
       (data) => {
         console.log(data)
-        this.router.navigate(['create-room'], {queryParams: {roomID: data.RoomID, 
-                                                              allowExplicit: data.allowExplicit,
-                                                              genresAllowed: data.genresAllowed,
-                                                              host: data.host,
-                                                              queue:data.queue,
-                                                              roomname: data.roomname,
-                                                              songThreshold:data.songThreshold,
-                                                              user:data.user,
-                                                            }})
+        this.router.navigate(['create-room'], {queryParams: {
+          roomID: data.RoomID, 
+          allowExplicit: data.allowExplicit,
+          genresAllowed: data.genresAllowed,
+          host: data.host,
+          queue:data.queue,
+          roomname: data.roomname,
+          songThreshold:data.songThreshold,
+          user:data.user,
+        }})
       },
       (error) => { console.log("unable to create room")})
   }
