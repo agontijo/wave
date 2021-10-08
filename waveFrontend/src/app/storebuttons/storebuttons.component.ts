@@ -24,6 +24,7 @@ export class StorebuttonsComponent implements OnInit {
   roombutton!: boolean;
   public room!: Room;
   roomName = new FormControl('New Listening Room');
+  editRoomID = ""
 
   constructor(private _userServive: UserService, private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
 
@@ -78,6 +79,23 @@ export class StorebuttonsComponent implements OnInit {
   }
   spotifyRoute() {
     this._userServive.spotifyConnect().subscribe(data => this.users = data)
+  }
+  joinRoom() {
+    this._userServive.getRoomFromID(this.editRoomID).subscribe(
+      (data) => {
+        console.log(data)
+        this.router.navigate(['display-room'], {queryParams: {
+          roomID: data.RoomID, 
+          allowExplicit: data.allowExplicit,
+          genresAllowed: data.genresAllowed,
+          host: data.host,
+          queue:data.queue,
+          roomname: data.roomname,
+          songThreshold:data.songThreshold,
+          user:data.user,
+        }})
+      },
+      (error) => { console.log("unable to join room")})
   }
 }
 

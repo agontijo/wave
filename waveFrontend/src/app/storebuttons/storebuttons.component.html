@@ -20,6 +20,9 @@
     </div>
     <br>
     <button mat-flat-button class="nav-item nav-link-edit" *ngIf="this.roombutton" [routerLink]="['/change-room-name']">Go to Room</button>
+    <br>
+    <input id="editRoomID" [(ngModel)]="editRoomID" placeholder="Room ID"/>
+    <button mat-flat-button matSuffix (click)="joinRoom()">Join Listening Room</button>
 
 
 </nav>

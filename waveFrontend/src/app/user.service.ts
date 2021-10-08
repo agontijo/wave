@@ -40,6 +40,10 @@ export class UserService {
     return this.http.get<Room>(`/api/room/${user.currRoom}`);
   }
 
+  getRoomFromID(id: any): Observable<Room> {
+    return this.http.get<Room>(`/api/room/${id}`);
+  }
+
   changeRoomName(createBody: any, url: any): Observable<Room> {
     console.log(createBody);
     return this.http.post<Room>(url, createBody);
