@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConsoleLogger } from '@aws-amplify/core';
 import { HttpClient } from '@angular/common/http';
 import { FormControl, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-password-change',
@@ -19,7 +20,8 @@ export class PasswordChangeComponent implements OnInit {
   editName = ""
   password = new FormControl('', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/)]);
   
-  constructor(private _userServive: UserService, private http:HttpClient ,private route: ActivatedRoute,private router: Router) { }
+  constructor(private _userServive: UserService, private http:HttpClient ,
+    private route: ActivatedRoute,private router: Router, public dialog: MatDialog) { }
 
   ngOnInit() {
     this._userServive.getCurrUser().subscribe(data => {this.tempusers = data;
@@ -32,17 +34,23 @@ export class PasswordChangeComponent implements OnInit {
   cancel() {
     this.gotoHomepage();
   }
-
+  openDialog() {
+    this.dialog.open(DialogElementCA);
+  }
   save() {
 
-    this.users.pswd = this.editName;
-    const newPassData = {
-      password: this.users.pswd,
-      uname: this.users.uname,};
+    if (this.password.valid) {
+      this.users.pswd = this.editName;
+      const newPassData = {
+        password: this.users.pswd,
+        uname: this.users.uname,};
 
-    let url = "/api/user/" + this.users.uname + "/password";
-    this._userServive.changePassword(newPassData, url).subscribe(data => this.users = data)
-      this.gotoHomepage();
+      let url = "/api/user/" + this.users.uname + "/password";
+      this._userServive.changePassword(newPassData, url).subscribe(data => this.users = data)
+        this.gotoHomepage();
+    } else {
+      this.openDialog();
+    }
   }
 
   gotoHomepage() {
@@ -51,4 +59,14 @@ export class PasswordChangeComponent implements OnInit {
 }
 
 
-
+@Component({
+  selector: 'dialog-element-ca',
+  templateUrl: 'dialog-element-ca.html',
+})
+export class DialogElementCA {
+  constructor(public dialog: MatDialog) { }
+  // msg = CreateAccountComponent.
+  close() {
+    this.dialog.closeAll();
+  }
+}
