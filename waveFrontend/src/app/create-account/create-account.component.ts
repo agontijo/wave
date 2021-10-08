@@ -16,12 +16,12 @@ export class CreateAccountComponent implements OnInit {
   title = 'Wave';
   hide = true;
   email = new FormControl('', [Validators.required, Validators.email]);
-  password = new FormControl('',[Validators.required, Validators.minLength(8),]);
+  password = new FormControl('',[Validators.required, Validators.minLength(8), Validators.pattern( /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/)]);
   username = new FormControl('', Validators.required);
   displayName = new FormControl('');
+  public message = "Error Creating Account"
 
-
-
+  // ^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})
   getErrorMessageEmail() {
     if (this.email.hasError('required')) {
       return 'You must enter a value';
@@ -43,12 +43,16 @@ export class CreateAccountComponent implements OnInit {
         body: JSON.stringify(user)
       });
   
-      this._userServive.registerUser(user).subscribe((data: any) => {
+      this._userServive.registerUser(user).subscribe(
+        (data: any) => {
+          console.log("at data")
         console.log(data)
         this.router.navigate(['storebuttons']);
       
       },
       (error) => {
+        console.log("at error")
+        console.log(error);
         this.openDialog();
       }
     )
@@ -61,7 +65,9 @@ export class CreateAccountComponent implements OnInit {
   openDialog() {
     this.dialog.open(DialogElementCA);
   }
-
+  getErrorMsg() {
+    return this.message
+  }
 }
 @Component({
   selector: 'dialog-element-ca',
@@ -69,6 +75,7 @@ export class CreateAccountComponent implements OnInit {
 })
 export class DialogElementCA {
   constructor(public dialog: MatDialog) {}
+  // msg = CreateAccountComponent.
  close() {
   this.dialog.closeAll();
  }

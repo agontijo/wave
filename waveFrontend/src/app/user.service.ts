@@ -45,6 +45,12 @@ export class UserService {
     return this.http.post<Room>(url, createBody);
   }
 
+  createRoom(body: any): Observable<any> {
+    console.log("creatingRoom");
+    console.log(body);
+    return this.http.post<any>('api/room/create', body);
+  }
+
   signIn(userObj: any): Observable<User> {
     console.log(userObj);
 
@@ -56,7 +62,7 @@ export class UserService {
       body: JSON.stringify(userObj)
     });
 
-    return this.http.post<any>(this.url + '/auth/local', userObj);
+    return this.http.post<any>('/auth/local', userObj);
   }
 
 }

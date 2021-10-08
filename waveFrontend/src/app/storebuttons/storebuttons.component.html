@@ -1,10 +1,12 @@
 <h1>{{title}}</h1>
 <a href="/auth/spotify"></a>
 <nav>
-    <button class="nav-item nav-link-edit" [routerLink]="['/change-name']">Change Display Name</button>
+    <button mat-flat-button matSuffix (click)="createRoom()">Create Listening Room</button>
+    <br>
+    <button mat-flat-button class="nav-item nav-link-edit" [routerLink]="['/change-name']">Change Display Name</button>
     <br>
     <br>
-    <button class="nav-item nav-link-edit" [routerLink]="['/password-change']">Change Password</button>
+    <button mat-flat-button class="nav-item nav-link-edit" [routerLink]="['/password-change']">Change Password</button>
     <br>
     <br>
     <div>
@@ -13,7 +15,8 @@
         <a href="/auth/spotify/disconnect" *ngIf="this.isNonSpotifyButtonVisible">Disconnect Spotify</a>
     </div>
     <br>
-    <button class="nav-item nav-link-edit" *ngIf="this.roombutton" [routerLink]="['/change-room-name']">Go to Room</button>
+    <button mat-flat-button class="nav-item nav-link-edit" *ngIf="this.roombutton" [routerLink]="['/change-room-name']">Go to Room</button>
+
 
 </nav>
 <router-outlet></router-outlet>

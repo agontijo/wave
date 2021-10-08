@@ -23,11 +23,11 @@
     <br>
     <mat-form-field appearance="legacy" style="color:white;">
       <mat-label style="color:white;">Password</mat-label>
-      <input matInput [formControl]="password" required>
+      <input matInput [formControl]="password" [type]="hide ? 'password' : 'text'" required>
       <button mat-icon-button matSuffix (click)="hide=!hide">
       <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
-<!--      <mat-error *ngIf="email.invalid">{{getErrorMessageEmail()}}</mat-error>-->
+     <mat-error *ngIf="email.invalid">{{getErrorMessageEmail()}}</mat-error>
     </mat-form-field>
     <br>
     <div class="create-account">

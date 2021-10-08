@@ -25,6 +25,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Router } from '@angular/router';
 import {MatDialogModule} from '@angular/material/dialog';
 import { PasswordChangeComponent } from './password-change/password-change.component';
+import { CreateRoomComponent } from './create-room/create-room.component';
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { PasswordChangeComponent } from './password-change/password-change.compo
     HomepageComponent,
     SignInComponent,
     PasswordChangeComponent,
+    CreateRoomComponent,
   ],
   imports: [
     BrowserModule,

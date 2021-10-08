@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { ChangeRoomNameComponent } from '../change-room-name/change-room-name.component';
 import { PasswordChangeComponent } from '../password-change/password-change.component';
 import { Room } from '../room';
+import { NONE_TYPE } from '@angular/compiler';
 
 @Component({
   selector: 'app-storebuttons',
@@ -43,6 +44,36 @@ export class StorebuttonsComponent implements OnInit {
       }
       // this.roombutton = true;
     });
+  }
+  createRoom() {
+    console.log(this.users)
+    console.log("creatingRoom");
+    let room = {
+      host:'abc',
+      // this.users.uname,
+      queue:NONE_TYPE,
+      user: "abc",
+      //this.users.uname,
+      roomname: NONE_TYPE,
+      allowExplicit: true,
+      genresAllowed: NONE_TYPE,
+      songThreshold: NONE_TYPE,
+
+    }
+    this._userServive.createRoom(room).subscribe(
+      (data) => {
+        console.log(data)
+        this.router.navigate(['create-room'], {queryParams: {roomID: data.RoomID, 
+                                                              allowExplicit: data.allowExplicit,
+                                                              genresAllowed: data.genresAllowed,
+                                                              host: data.host,
+                                                              queue:data.queue,
+                                                              roomname: data.roomname,
+                                                              songThreshold:data.songThreshold,
+                                                              user:data.user,
+                                                            }})
+      },
+      (error) => { console.log("unable to create room")})
   }
   spotifyRoute() {
     this._userServive.spotifyConnect().subscribe(data => this.users = data)
