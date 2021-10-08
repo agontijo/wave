@@ -82,7 +82,7 @@ router.get(
   passport.authenticate('spotify', { failureRedirect: '/auth/failure' }),
   (req, res) => {
     if (!req.user) { res.status(500).send('Failded to attach spotify credentials to user'); }
-    else { res.redirect('/'); }
+    else { res.redirect('/storebuttons'); }
   }
 );
 
@@ -92,7 +92,7 @@ router.get(
   async (req, res) => {
     try {
       await userActions.clearSpotifyToks(req.user.uname);
-      res.redirect('/');
+      res.redirect('/storebuttons');
     } catch (err) { res.status(500).send(err); }
   }
 )
