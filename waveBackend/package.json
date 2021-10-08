@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "test": "mocha"
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +22,9 @@
     "passport-spotify": "^2.0.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.13"
+    "chai": "^4.3.4",
+    "mocha": "^9.1.2",
+    "nodemon": "^2.0.13",
+    "supertest": "^6.1.6"
   }
 }

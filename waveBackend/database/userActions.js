@@ -57,11 +57,11 @@ async function createUser(params) {
     params.password &&
     params.email
   )) {
-    throw 'Malformed User Object!';
+    throw Error('Malformed User Object!');
   }
 
   if (!(await emailMapActions.isEmailAvailble(params.email, params.uname))) {
-    throw 'Email is alread in use!';
+    throw Error('Email is alread in use!');
   }
   
   const user = {
@@ -74,7 +74,7 @@ async function createUser(params) {
   };
 
   const existing = await getUser(user.uname);
-  if (existing?.Item) { throw 'Username is already in use!' }
+  if (existing?.Item) { throw Error('Username is already in use!'); }
 
   await emailMapActions.setEmailMap(user.email, user.uname);
   await _createUser({
