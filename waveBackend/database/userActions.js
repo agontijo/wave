@@ -17,6 +17,11 @@ async function _createUser(params) {
   await dc.put(params).promise();
 }
 
+async function _deleteUser(params) {
+  const dc = new AWS.DynamoDB.DocumentClient();
+  await dc.delete(params).promise();
+}
+
 // Getters
 async function getUser(uname) {
   return await _getUser({
@@ -63,7 +68,7 @@ async function createUser(params) {
   if (!(await emailMapActions.isEmailAvailble(params.email, params.uname))) {
     throw Error('Email is alread in use!');
   }
-  
+
   const user = {
     uname: params.username,
     pswd: params.password,
@@ -116,15 +121,36 @@ async function setCurrRoom(uname, newRoomID) {
   });
 }
 
+
+async function deleteUser(uname) {
+
+  const theuser = await getUser(uname);
+
+  if(theuser?.Item == undefined) {throw Error('No user with given username');}
+
+  const theemail = theuser.Item.email;
+
+  await emailMapActions.deleteEmailMap(theemail)
+
+  return await _deleteUser({
+    TableName: 'WVUsers',
+    Key : {uname},
+  });
+
+}
+
+
 module.exports = {
   _updateUser,
   _getUser,
   _createUser,
+  _deleteUser,
   getUser,
   setUserDisplayName,
   setUserPassword,
   createUser,
   setSpotifyToks,
   clearSpotifyToks,
-  setCurrRoom
+  setCurrRoom,
+  deleteUser,
 };

@@ -10,6 +10,11 @@ async function _createEmailMap(params) {
   return await dc.put(params).promise();
 }
 
+async function _deleteEmailMap(params) {
+  const dc = new AWS.DynamoDB.DocumentClient();
+  return await dc.delete(params).promise();
+}
+
 async function getEmailMap(email) {
   return await _getEmailMap({
     TableName: 'WVEmailMap',
@@ -32,10 +37,21 @@ async function setEmailMap(email, uname) {
   });
 }
 
+async function deleteEmailMap(email) {
+  return await _deleteEmailMap({
+    TableName: 'WVEmailMap',
+    Key: {email},
+    ConditionExpression: 'attribute_exists(email)'
+  });
+}
+
+
 module.exports = {
   _getEmailMap,
   _createEmailMap,
+  _deleteEmailMap,
   getEmailMap,
   isEmailAvailble,
   setEmailMap,
+  deleteEmailMap,
 };
