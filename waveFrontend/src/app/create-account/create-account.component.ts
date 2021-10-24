@@ -49,7 +49,6 @@ export class CreateAccountComponent implements OnInit {
       if (res.status === 409) {
         this.message = await res.text();
         console.log(this.message);
-        
       }
   
       this._userServive.registerUser(user).subscribe(
