@@ -268,6 +268,33 @@ async function setThreshold(user, RoomID, threshold) {
   });
 }
 
+async function getNumberOfUsers(RoomID) {
+  let room = await _getRoom({
+    TableName: 'WVRooms',
+    Key: {RoomID},
+  });
+
+  if (room?.Item == undefined) { throw Error('Invalid roomID!');}
+
+  let list_users = room.Item.user;
+
+  return list_users.length;
+
+}
+
+
+async function getUsers(RoomID) {
+  let room = await _getRoom({
+    TableName: 'WVRooms',
+    Key: {RoomID}
+  });
+
+  if (room?.Item == undefined) { throw Error('Invalid room ID!');}
+
+  return room.Item.user;
+}
+
+
 module.exports = {
   _getRoom,
   _updateRoom,
@@ -284,4 +311,6 @@ module.exports = {
   removeGenre,
   setAllowExplicit,
   setThreshold,
+  getNumberOfUsers,
+  getUsers,
 }
