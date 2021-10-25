@@ -21,6 +21,7 @@ async function createRoom(params) {
   if (!params?.host) {
     throw 'Malformed Room Object';
   }
+  
 
   const room = {
     RoomID: generate.eightDigitHexID(),

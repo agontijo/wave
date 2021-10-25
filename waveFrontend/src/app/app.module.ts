@@ -5,13 +5,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppRoutingModule} from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
-
+import {MatGridListModule} from '@angular/material/grid-list';
 import { ChangeNameComponent } from './change-name/change-name.component';
 import { SpotifyConnectComponent } from './spotify-connect/spotify-connect.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { UserService } from './user.service';
 import { ChangeRoomNameComponent } from './change-room-name/change-room-name.component';
 import { StorebuttonsComponent } from './storebuttons/storebuttons.component';
+import {MatSelectModule} from '@angular/material/select';
 
 import { MatCardModule } from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -26,6 +27,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {MatDialogModule} from '@angular/material/dialog';
 import { PasswordChangeComponent } from './password-change/password-change.component';
 import { CreateRoomComponent } from './create-room/create-room.component';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { AccountSettingsComponent } from './account-settings/account-settings.component';
 
 
 @NgModule({
@@ -41,6 +44,7 @@ import { CreateRoomComponent } from './create-room/create-room.component';
     SignInComponent,
     PasswordChangeComponent,
     CreateRoomComponent,
+    AccountSettingsComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,6 +58,9 @@ import { CreateRoomComponent } from './create-room/create-room.component';
     MatIconModule,
     BrowserAnimationsModule,
     MatDialogModule,
+    MatGridListModule,
+    MatSelectModule,
+    MatSlideToggleModule,
   ],
   providers: [UserService],
   bootstrap: [AppComponent]

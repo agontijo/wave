@@ -50,8 +50,6 @@ export class UserService {
   }
 
   createRoom(body: any): Observable<any> {
-    console.log("creatingRoom");
-    console.log(body);
     return this.http.post<any>('api/room/create', body);
   }
 
