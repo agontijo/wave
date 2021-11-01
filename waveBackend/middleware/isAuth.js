@@ -14,7 +14,17 @@ const isNotLoggedIn = (req, res, next) => {
   }
 };
 
+const isSpotify = (req, res, next) => {
+  console.log(req.user);
+  if (req.user?.spotifyTok?.accessToken) {
+    next();
+  } else {
+    res.status(401).send('No spotify credentials');
+  }
+}
+
 module.exports = {
   isLoggedIn,
   isNotLoggedIn,
+  isSpotify,
 };
