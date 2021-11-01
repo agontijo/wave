@@ -15,7 +15,7 @@ const isNotLoggedIn = (req, res, next) => {
 };
 
 const isSpotify = (req, res, next) => {
-  console.log(req.user);
+  // console.log(req.user);
   if (req.user?.spotifyTok?.accessToken) {
     next();
   } else {
