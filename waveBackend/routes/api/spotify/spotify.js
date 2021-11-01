@@ -1,6 +1,5 @@
 const express = require('express');
 const axios = require('axios');
-const qs = require('qs');
 
 const isAuth = require('../../../middleware/isAuth.js');
 const userActions = require('../../../database/userActions.js')
@@ -34,22 +33,8 @@ router.get(
   isAuth.isSpotify,
   async (req, res) => {
     try {
-      const response = await axios({
-        method: 'post',
-        url: 'https://accounts.spotify.com/api/token',
-        data: qs.stringify({
-          'grant_type': 'refresh_token',
-          'refresh_token': req.user.spotifyTok.refreshToken
-        }),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': `Basic ${Buffer.from(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64')}`
-        }
-      });
-
-      // console.log(response.data.access_token);
-      userActions.setSpotifyToks(req.user.uname, response.data.access_token, req.user.spotifyTok.refreshToken);
-      res.send(req.user);
+      const newTok = await userActions.refreshSpotifyToks(req.user.uname, req.user.spotifyTok.refreshToken);
+      res.send(newTok);
     } catch (e) {
       // console.error(e.response.data);
       console.error(e);
