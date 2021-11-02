@@ -269,6 +269,11 @@ async function getUsers(RoomID) {
 async function addSong(RoomID, song_id) {
   const room = (await getRoom(RoomID)).Item;
   const host = (await userActs.getUser(room.host)).Item;
+
+  if (!host.spotifyTok.expireTime || host.spotifyTok.expireTime < Date.now()) {
+    host.spotifyTok.accessToken = await userActs.refreshSpotifyToks(host.uname, host.spotifyTok.refreshToken);
+  }
+
   const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
   return await _updateRoom({
