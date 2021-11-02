@@ -330,21 +330,37 @@ async function downvoteSong(RoomID, song_id, user) {
   const host = (await userActs.getUser(room.host)).Item;
   const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
+  const check = false
+  const indextoRem = 0
+
+
   // manually update song object
   for (s in room.queue) {
     if (s.id === song.id) {
       // add user to the downvote list, but only if they are not already on the list
-      if (!s.disliked.includes(user.uname)) s.liked.push(user.uname);
+      if (!s.disliked.includes(user.uname)) s.disliked.push(user.uname);
       // remove the user from the upvote list, but only if they were on the list already
       if (s.liked.includes(user.uname)) {
-        index = s.disliked.indexOf(user.uname);
-        s.disliked.splice(index, 1);
+        index = s.liked.indexOf(user.uname);
+        s.liked.splice(index, 1);
       }
-      break;
+
+    
+      const tot_users = getNumberOfUsers(RoomID)
+
+      if (s.liked.length > (tot_users / 2)) {
+        check = true
+        indextoRem = room.queue.indexOf(s)
+      }
+
     }
   }
 
   // TODO: check if song meets downvote threshold, and remove it if it does
+
+  if (check) {
+    room.queue.splice(indextoRem,1)
+  }
 
   return await _updateRoom({
     TableName: 'WVRooms',
