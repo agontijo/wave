@@ -316,7 +316,8 @@ async function addSong(RoomID, song_id) {
         disliked: [],
         duration_ms: song.duration_ms,
         name: song.name,
-        artists: song.artists.map(a => a.name)
+        artists: song.artists.map(a => a.name),
+        explicit: song.explicit
       }],
     },
     ReturnValues: 'UPDATED_NEW'
