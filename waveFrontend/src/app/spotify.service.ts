@@ -9,7 +9,7 @@ import { UserService } from './user.service';
 })
 export class SpotifyService {
 
-  public authorizationKey = "Bearer BQA5i_bJlYNk7Ga-HVIgWRzu4UtvqHzPhp2Cqz4ROoBPdWg9JPiqjMH_Er4z4QzD2hYH41m8v3Qx_NjWP3o96SRJYZcQQwtU6_6-Q_dEO8WMVgdWAb8bulYWFSpGnE8R53ovdjQmpx_S-WpVEYVX0UjIkNDQOFU"
+  public authorizationKey = "Bearer BQC4FlQzrmAGGyzJZXrM-l7E2fNGHeTUjKEYefz8tHfgnyk2TSUAL5CX6kmm9_IeewRuI_DU0B65bpYTeNBYupZBAFlc2COQknxxX3g2TJKuhG2SfFxWv0LC5lCqzzpoI_n-1Exq0dR3grjkf-AyleTjc6QlQt8"
 
   public httpOptions = {
     headers : new HttpHeaders({

@@ -66,11 +66,17 @@
       margin-left:10%;
       font-size: 20px;
   }
-  button {
+  .button {
     background-color: black;
 	  color: white;
 	  width: 150px;
 	  height: 40px;
+  }
+  .clearbutton {
+    background-color: lightblue;
+	  color: white;
+	  width: 100px;
+	  height: 20px;
   }
   .create-account {
       font-size: 18px;

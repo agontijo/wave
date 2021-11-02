@@ -62,4 +62,11 @@ export class DisplayRoomComponent implements OnInit {
       });
     }
 
+    public select(){
+      console.log("ok");
+      this.songs = []
+      this.searchQuery = ""
+    }
+
+
 }
