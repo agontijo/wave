@@ -27,7 +27,8 @@ async function createRoom(params) {
     RoomID: generate.eightDigitHexID(),
     host: params.host,
     queue: Array.isArray(params.queue) ? params.queue : [],
-    user: Array.isArray(params.users) ? params.users : [],
+    users: Array.isArray(params.users) ? params.users : [],
+    previous: Array.isArray(params.previous) ? params.previous : [],    // Previously played songs
     roomname: params.name ?? "New Listening Room!",
     allowExplicit: params.allowExplicit ?? true,
     genresAllowed: Array.isArray(params.genresAllowed) ? params.genresAllowed : [],
@@ -62,24 +63,12 @@ async function getRoom(RoomID) {
 }
 
 async function addUser(user, RoomID) {
-  // Fetch room object
-  let room = await _getRoom({
-    TableName: 'WVRooms',
-    Key: { RoomID },
-  });
-
-  room = room.Item;
-
-  // Add user to user list
-  room.users.push(user);
-
-  // Update room in db
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
-    UpdateExpression: 'set users = :u',
+    UpdateExpression: 'ADD users :val',
     ExpressionAttributeValues: {
-      ':u': room.users,
+      ':val': {"SS":[user]},
     },
     ReturnValues: 'UPDATED_NEW'
   });
@@ -87,25 +76,12 @@ async function addUser(user, RoomID) {
 }
 
 async function removeUser(user, RoomID) {
-  // Fetch room object
-  let room = await _getRoom({
-    TableName: 'WVRooms',
-    Key: { RoomID },
-  });
-
-  room = room.Item;
-
-  // Remove user from the user list
-  let index = room.users.indexOf(user);
-  room.users.splice(index, 1);
-
-  // Update room in db
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
-    UpdateExpression: 'set users = :u',
+    UpdateExpression: 'DELETE users :val',
     ExpressionAttributeValues: {
-      ':u': room.users,
+      ':val': {"SS":[user]},
     },
     ReturnValues: 'UPDATED_NEW'
   });
@@ -168,26 +144,24 @@ async function setRoomName(user, RoomID, roomName) {
 
 // Add genre to allowed music genres
 async function addGenre(user, RoomID, genre) {
+
   // Fetch room object
   let room = await _getRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
   });
-
+  
   room = room.Item;
-
+  
   // Check if user is the host of the room
   _checkHost(user, room);
-
-  // Add genre to allowed genre
-  room.genresAllowed.push(genre);
-
+  
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
-    UpdateExpression: 'set genresAllowed = :g',
+    UpdateExpression: 'ADD genresAllowed :val',
     ExpressionAttributeValues: {
-      ':g': room.genresAllowed,
+      ':val': {"SS":[genre]},
     },
     ReturnValues: 'UPDATED_NEW'
   });
@@ -195,6 +169,7 @@ async function addGenre(user, RoomID, genre) {
 
 // Remove genre to allowed music genres
 async function removeGenre(user, RoomID, genre) {
+
   // Fetch room object
   let room = await _getRoom({
     TableName: 'WVRooms',
@@ -206,16 +181,12 @@ async function removeGenre(user, RoomID, genre) {
   // Check if user is the host of the room
   _checkHost(user, room);
 
-  // Add genre to allowed genre
-  let index = room.genresAllowed.users.indexOf(genre);
-  room.genresAllowed.splice(index, 1);
-
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
-    UpdateExpression: 'set genresAllowed = :g',
+    UpdateExpression: 'DELETE genresAllowed :val',
     ExpressionAttributeValues: {
-      ':g': room.genresAllowed,
+      ':val': {"SS":[genre]},
     },
     ReturnValues: 'UPDATED_NEW'
   });
@@ -324,6 +295,67 @@ async function addSong(RoomID, song_id) {
   });
 }
 
+async function upvoteSong(RoomID, song_id, user) {
+  const room = (await getRoom(RoomID)).Item;
+  const host = (await userActs.getUser(room.host)).Item;
+  const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
+
+  // manually update song object
+  for (s in room.queue) {
+    if (s.id === song.id) {
+      // add user to the upvote list, but only if they are not already on the list
+      if (!s.liked.includes(user.uname)) s.liked.push(user.uname);
+      // remove the user from the downvote list, but only if they were on the list already
+      if (s.disliked.includes(user.uname)) {
+        index = s.disliked.indexOf(user.uname);
+        s.disliked.splice(index, 1);
+      }
+      break;
+    }
+  }
+
+  return await _updateRoom({
+    TableName: 'WVRooms',
+    Key: { RoomID },
+    UpdateExpression: 'set queue = :q',
+    ExpressionAttributeValues: {
+      ':q': room.queue,
+    },
+    ReturnValues: 'UPDATED_NEW'
+  });
+}
+
+async function downvoteSong(RoomID, song_id, user) {
+  const room = (await getRoom(RoomID)).Item;
+  const host = (await userActs.getUser(room.host)).Item;
+  const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
+
+  // manually update song object
+  for (s in room.queue) {
+    if (s.id === song.id) {
+      // add user to the downvote list, but only if they are not already on the list
+      if (!s.disliked.includes(user.uname)) s.liked.push(user.uname);
+      // remove the user from the upvote list, but only if they were on the list already
+      if (s.liked.includes(user.uname)) {
+        index = s.disliked.indexOf(user.uname);
+        s.disliked.splice(index, 1);
+      }
+      break;
+    }
+  }
+
+  // TODO: check if song meets downvote threshold, and remove it if it does
+
+  return await _updateRoom({
+    TableName: 'WVRooms',
+    Key: { RoomID },
+    UpdateExpression: 'set queue = :q',
+    ExpressionAttributeValues: {
+      ':q': room.queue,
+    },
+    ReturnValues: 'UPDATED_NEW'
+  });
+}
 
 module.exports = {
   _getRoom,
@@ -344,4 +376,6 @@ module.exports = {
   getNumberOfUsers,
   getUsers,
   addSong,
+  upvoteSong,
+  downvoteSong
 }
