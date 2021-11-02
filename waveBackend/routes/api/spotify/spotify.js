@@ -11,6 +11,7 @@ router.get(
   isAuth.isLoggedIn,
   isAuth.isSpotify,
   async (req, res) => {
+    // console.log(req.user.spotifyTok.accessToken)
     try {
       const response = await axios.get('https://api.spotify.com/v1/recommendations/available-genre-seeds', {
         headers: {
