@@ -297,13 +297,22 @@ async function addSong(RoomID, song_id) {
 async function removeSongAtIndex(RoomID, index) {
   const room = (await getRoom(RoomID)).Item;
 
-  return await _updateRoom({
+  if (room.queue.length <= index) {
+    return -1;
+  }
 
-  })
+  await _updateRoom({
+    TableName: 'WVRooms',
+    Key: { RoomID },
+    UpdateExpression: `REMOVE queue[${index}]`,
+    ReturnValues: 'UPDATED_NEW'
+  });
+
+  return room.queue[i];
 }
 
 async function popSongFromQueue(RoomID) {
-  return removeSongAtIndex(RoomID, 0)
+  return await removeSongAtIndex(RoomID, 0);
 }
 
 async function upvoteSong(RoomID, song_id, user) {
@@ -356,7 +365,7 @@ async function downvoteSong(RoomID, song_id, user) {
         s.liked.splice(index, 1);
       }
 
-    
+
       const tot_users = getNumberOfUsers(RoomID)
 
       if (s.liked.length > (tot_users / 2)) {
@@ -370,7 +379,7 @@ async function downvoteSong(RoomID, song_id, user) {
   // TODO: check if song meets downvote threshold, and remove it if it does
 
   if (check) {
-    room.queue.splice(indextoRem,1)
+    room.queue.splice(indextoRem, 1)
   }
 
   return await _updateRoom({
@@ -403,6 +412,8 @@ module.exports = {
   getNumberOfUsers,
   getUsers,
   addSong,
+  removeSongAtIndex,
+  popSongFromQueue,
   upvoteSong,
   downvoteSong
 }
