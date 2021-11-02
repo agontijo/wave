@@ -313,7 +313,7 @@ async function removeSongAtIndex(RoomID, index) {
     ReturnValues: 'UPDATED_NEW'
   });
 
-  return room.queue[i];
+  return room.queue[index];
 }
 
 async function popSongFromQueue(RoomID) {
