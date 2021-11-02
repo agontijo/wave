@@ -17,7 +17,7 @@ router.get(
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${req.user.spotifyTok.accessToken}`
         }
-      })
+      });
       res.send(response.data)
     } catch (e) {
       console.error(e);
@@ -39,6 +39,27 @@ router.get(
       // console.error(e.response.data);
       console.error(e);
       res.status(500).send('Something went wrong with spotify');
+    }
+  }
+);
+
+router.get(
+  '/search',
+  isAuth.isLoggedIn,
+  isAuth.isSpotify,
+  async (req, res) => {
+    if (!req.query.song) { res.status(422).send('missing song query parameter'); return; }
+    try {
+      const response = await axios.get(`https://api.spotify.com/v1/search?query=${req.query.song}&type=track&offset=0&limit=20`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${req.user.spotifyTok.accessToken}`
+        }
+      });
+      res.send(response.data);
+    } catch (e) {
+      console.error(e)
+      res.status(500).send('Something went wrong with spotify')
     }
   }
 );
