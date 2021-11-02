@@ -1,10 +1,12 @@
+<button (click)="back()" type="button clearbutton">back</button>
+
 <p>roomID: {{roomID}}</p>
 <p>host: {{host}}</p>
 <p>roomName: {{roomname}}</p>
 
 
 <div>
-    <input id="searchSong" [(ngModel)]="searchQuery" (keyup)="searchTrack()"  placeholder="Search Song"/>  <button (click)="select()" type="button clearbutton">clear</button>
+    <input id="searchSong" [(ngModel)]="searchQuery" (keyup)="searchTrack()"  placeholder="Search Song"/>  <button (click)="clear()" type="button clearbutton">clear</button>
 </div>
 
 <!-- <pre>{{songs | json}}</pre>  -->
@@ -15,7 +17,7 @@
     <h2>{{song.name}}</h2>
     <img [src]="song.album.images[0].url" alt="" width="200" height ="200">
     <h2>{{song.album.artists[0].name}}</h2>
-    <button (click)="select()" type="button">Choose Song</button>
+    <button (click)="select(song.id)" type="button button">Choose Song</button>
     <br>
     <br>
     <br>

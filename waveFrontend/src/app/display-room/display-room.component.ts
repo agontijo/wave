@@ -62,11 +62,21 @@ export class DisplayRoomComponent implements OnInit {
       });
     }
 
-    public select(){
+    public select(ids: number){
+      console.log(ids)
       console.log("ok");
       this.songs = []
       this.searchQuery = ""
     }
 
+    public clear(){
+      console.log("ok");
+      this.songs = []
+      this.searchQuery = ""
+    }
+
+    public back(){
+      this.router.navigate(['../storebuttons',], { relativeTo: this.route });
+    }
 
 }
