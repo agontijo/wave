@@ -28,7 +28,7 @@ export class DisplayRoomComponent implements OnInit {
     private route: ActivatedRoute,private router: Router) { }
     host:string = ''
     queue= NONE_TYPE
-    user:string = ''
+    users:string = ''
     roomname= NONE_TYPE
     allowExplicit:boolean = true
     genresAllowed = NONE_TYPE
@@ -50,7 +50,7 @@ export class DisplayRoomComponent implements OnInit {
           this.roomID = params.roomID
           this.roomname = params.roomname
           this.songThreshold = params.songThreshold
-          this.user = params.user
+          this.users = params.users
         }
       );
     }
