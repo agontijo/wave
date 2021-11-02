@@ -1,3 +1,5 @@
+const userActions = require('../database/userActions.js');
+
 const isLoggedIn = (req, res, next) => {
   if (req.user) {
     next();
@@ -14,9 +16,17 @@ const isNotLoggedIn = (req, res, next) => {
   }
 };
 
-const isSpotify = (req, res, next) => {
+const isSpotify = async (req, res, next) => {
   // console.log(req.user);
-  if (req.user?.spotifyTok?.accessToken) {
+  if (req.user?.spotifyTok?.refreshToken) {
+    if (!req.user.spotifyTok.expireTime || req.user.spotifyTok.expireTime <= Date.now()) {
+      console.log(req.user.spotifyTok.expireTime <= Date.now())
+      const newAccess = await userActions.refreshSpotifyToks(
+        req.user.uname,
+        req.user.spotifyTok.refreshToken);
+      // console.log(newAccess);
+      req.user.spotifyTok.accessToken = newAccess;
+    }
     next();
   } else {
     res.status(401).send('No spotify credentials');
