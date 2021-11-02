@@ -1,6 +1,15 @@
 <p>roomID: {{roomID}}</p>
 <p>host: {{host}}</p>
 <p>roomName: {{roomname}}</p>
+
+
+<div>
+    <input id="searchSong" [(ngModel)]="searchQuery" (keyup)="searchTrack()"  placeholder="Search Song"/>
+    {{searchQuery}}
+</div>
+
+<pre>{{songs | json}}</pre>
+
 <!-- <p>user: {{user}}</p> -->
 
 <!-- private route: ActivatedRoute,private router: Router) { }
