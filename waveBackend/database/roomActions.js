@@ -27,7 +27,7 @@ async function createRoom(params) {
     RoomID: generate.eightDigitHexID(),
     host: params.host,
     queue: Array.isArray(params.queue) ? params.queue : [],
-    users: Array.isArray(params.users) ? params.users : [],
+    userList: Array.isArray(params.users) ? params.users : [],
     previous: Array.isArray(params.previous) ? params.previous : [],    // Previously played songs
     roomname: params.name ?? "New Listening Room!",
     allowExplicit: params.allowExplicit ?? true,
@@ -63,12 +63,21 @@ async function getRoom(RoomID) {
 }
 
 async function addUser(user, RoomID) {
+  let room = await _getRoom({
+    TableName: 'WVRooms',
+    Key: { RoomID },
+  });
+
+  let item = room.Item;
+
+  if (!item.userList.includes(user.uname)) item.userList.push(user.uname);
+
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
-    UpdateExpression: 'ADD users :val',
+    UpdateExpression: 'set userList = :u',
     ExpressionAttributeValues: {
-      ':val': {"SS":[user]},
+      ':u': item.userList,
     },
     ReturnValues: 'UPDATED_NEW'
   });
@@ -76,12 +85,24 @@ async function addUser(user, RoomID) {
 }
 
 async function removeUser(user, RoomID) {
+  let room = await _getRoom({
+    TableName: 'WVRooms',
+    Key: { RoomID },
+  });
+
+  let item = room.Item;
+
+  if (item.userList.includes(user.uname)) {
+    index = item.userList.indexOf(user.uname);
+    item.userList.splice(index, 1);
+  }
+
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
-    UpdateExpression: 'DELETE users :val',
+    UpdateExpression: 'set userList = :u',
     ExpressionAttributeValues: {
-      ':val': {"SS":[user]},
+      ':u': item.userList,
     },
     ReturnValues: 'UPDATED_NEW'
   });
@@ -248,7 +269,7 @@ async function getNumberOfUsers(RoomID) {
 
   if (room?.Item == undefined) { throw Error('Invalid roomID!'); }
 
-  let list_users = room.Item.users;
+  let list_users = room.Item.userList;
 
   return list_users.length;
 
@@ -263,7 +284,7 @@ async function getUsers(RoomID) {
 
   if (room?.Item == undefined) { throw Error('Invalid room ID!'); }
 
-  return room.Item.users;
+  return room.Item.userList;
 }
 
 async function addSong(RoomID, song_id) {
