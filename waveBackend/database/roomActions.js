@@ -68,7 +68,7 @@ async function addUser(user, RoomID) {
     Key: { RoomID },
     UpdateExpression: 'ADD users :val',
     ExpressionAttributeValues: {
-      ':val': {"SS":[user]},
+      ':val': { "SS": [user] },
     },
     ReturnValues: 'UPDATED_NEW'
   });
@@ -81,7 +81,7 @@ async function removeUser(user, RoomID) {
     Key: { RoomID },
     UpdateExpression: 'DELETE users :val',
     ExpressionAttributeValues: {
-      ':val': {"SS":[user]},
+      ':val': { "SS": [user] },
     },
     ReturnValues: 'UPDATED_NEW'
   });
@@ -150,18 +150,18 @@ async function addGenre(user, RoomID, genre) {
     TableName: 'WVRooms',
     Key: { RoomID },
   });
-  
+
   room = room.Item;
-  
+
   // Check if user is the host of the room
   _checkHost(user, room);
-  
+
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
     UpdateExpression: 'ADD genresAllowed :val',
     ExpressionAttributeValues: {
-      ':val': {"SS":[genre]},
+      ':val': { "SS": [genre] },
     },
     ReturnValues: 'UPDATED_NEW'
   });
@@ -186,7 +186,7 @@ async function removeGenre(user, RoomID, genre) {
     Key: { RoomID },
     UpdateExpression: 'DELETE genresAllowed :val',
     ExpressionAttributeValues: {
-      ':val': {"SS":[genre]},
+      ':val': { "SS": [genre] },
     },
     ReturnValues: 'UPDATED_NEW'
   });
@@ -271,13 +271,12 @@ async function addSong(RoomID, song_id) {
   const host = (await userActs.getUser(room.host)).Item;
   const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
-  // console.log(song);
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
     UpdateExpression: 'set #q = list_append(#q, :qval)',
-    ExpressionAttributeNames : {
-      "#q" : "queue"
+    ExpressionAttributeNames: {
+      "#q": "queue"
     },
     ExpressionAttributeValues: {
       ':qval': [{
@@ -293,6 +292,18 @@ async function addSong(RoomID, song_id) {
     },
     ReturnValues: 'UPDATED_NEW'
   });
+}
+
+async function removeSongAtIndex(RoomID, index) {
+  const room = (await getRoom(RoomID)).Item;
+
+  return await _updateRoom({
+
+  })
+}
+
+async function popSongFromQueue(RoomID) {
+  return removeSongAtIndex(RoomID, 0)
 }
 
 async function upvoteSong(RoomID, song_id, user) {
