@@ -58,7 +58,8 @@ export class DisplayRoomComponent implements OnInit {
     //search track
     public searchTrack() {
       this._spotifyServive.getSongs(this.searchQuery).subscribe((data) => {
-        this.songs = data;
+        this.songs = data.tracks.items;
+        console.log(this.songs.image);
       });
     }
 

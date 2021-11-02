@@ -5,10 +5,43 @@
 
 <div>
     <input id="searchSong" [(ngModel)]="searchQuery" (keyup)="searchTrack()"  placeholder="Search Song"/>
-    {{searchQuery}}
 </div>
 
-<pre>{{songs | json}}</pre>
+<!-- <pre>{{songs | json}}</pre>  -->
+
+
+<section class="p-3">
+    <div class = "container">
+        <div class = "row" *ngFor="let song of songs">
+            <div class="col">
+                <div class = "card mt-3">
+                    <div class="card-header bg-primary text-white">
+                        <h2>{{song.name}}</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3>">
+                                <!-- <img src={{song.images[0].url}} alt="" width="50" height ="50"> -->
+                            </div>
+                            <h2>{{song.album.artists[0].name}}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+<!-- <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Google_Images_2015_logo.svg/1200px-Google_Images_2015_logo.svg.png" class="img-fluid img-thumbnail" alt=""> -->
+
+
+
+
 
 <!-- <p>user: {{user}}</p> -->
 

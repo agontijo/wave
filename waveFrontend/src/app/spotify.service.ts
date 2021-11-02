@@ -9,7 +9,7 @@ import { UserService } from './user.service';
 })
 export class SpotifyService {
 
-  public authorizationKey = "Bearer BQCT_dvgLWrogP5bZcVpL8gO8YmDc3pgYjuc0c20x6r-37_oEgG4S25U7yg7TUd_iowbjlR-8q2IAUJpKJwCm7Mv6Xtva-inFu89bYy_zs9xUL6a8XrmXLvqlZqlMQ1_gO2Kdx6DLFuHydIKn7OvqrdxXS8Xebw"
+  public authorizationKey = "Bearer BQA5i_bJlYNk7Ga-HVIgWRzu4UtvqHzPhp2Cqz4ROoBPdWg9JPiqjMH_Er4z4QzD2hYH41m8v3Qx_NjWP3o96SRJYZcQQwtU6_6-Q_dEO8WMVgdWAb8bulYWFSpGnE8R53ovdjQmpx_S-WpVEYVX0UjIkNDQOFU"
 
   public httpOptions = {
     headers : new HttpHeaders({
@@ -24,7 +24,7 @@ export class SpotifyService {
 
     // get tracks
     public getSongs(searchQuery: string): Observable<any> {
-      let trackURL = "https://api.spotify.com/v1/search?q=" + searchQuery + "&type=track";
+      let trackURL = "https://api.spotify.com/v1/search?q=" + searchQuery + "&type=track&limit=10";
       return this.http.get<any>(trackURL, this.httpOptions);
     }
 
