@@ -12,6 +12,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { UserService } from './user.service';
 import { ChangeRoomNameComponent } from './change-room-name/change-room-name.component';
 import { StorebuttonsComponent } from './storebuttons/storebuttons.component';
+import { DisplayRoomComponent } from './display-room/display-room.component';
 
 import { MatCardModule } from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -26,6 +27,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {MatDialogModule} from '@angular/material/dialog';
 import { PasswordChangeComponent } from './password-change/password-change.component';
 import { CreateRoomComponent } from './create-room/create-room.component';
+import { SpotifyService } from './spotify.service';
 
 
 @NgModule({
@@ -41,6 +43,7 @@ import { CreateRoomComponent } from './create-room/create-room.component';
     SignInComponent,
     PasswordChangeComponent,
     CreateRoomComponent,
+    DisplayRoomComponent 
   ],
   imports: [
     BrowserModule,
@@ -55,7 +58,7 @@ import { CreateRoomComponent } from './create-room/create-room.component';
     BrowserAnimationsModule,
     MatDialogModule,
   ],
-  providers: [UserService],
+  providers: [UserService, SpotifyService],
   bootstrap: [AppComponent]
 })
 

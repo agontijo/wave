@@ -179,4 +179,30 @@ router.post(
   }
 );
 
+router.post(
+  '/:roomid/likesong',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    try {
+      const data = await roomActions.upvoteSong(req.params.roomid, req.body.songID, req.user);
+      res.send(data);
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  }
+);
+
+router.post(
+  '/:roomid/dislikesong',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    try {
+      const data = await roomActions.downvoteSong(req.params.roomid, req.body.songID, req.user);
+      res.send(data);
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  }
+);
+
 module.exports = router;

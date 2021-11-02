@@ -1,6 +1,39 @@
+<button (click)="back()" type="button clearbutton">back</button>
+
 <p>roomID: {{roomID}}</p>
 <p>host: {{host}}</p>
 <p>roomName: {{roomname}}</p>
+
+
+<div>
+    <input id="searchSong" [(ngModel)]="searchQuery" (keyup)="searchTrack()"  placeholder="Search Song"/>  <button (click)="clear()" type="button clearbutton">clear</button>
+</div>
+
+<!-- <pre>{{songs | json}}</pre>  -->
+
+
+
+<div class = "row" *ngFor="let song of songs">        
+    <h2>{{song.name}}</h2>
+    <img [src]="song.album.images[0].url" alt="" width="200" height ="200">
+    <h2>{{song.album.artists[0].name}}</h2>
+    <button (click)="select(song.id)" type="button button">Choose Song</button>
+    <br>
+    <br>
+    <br>
+</div>
+
+
+
+
+
+
+<!-- <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Google_Images_2015_logo.svg/1200px-Google_Images_2015_logo.svg.png" class="img-fluid img-thumbnail" alt=""> -->
+
+
+
+
+
 <!-- <p>user: {{user}}</p> -->
 
 <!-- private route: ActivatedRoute,private router: Router) { }
