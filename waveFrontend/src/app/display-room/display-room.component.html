@@ -10,28 +10,17 @@
 <!-- <pre>{{songs | json}}</pre>  -->
 
 
-<section class="p-3">
-    <div class = "container">
-        <div class = "row" *ngFor="let song of songs">
-            <div class="col">
-                <div class = "card mt-3">
-                    <div class="card-header bg-primary text-white">
-                        <h2>{{song.name}}</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col>">
-                                <img [src]="song.album.images[0].url" alt="" width="200" height ="200">
-                            </div>
-                            <h2>{{song.album.artists[0].name}}</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br>
-        </div>
-    </div>
-</section>
+
+<div class = "row" *ngFor="let song of songs">        
+    <h2>{{song.name}}</h2>
+    <img [src]="song.album.images[0].url" alt="" width="200" height ="200">
+    <h2>{{song.album.artists[0].name}}</h2>
+    <button type="button">Choose Song</button>
+    <br>
+    <br>
+    <br>
+</div>
+
 
 
 

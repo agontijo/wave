@@ -67,12 +67,10 @@
       font-size: 20px;
   }
   button {
-    padding: 0.5em;
-    color:#6fd8b8;
-    margin-right: 8%;
-    font-size:30px;
-    border:transparent;
-    background:transparent;
+    background-color: black;
+	  color: white;
+	  width: 150px;
+	  height: 40px;
   }
   .create-account {
       font-size: 18px;
