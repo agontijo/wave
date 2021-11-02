@@ -248,7 +248,7 @@ async function getNumberOfUsers(RoomID) {
 
   if (room?.Item == undefined) { throw Error('Invalid roomID!'); }
 
-  let list_users = room.Item.user;
+  let list_users = room.Item.users;
 
   return list_users.length;
 
@@ -263,7 +263,7 @@ async function getUsers(RoomID) {
 
   if (room?.Item == undefined) { throw Error('Invalid room ID!'); }
 
-  return room.Item.user;
+  return room.Item.users;
 }
 
 async function addSong(RoomID, song_id) {
