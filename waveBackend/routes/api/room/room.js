@@ -26,6 +26,7 @@ router.get(
 router.post(
   '/create',
   isAuth.isLoggedIn,
+  isAuth.isSpotify,
   async (req, res) => {
     let data = null;
     try {
@@ -161,6 +162,19 @@ router.post(
       else { res.status(500).send(null); }
     } catch (err) {
       res.status(500).send(err.message)
+    }
+  }
+);
+
+router.post(
+  '/:roomid/song',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    try {
+      const data = await roomActions.addSong(req.params.roomid, req.body.songID);
+      res.send(data);
+    } catch (err) {
+      res.status(500).send(err.message);
     }
   }
 );

@@ -1,3 +1,6 @@
+const axios = require('axios');
+const qs = require('qs');
+
 const AWS = require('./awsconfig.js');
 const emailMapActions = require('./emailMapActions.js');
 
@@ -108,6 +111,25 @@ async function _setSpotifyToksObject(uname, toks) {
   });
 }
 
+async function refreshSpotifyToks(uname, refreshTok) {
+  const response = await axios({
+    method: 'post',
+    url: 'https://accounts.spotify.com/api/token',
+    data: qs.stringify({
+      'grant_type': 'refresh_token',
+      'refresh_token': refreshTok
+    }),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `Basic ${Buffer.from(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64')}`
+    }
+  });
+
+  // console.log(response.data.access_token);
+  await setSpotifyToks(uname, response.data.access_token, refreshTok);
+  return response.data.access_token
+}
+
 
 async function setCurrRoom(uname, newRoomID) {
   return await _updateUser({
@@ -150,6 +172,7 @@ module.exports = {
   setUserPassword,
   createUser,
   setSpotifyToks,
+  refreshSpotifyToks,
   clearSpotifyToks,
   setCurrRoom,
   deleteUser,
