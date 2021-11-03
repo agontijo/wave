@@ -217,11 +217,6 @@ async function removeGenre(user, RoomID, genre) {
   // Check if user is the host of the room
   _checkHost(user, item);
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> sort_host_remove
   if (item.genresAllowed.includes(genre)) {
     index = item.genresAllowed.indexOf(genre);
     item.genresAllowed.splice(index, 1);
@@ -384,17 +379,10 @@ async function downvoteSong(RoomID, song_id, user) {
   for (s in room.queue) {
     if (s.id === song.id) {
       // add user to the downvote list, but only if they are not already on the list
-<<<<<<< HEAD
-      if (!s.disliked.includes(user)) s.liked.push(user);
+      if (!s.disliked.includes(user)) s.disliked.push(user);
       // remove the user from the upvote list, but only if they were on the list already
       if (s.liked.includes(user)) {
-        index = s.disliked.indexOf(user);
-        s.disliked.splice(index, 1);
-=======
-      if (!s.disliked.includes(user.uname)) s.disliked.push(user.uname);
-      // remove the user from the upvote list, but only if they were on the list already
-      if (s.liked.includes(user.uname)) {
-        index = s.liked.indexOf(user.uname);
+        index = s.liked.indexOf(user);
         s.liked.splice(index, 1);
       }
 
@@ -403,7 +391,6 @@ async function downvoteSong(RoomID, song_id, user) {
       if (s.disliked.length > (totusers / 2)) {
         check = true
         indexRem = room.queue.indexOf(s)
->>>>>>> sort_host_remove
       }
 
       break;
