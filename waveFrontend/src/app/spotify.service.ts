@@ -10,7 +10,7 @@ import { SongCheck } from './songcheck';
 })
 export class SpotifyService {
 
-  public authorizationKey = "Bearer BQA4Z0zzYwt9iPUJPvLjpiMtdjBjHYe_wko9rF7EYvugaeakhCsr8su9B7BvRAp5rCLg22F_MZjfHueqSOIghZOHdJzEDN9TDuSznNH8kbXZ2V_4lF3NVmAKef1LkSWH2Nk2YxDYiOVvklz1PUJJESp_Ehl-0eg"
+  public authorizationKey = "Bearer BQD8ukKqSiPDPFhz4cqchncZOzNkMTrqfcyPdAITYLAp6JQc_RTWDiHhM32oapOcSpfwdEqJmGV7YV7JdTLF80k_g4czFRRwJKDDCJWHbP_aePCSfD6uMglg0WwMfjRM-vkp7zkX-KUIJznwXlegGczXpNZEeDw"
   public httpOptions = {
     headers : new HttpHeaders({
       "Accept" : "application/json",

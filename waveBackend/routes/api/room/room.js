@@ -49,14 +49,15 @@ router.post(
   '/:roomid/join',
   isAuth.isLoggedIn,
   async (req, res) => {
-    
     try {
+      
       // TODO: Make this if its own function
       if (req.user.currRoom === "") {
         try { await roomActions.destroyRoom(req.user.uname, req.user.currRoom); }
         catch (err) { console.error(err); }
       }
       const data = await roomActions.addUser(req.user.uname, req.params.roomid);
+      console.log(data);
       if (data?.Attributes) { res.status(200).send(data); }
       else { res.status(500).send(null); }
     } catch (err) {
