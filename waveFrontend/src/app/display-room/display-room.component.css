@@ -9,19 +9,12 @@
   }
 
   mat-card {
-    color: white;
-    width: 85%;
-    height: 80%;
-    border-radius: 1em;
-    padding: 1em;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-    background-color:#25473c;
-    font-family: 'Philosopher';
-
+      max-width: 450px;
+      margin-bottom: 8px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      vertical-align: middle;
   }
   h1 {
     margin-top:15%;
@@ -66,13 +59,17 @@
     margin-left:10%;
     font-size: 20px;
   }
-  button {
-    padding: 0.5em;
-    color:#6fd8b8;
-    margin-right: 8%;
-    font-size:30px;
-    border:transparent;
-    background:transparent;
+  .button {
+    background-color: black;
+	  color: white;
+	  width: 150px;
+	  height: 40px;
+  }
+  .clearbutton {
+    background-color: lightblue;
+	  color: white;
+	  width: 100px;
+	  height: 20px;
   }
   .create-account {
       font-size: 18px;
@@ -84,3 +81,4 @@
 .mat-form-field + .mat-form-field {
   margin-left: 8px;
 }
+

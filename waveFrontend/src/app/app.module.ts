@@ -13,6 +13,7 @@ import { UserService } from './user.service';
 import { ChangeRoomNameComponent } from './change-room-name/change-room-name.component';
 import { StorebuttonsComponent } from './storebuttons/storebuttons.component';
 import {MatSelectModule} from '@angular/material/select';
+import { DisplayRoomComponent } from './display-room/display-room.component';
 
 import { MatCardModule } from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -30,6 +31,7 @@ import { CreateRoomComponent } from './create-room/create-room.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { LogoutComponent } from './logout/logout.component';
+import { SpotifyService } from './spotify.service';
 
 
 @NgModule({
@@ -47,6 +49,7 @@ import { LogoutComponent } from './logout/logout.component';
     CreateRoomComponent,
     AccountSettingsComponent,
     LogoutComponent,
+    DisplayRoomComponent 
   ],
   imports: [
     BrowserModule,
@@ -64,7 +67,7 @@ import { LogoutComponent } from './logout/logout.component';
     MatSelectModule,
     MatSlideToggleModule,
   ],
-  providers: [UserService],
+  providers: [UserService, SpotifyService],
   bootstrap: [AppComponent]
 })
 

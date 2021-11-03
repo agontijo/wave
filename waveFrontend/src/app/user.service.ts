@@ -71,4 +71,9 @@ export class UserService {
     return this.http.get<any>('auth/logout');
   }
 
+  addUserToRoom(createBody: any, url: any): Observable<any> {
+    console.log(url);
+    return this.http.post<any>(url, createBody);
+  }
+
 }
