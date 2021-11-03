@@ -66,5 +66,9 @@ export class UserService {
 
     return this.http.post<any>('/auth/local', userObj);
   }
+  signOut(): Observable<User>  {
+    
+    return this.http.get<any>('auth/logout');
+  }
 
 }

@@ -29,6 +29,7 @@ import { PasswordChangeComponent } from './password-change/password-change.compo
 import { CreateRoomComponent } from './create-room/create-room.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
+import { LogoutComponent } from './logout/logout.component';
 
 
 @NgModule({
@@ -45,6 +46,7 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
     PasswordChangeComponent,
     CreateRoomComponent,
     AccountSettingsComponent,
+    LogoutComponent,
   ],
   imports: [
     BrowserModule,

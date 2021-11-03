@@ -88,6 +88,7 @@ export class HomepageComponent implements OnInit {
       },
       (error) => { console.log("unable to create room")})
   }
+
   joinRoom() {
     this._userServive.getRoomFromID(this.roomID).subscribe(
       (data) => {
