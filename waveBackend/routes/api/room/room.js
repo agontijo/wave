@@ -49,6 +49,7 @@ router.post(
   '/:roomid/join',
   isAuth.isLoggedIn,
   async (req, res) => {
+    
     try {
       // TODO: Make this if its own function
       if (req.user.currRoom === "") {
@@ -172,6 +173,7 @@ router.post(
   async (req, res) => {
     try {
       const data = await roomActions.addSong(req.params.roomid, req.body.songID);
+      console.log(data);
       res.send(data);
     } catch (err) {
       res.status(500).send(err.message);
