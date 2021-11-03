@@ -65,7 +65,6 @@ export class DisplayRoomComponent implements OnInit {
           this.roomname = this.roominfo.roomname
           this.songThreshold = this.roominfo.songThreshold
           this.userList = this.roominfo.userList
-          this.len = this.userList.length
           this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
             let _url = "/api/room/" + this.roomID + "/join";
             const joinData = {
@@ -77,6 +76,8 @@ export class DisplayRoomComponent implements OnInit {
               this.roomusers += this.userList[i] + ", "
             }
           });
+          this.len = this.userList.length
+          
       });
      
       

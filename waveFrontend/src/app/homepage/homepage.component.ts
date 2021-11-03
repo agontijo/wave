@@ -44,10 +44,10 @@ export class HomepageComponent implements OnInit {
     this._userServive.getCurrUser().subscribe(data => {
       this.tempusers = data;
       if (Object.keys(this.tempusers?.spotifyTok).length == 0) {
-        this.isSpotifyConnected = true;
+        this.isSpotifyConnected = false;
       }
       else {
-        this.isSpotifyConnected = false;
+        this.isSpotifyConnected = true;
       }
       if (this.tempusers.currRoom) {
         this._userServive.getRoom(this.tempusers).subscribe(res => {
@@ -82,15 +82,15 @@ export class HomepageComponent implements OnInit {
           host: data.host,
           queue:data.queue,
           roomname: data.roomname,
-          songThreshold:data.songThreshold,
-          user:data.user,
+          songThreshold: data.songThreshold,
+          userList: data.userList,
         }})
       },
       (error) => { console.log("unable to create room")})
   }
 
   joinRoom() {
-    this._userServive.getRoomFromID(this.roomID).subscribe(
+    this._userServive.getRoomFromID(this.roomID.value).subscribe(
       (data) => {
         console.log(data)
         this.router.navigate(['display-room'], {queryParams: {
@@ -101,7 +101,7 @@ export class HomepageComponent implements OnInit {
           queue:data.queue,
           roomname: data.roomname,
           songThreshold:data.songThreshold,
-          user:data.user,
+          userList:data.userList,
         }})
       },
       (error) => { console.log("unable to join room")})
