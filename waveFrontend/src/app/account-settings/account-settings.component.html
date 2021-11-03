@@ -1,14 +1,23 @@
-<p>roomID: {{roomID}}</p>
-<p>host: {{host}}</p>
-<p>roomName: {{roomname}}</p>
-<!-- <p>user: {{user}}</p> -->
+<div class="justify-inline">
 
-<!-- private route: ActivatedRoute,private router: Router) { }
-host:string = ''
-queue= NONE_TYPE
-user:string = ''
-roomname= NONE_TYPE
-allowExplicit:boolean = true
-genresAllowed = NONE_TYPE
-songThreshold = NONE_TYPE
-roomID:number | undefined -->
+    <h1 routerLink='/homepage'>Wave</h1><br>
+    <br>
+    <button style="padding: 0.5em;
+    color: white;
+    font-size:70px;
+    border:transparent;
+    background:transparent;
+    font-family: 'Philosopher';" routerLink="/logout" mat-flat-button>Logout</button>
+    </div>
+    <mat-card>
+        <mat-form-field appearance="legacy" style="color:white;">
+            <mat-label style="color:white;">New Display Name</mat-label>
+            <input matInput [formControl]="displayName">
+            <button mat-flat-button matSuffix (click)="changeDisplayName()">Change Name</button>
+        </mat-form-field>
+        <br>
+        <button mat-flat-button class="nav-item nav-link-edit" [routerLink]="['/password-change']">Change Password</button>
+        <button mat-flat-button href="/auth/spotify" *ngIf="!isSpotifyConnected">Connect Spotify</button>
+        <button mat-flat-button href="/auth/spotify/disconnect" *ngIf="isSpotifyConnected">Disconnect Spotify</button>
+        <button mat-flat-button (click)="deleteAccount()">Delete Account</button>
+    </mat-card>

@@ -1,7 +1,11 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NONE_TYPE } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Room } from '../room';
+import { User } from '../user';
 import { UserService } from '../user.service';
 
 
@@ -13,7 +17,7 @@ import { UserService } from '../user.service';
 export class AccountSettingsComponent implements OnInit {
 
   constructor(private _userServive: UserService, private http:HttpClientModule ,
-    private route: ActivatedRoute,private router: Router) { }
+    private route: ActivatedRoute,private router: Router, public dialog: MatDialog ) { }
     host:string = ''
     queue= NONE_TYPE
     user:string = ''
@@ -22,21 +26,61 @@ export class AccountSettingsComponent implements OnInit {
     genresAllowed = NONE_TYPE
     songThreshold = NONE_TYPE
     roomID:number | undefined
+    tempusers!: User;
+    isSpotifyConnected = false
+    public room!: Room;
+    roombutton = false;
+    displayName = new FormControl();
+
+    changeDisplayName() {
+      const newNameData = {displayName: this.displayName.value,
+        pswd: this.tempusers.pswd,
+        email: this.tempusers.email,
+        spotifyTok: this.tempusers.spotifyTok,
+        uname: this.tempusers.uname,
+        currRoom: this.tempusers.currRoom};
+  
+      let url = "/api/user/" + this.tempusers.uname + "/displayname";
+      this._userServive.changeDisplayName(newNameData, url).subscribe(data => this.tempusers = data)
+    
+    }
+    deleteAccount(){
+      this.openDialog()
+    }
     
     ngOnInit(): void {
-      this.route.queryParams
-        .subscribe(params => {
-          console.log(params); // { order: "popular" }
-          this.allowExplicit = params.allowExplicit
-          this.genresAllowed = params.genresAllowed
-          this.host = params.host
-          this.queue = params.queue
-          this.roomID = params.roomID
-          this.roomname = params.roomname
-          this.songThreshold = params.songThreshold
-          this.user = params.user
+      this._userServive.getCurrUser().subscribe(data => {
+        this.tempusers = data;
+        if (Object.keys(this.tempusers?.spotifyTok).length == 0) {
+          this.isSpotifyConnected = true;
         }
-      );
+        else {
+          this.isSpotifyConnected = false;
+        }
+        if (this.tempusers.currRoom) {
+          this._userServive.getRoom(this.tempusers).subscribe(res => {
+            this.room = res
+            if (this.room.host === this.tempusers.uname) {
+              this.roombutton = true;
+            }
+          });
+        }
+      });
+    }
+    openDialog() {
+      this.dialog.open(DialogElement);
+      
     }
 
+}
+@Component({
+  selector: 'dialog-element-',
+  templateUrl: 'dialog-element.html',
+})
+export class DialogElement {
+  constructor(public dialog: MatDialog) { }
+
+  close() {
+    this.dialog.closeAll();
+  }
 }

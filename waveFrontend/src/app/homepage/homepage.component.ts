@@ -17,6 +17,7 @@ export class HomepageComponent implements OnInit {
   constructor(private _userServive: UserService, private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
   title = 'Homepage';
   color = "#6fd8b8";
+  
   hide = true;
   email = new FormControl('', [Validators.required, Validators.email]);
   password = new FormControl('');
@@ -56,7 +57,6 @@ export class HomepageComponent implements OnInit {
           }
         });
       }
-      // this.roombutton = true;
     });
   }
   createRoom() {
