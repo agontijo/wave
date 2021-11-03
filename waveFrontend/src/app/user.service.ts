@@ -70,6 +70,7 @@ export class UserService {
   }
 
   addUserToRoom(createBody: any, url: any): Observable<any> {
+    console.log(url);
     return this.http.post<any>(url, createBody);
   }
 

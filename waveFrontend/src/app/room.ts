@@ -4,7 +4,7 @@ export interface Room {
     RoomID: string;
     genresAllowed: String[];
     host: string;
-    user: String[];
+    userList: String[];
     allowExplicit: boolean;
     roomname: String;
 }
