@@ -92,7 +92,7 @@ export class StorebuttonsComponent implements OnInit {
           queue:data.queue,
           roomname: data.roomname,
           songThreshold:data.songThreshold,
-          user:data.user,
+          userList:data.userList,
         }})
       },
       (error) => { console.log("unable to join room")})

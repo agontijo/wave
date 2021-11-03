@@ -28,12 +28,14 @@ export class DisplayRoomComponent implements OnInit {
   public songid: number | undefined;
   public sc!: SongCheck;
   songArr = new Array<SongI>(0);
+  len: number = 0;
+  roomusers = ""
 
   constructor(private _spotifyServive: SpotifyService, private _userServive: UserService, private http:HttpClientModule ,
     private route: ActivatedRoute,private router: Router) { }
     host:string = ''
     queue= NONE_TYPE
-    users:string = ''
+    userList: string[] = []
     roomname= NONE_TYPE
     allowExplicit:boolean = true
     genresAllowed = NONE_TYPE
@@ -55,7 +57,9 @@ export class DisplayRoomComponent implements OnInit {
           this.roomID = params.roomID
           this.roomname = params.roomname
           this.songThreshold = params.songThreshold
-          this.users = params.users
+          this.userList = params.userList
+          this.len = this.userList.length
+          console.log(this.len)
         }
       );
       this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
@@ -63,10 +67,13 @@ export class DisplayRoomComponent implements OnInit {
         const joinData = {
           user: this.curruser,
         };
-        this._userServive.addUserToRoom(joinData, _url).subscribe(data => this.users = data);
-        console.log(data);
+        this._userServive.addUserToRoom(joinData, _url).subscribe(data => {this.userList = data;
+        });
+        for (let i = 0; i < this.len; i++) {
+          this.roomusers += this.userList[i] + ", "
+        }
       });
-
+      
 
     }
     // <!-- <h2>Song Name: {{song.name}}</h2>
