@@ -95,6 +95,19 @@ async function removeUser(user, RoomID) {
   if (item.userList.includes(user)) {
     index = item.userList.indexOf(user);
     item.userList.splice(index, 1);
+    await userActs.setCurrRoom(user, '')
+  }
+
+  if (item.host == user) {
+    item.userList.forEach(async function(auser) {
+      await userActs.setCurrRoom(auser,'')
+    })
+
+    return await _destroyRoom({
+      TableName: 'WVRooms',
+      Key: { RoomID }
+    });
+
   }
 
   return await _updateRoom({
@@ -359,21 +372,37 @@ async function downvoteSong(RoomID, song_id, user) {
   const host = (await userActs.getUser(room.host)).Item;
   const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
+  const check = false;
+  const indexRem = undefined;
+
   // manually update song object
   for (s in room.queue) {
     if (s.id === song.id) {
       // add user to the downvote list, but only if they are not already on the list
-      if (!s.disliked.includes(user)) s.liked.push(user);
+      if (!s.disliked.includes(user)) s.disliked.push(user);
       // remove the user from the upvote list, but only if they were on the list already
       if (s.liked.includes(user)) {
-        index = s.disliked.indexOf(user);
-        s.disliked.splice(index, 1);
+        index = s.liked.indexOf(user);
+        s.liked.splice(index, 1);
       }
+
+      const totusers = await getNumberOfUsers(RoomID);
+
+      if (s.disliked.length > (totusers / 2)) {
+        check = true
+        indexRem = room.queue.indexOf(s)
+      }
+
       break;
+
     }
   }
 
   // TODO: check if song meets downvote threshold, and remove it if it does
+
+  if (check) {
+    room.queue.splice(indexRem,1)
+  }
 
   return await _updateRoom({
     TableName: 'WVRooms',

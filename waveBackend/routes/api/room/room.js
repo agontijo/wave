@@ -187,7 +187,7 @@ router.post(
   isAuth.isLoggedIn,
   async (req, res) => {
     try {
-      const data = await roomActions.upvoteSong(req.params.roomid, req.body.songID, req.user);
+      const data = await roomActions.upvoteSong(req.params.roomid, req.body.songID, req.user.uname);
       res.send(data);
     } catch (err) {
       res.status(500).send(err.message);
@@ -200,7 +200,7 @@ router.post(
   isAuth.isLoggedIn,
   async (req, res) => {
     try {
-      const data = await roomActions.downvoteSong(req.params.roomid, req.body.songID, req.user);
+      const data = await roomActions.downvoteSong(req.params.roomid, req.body.songID, req.user.uname);
       res.send(data);
     } catch (err) {
       res.status(500).send(err.message);
