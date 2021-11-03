@@ -300,7 +300,7 @@ async function addSong(RoomID, song_id) {
   const host = (await userActs.getUser(room.host)).Item;
   const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
-  // console.log(song);
+
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },

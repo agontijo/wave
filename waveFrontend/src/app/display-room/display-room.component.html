@@ -3,6 +3,7 @@
 <p>roomID: {{roomID}}</p>
 <p>host: {{host}}</p>
 <p>roomName: {{roomname}}</p>
+<p>users: {{users}}</p>
 
 
 <div>
@@ -13,14 +14,22 @@
 
 
 
-<div class = "row" *ngFor="let song of songs">        
-    <h2>{{song.name}}</h2>
-    <img [src]="song.album.images[0].url" alt="" width="200" height ="200">
-    <h2>{{song.album.artists[0].name}}</h2>
-    <button (click)="select(song.id)" type="button button">Choose Song</button>
-    <br>
-    <br>
-    <br>
+<div class = "row" *ngFor="let song of songArr">  
+    <br> 
+    <mat-card class="example-card">
+        <mat-card-title-group>
+          <mat-card-title>{{song.songName}}</mat-card-title>
+          <mat-card-subtitle>{{song.artistName}}</mat-card-subtitle>
+          <mat-card-subtitle>Explicit: {{song.explicit}}</mat-card-subtitle>
+          <mat-card-subtitle>Genre: {{song.genre}}</mat-card-subtitle>
+          <mat-card-title>
+            <mat-card-actions>
+                <button mat-button (click)="select(song.id)" type="button button">Choose Song</button>
+            </mat-card-actions>
+          </mat-card-title>
+          <img mat-card-lg-image src={{song.imgSrc}}>
+        </mat-card-title-group>
+    </mat-card>     
 </div>
 
 

@@ -69,4 +69,8 @@ export class UserService {
     return this.http.post<any>('/auth/local', userObj);
   }
 
+  addUserToRoom(createBody: any, url: any): Observable<any> {
+    return this.http.post<any>(url, createBody);
+  }
+
 }
