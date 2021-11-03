@@ -171,18 +171,25 @@ async function addGenre(user, RoomID, genre) {
     TableName: 'WVRooms',
     Key: { RoomID },
   });
-  
-  room = room.Item;
-  
+
+  let item = room.Item;
+
   // Check if user is the host of the room
-  _checkHost(user, room);
-  
+  _checkHost(user, item);
+
+  let room = await _getRoom({
+    TableName: 'WVRooms',
+    Key: { RoomID },
+  });
+
+  if (!item.genresAllowed.includes(genre)) item.genresAllowed.push(genre);
+
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
-    UpdateExpression: 'ADD genresAllowed :val',
+    UpdateExpression: 'set genresAllowed = :g',
     ExpressionAttributeValues: {
-      ':val': {"SS":[genre]},
+      ':g': item.genresAllowed,
     },
     ReturnValues: 'UPDATED_NEW'
   });
@@ -197,20 +204,31 @@ async function removeGenre(user, RoomID, genre) {
     Key: { RoomID },
   });
 
-  room = room.Item;
+  let item = room.Item;
 
   // Check if user is the host of the room
-  _checkHost(user, room);
+  _checkHost(user, item);
+
+  let room = await _getRoom({
+    TableName: 'WVRooms',
+    Key: { RoomID },
+  });
+
+  if (item.genresAllowed.includes(genre)) {
+    index = item.genresAllowed.indexOf(genre);
+    item.genresAllowed.splice(index, 1);
+  }
 
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
-    UpdateExpression: 'DELETE genresAllowed :val',
+    UpdateExpression: 'set genresAllowed = :g',
     ExpressionAttributeValues: {
-      ':val': {"SS":[genre]},
+      ':g': item.genresAllowed,
     },
     ReturnValues: 'UPDATED_NEW'
   });
+
 }
 
 // Set allow expicit
