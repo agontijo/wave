@@ -6,8 +6,20 @@
 <!-- <div class = "row" *ngFor="let u of userList">  
     <p>users: {{u}}</p>
 </div> -->
-<p># of users: {{roomusers}}</p>
+<p>users: {{roomusers}}</p>
 <p># of users: {{len}}</p>
+<br>
+<br>
+<p> QUEUE </p>
+<div class = "row" *ngFor="let q of queue">  
+    <br> 
+    <mat-card class="example-card">
+        <mat-card-title-group>
+          <mat-card-title>{{q.name}}</mat-card-title>
+          <mat-card-subtitle>{{q.artists}}</mat-card-subtitle>
+        </mat-card-title-group>
+    </mat-card>     
+</div>
 
 
 <div>

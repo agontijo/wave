@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
 import { Observable } from 'rxjs';
 import { User } from '../user';
+import { Room } from '../room';
 import { ConsoleLogger } from '@aws-amplify/core';
 import { HttpClient } from '@angular/common/http';
 import { FormControl, Validators } from '@angular/forms';
@@ -30,16 +31,17 @@ export class DisplayRoomComponent implements OnInit {
   songArr = new Array<SongI>(0);
   len: number = 0;
   roomusers = ""
+  public roominfo!: Room;
 
   constructor(private _spotifyServive: SpotifyService, private _userServive: UserService, private http:HttpClientModule ,
     private route: ActivatedRoute,private router: Router) { }
     host:string = ''
-    queue= NONE_TYPE
+    queue: any[] = []
     userList: string[] = []
-    roomname= NONE_TYPE
+    roomname: string = ''
     allowExplicit:boolean = true
-    genresAllowed = NONE_TYPE
-    songThreshold = NONE_TYPE
+    genresAllowed: string[] = []
+    songThreshold: number | undefined
     roomID:number | undefined
     
     ngOnInit(): void {
@@ -50,29 +52,34 @@ export class DisplayRoomComponent implements OnInit {
       this.route.queryParams
         .subscribe(params => {
           console.log(params); // { order: "popular" }
-          this.allowExplicit = params.allowExplicit
-          this.genresAllowed = params.genresAllowed
-          this.host = params.host
-          this.queue = params.queue
           this.roomID = params.roomID
-          this.roomname = params.roomname
-          this.songThreshold = params.songThreshold
-          this.userList = params.userList
-          this.len = this.userList.length
-          console.log(this.len)
         }
       );
-      this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
-        let _url = "/api/room/" + this.roomID + "/join";
-        const joinData = {
-          user: this.curruser,
-        };
-        this._userServive.addUserToRoom(joinData, _url).subscribe(data => {this.userList = data;
-        });
-        for (let i = 0; i < this.len; i++) {
-          this.roomusers += this.userList[i] + ", "
-        }
+      
+      this._userServive.getRoomFromID(this.roomID).subscribe(data => {this.roominfo = data;
+          this.allowExplicit = this.roominfo.allowExplicit
+          this.genresAllowed = this.roominfo.genresAllowed
+          this.host = this.roominfo.host
+          this.queue = this.roominfo.queue
+          console.log(this.queue)
+          this.roomname = this.roominfo.roomname
+          this.songThreshold = this.roominfo.songThreshold
+          this.userList = this.roominfo.userList
+          this.len = this.userList.length
+          this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
+            let _url = "/api/room/" + this.roomID + "/join";
+            const joinData = {
+              user: this.curruser,
+            };
+            this._userServive.addUserToRoom(joinData, _url).subscribe(data => {this.userList = data;
+            });
+            for (let i = 0; i < this.len; i++) {
+              this.roomusers += this.userList[i] + ", "
+            }
+          });
       });
+     
+      
       
 
     }
