@@ -177,11 +177,6 @@ async function addGenre(user, RoomID, genre) {
   // Check if user is the host of the room
   _checkHost(user, item);
 
-  let room = await _getRoom({
-    TableName: 'WVRooms',
-    Key: { RoomID },
-  });
-
   if (!item.genresAllowed.includes(genre)) item.genresAllowed.push(genre);
 
   return await _updateRoom({
@@ -208,11 +203,6 @@ async function removeGenre(user, RoomID, genre) {
 
   // Check if user is the host of the room
   _checkHost(user, item);
-
-  let room = await _getRoom({
-    TableName: 'WVRooms',
-    Key: { RoomID },
-  });
 
   if (item.genresAllowed.includes(genre)) {
     index = item.genresAllowed.indexOf(genre);
