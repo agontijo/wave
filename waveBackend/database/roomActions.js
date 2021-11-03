@@ -95,6 +95,19 @@ async function removeUser(user, RoomID) {
   if (item.userList.includes(user.uname)) {
     index = item.userList.indexOf(user.uname);
     item.userList.splice(index, 1);
+    await userActs.setCurrRoom(user, '')
+  }
+
+  if (item.host == user) {
+    item.userList.forEach(async function(auser) {
+      await userActs.setCurrRoom(auser,'')
+    })
+
+    return await _destroyRoom({
+      TableName: 'WVRooms',
+      Key: { RoomID }
+    });
+
   }
 
   return await _updateRoom({
@@ -177,11 +190,6 @@ async function addGenre(user, RoomID, genre) {
   // Check if user is the host of the room
   _checkHost(user, item);
 
-  let room = await _getRoom({
-    TableName: 'WVRooms',
-    Key: { RoomID },
-  });
-
   if (!item.genresAllowed.includes(genre)) item.genresAllowed.push(genre);
 
   return await _updateRoom({
@@ -209,10 +217,7 @@ async function removeGenre(user, RoomID, genre) {
   // Check if user is the host of the room
   _checkHost(user, item);
 
-  let room = await _getRoom({
-    TableName: 'WVRooms',
-    Key: { RoomID },
-  });
+
 
   if (item.genresAllowed.includes(genre)) {
     index = item.genresAllowed.indexOf(genre);
