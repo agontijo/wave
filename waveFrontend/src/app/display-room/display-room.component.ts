@@ -34,10 +34,8 @@ export class DisplayRoomComponent implements OnInit {
   public roominfo!: Room;
   likedSong = false;
   dislikedSong = false;
-  selectedC= '#6fd8b8'
-  unseelctedC = '#333'
-  likedC = this.unseelctedC;
-  dislikedC = this.unseelctedC;
+  likedC = false;
+  dislikedC = false;
   
 
   constructor(private _spotifyServive: SpotifyService, private _userServive: UserService, private http:HttpClientModule ,
@@ -78,11 +76,8 @@ export class DisplayRoomComponent implements OnInit {
               room: this.roominfo,
               
             };
-            console.log(this.roominfo)
             this._userServive.addUserToRoom(joinData, _url).subscribe(data => {this.userList = data;
             });
-            console.log(this.roominfo)
-            console.log(this.userList)
             this.len = this.userList.length
             for (let i = 0; i < this.len; i++) {
               this.roomusers += this.userList[i] + ", "
@@ -96,12 +91,6 @@ export class DisplayRoomComponent implements OnInit {
       
 
     }
-    // <!-- <h2>Song Name: {{song.name}}</h2>
-    // <img [src]="song.album.images[0].url" alt="" width="200" height ="200">
-    // <h2>Artist: {{song.album.artists[0].name}}</h2>
-    // <h2>Explcit: {{song.explicit}}</h2>
-    // <h2>Explcit: {{song.album.artists[0].id}}</h2>
-    // {{getGenre(song.album.artists[0].id)}} -->
     //search track
     
     public searchTrack() {
@@ -141,13 +130,13 @@ export class DisplayRoomComponent implements OnInit {
         'uname': this.curruser.uname
       }
       this._userServive.likeSong(songData, '/api/room/'+this.roomID+'/likeSong').subscribe(data =>  {
-        if (data.includes(this.curruser)) {
-          this.likedC = this.selectedC;
-          this.dislikedC = this.unseelctedC;
+        if (data.includes(this.curruser.uname)) {
+          this.likedC = true;
+          this.dislikedC = false;
         } else {
-          this.likedC = this.unseelctedC;
-          this.unseelctedC;
+          this.likedC = false;
         }
+        console.log(data);
       
       });
     }
@@ -159,13 +148,13 @@ export class DisplayRoomComponent implements OnInit {
       }
       this._userServive.dislikeSong(songData, '/api/room/'+this.roomID+'/dislikeSong').subscribe(data => 
         {
-          // if (data.includes(this.curruser)) {
-          //   this.dislikedC = this.selectedC;
-          //   this.likedC = this.unseelctedC;
-          // } else {
-          //   this.dislikedC = this.unseelctedC;
-          //   this.likedC = this.selectedC;
-          // }
+          if (data.includes(this.curruser.uname)) {
+            this.dislikedC = true;
+            this.likedC = false;
+            console.log(this.dislikedC);
+          } else {
+            this.dislikedC = true;
+          }
           console.log(data);
           
         });
@@ -190,7 +179,6 @@ export class DisplayRoomComponent implements OnInit {
       this.searchQuery = ""
       this.searchTrack()
     }
-
     public leaveroom(){
       this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
         let _url = "/api/room/" + this.roomID + "/leave";
@@ -201,7 +189,26 @@ export class DisplayRoomComponent implements OnInit {
         this._userServive.addUserToRoom(leaveData, _url).subscribe(data => {this.userList = data;
         });
       });
-      this.router.navigate(['../storebuttons',], { relativeTo: this.route });
+      this.router.navigate(['../homepage',], { relativeTo: this.route });
+    }
+
+    formatLabel(value: number) {
+      if (value >= 100) {
+        return Math.round(value / 100) + '%';
+      }
+      return value;
     }
 
 }
+@Component({
+  selector: 'liked',
+  templateUrl: 'liked.html',
+  styles: [],
+})
+export class LikedComponent {}
+@Component({
+  selector: 'disliked',
+  templateUrl: 'disliked.html',
+  styles: [],
+})
+export class diikedComponent {}
