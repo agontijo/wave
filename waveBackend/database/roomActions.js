@@ -71,8 +71,8 @@ async function addUser(user, RoomID) {
 
   let item = room.Item;
 
-  if (!item.userList.includes(user)) item.userList.push(user);
-
+  if (!item.userList?.includes(user)) item.userList.push(user);
+  console.log(item);
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
