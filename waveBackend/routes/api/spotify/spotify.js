@@ -87,7 +87,6 @@ router.get(
   }
 );
 
-
 router.get(
   '/device',
   isAuth.isLoggedIn,
@@ -97,7 +96,26 @@ router.get(
       res.send(await spotifyUtil.getDevice(req.user.spotifyTok.accessToken));
     } catch (e) {
       console.error(e);
-      res.send(500).send('Something went wrong with spotify device (Does token have correct permissions?)');
+      res.status(500).send('Something went wrong with spotify device (Does token have correct permissions?)');
+    }
+  }
+);
+
+router.put(
+  '/play',
+  isAuth.isLoggedIn,
+  isAuth.isSpotify,
+  async (req, res) => {
+    try {
+      console.log('here');
+      res.send(await spotifyUtil.playOnDevice(
+        req.body.device,
+        req.body.uris,
+        req.user.spotifyTok.accessToken
+      ));
+    } catch (e) {
+      console.error(e);
+      res.status(500).send('Something went wrong with spotify play (Does token have correct permissions?)')
     }
   }
 )
