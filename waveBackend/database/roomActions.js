@@ -365,15 +365,19 @@ async function popSongFromQueue(RoomID) {
 
 async function upvoteSong(RoomID, song_id, user) {
   const room = (await getRoom(RoomID)).Item;
-  const host = (await userActs.getUser(room.host)).Item;
-  const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
+  //const host = (await userActs.getUser(room.host)).Item;
+ // const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
   let thesong = undefined;
   // manually update song object
+
+console.log('camehere');
+
   for (let i = 0; i < room.queue.length; i++) {
     const s = room.queue[i];
-    if (s.id === song.id) {
+    if (s.id === song_id) {
       thesong = s;
+      console.log(s)
       // add user to the upvote list, but only if they are not already on the list
       if (!s.liked.includes(user)) {
         s.liked.push(user);
@@ -401,6 +405,8 @@ async function upvoteSong(RoomID, song_id, user) {
     },
     ReturnValues: 'UPDATED_NEW'
   });
+
+  console.log(thesong.liked);
 
   return thesong.liked;
 }
