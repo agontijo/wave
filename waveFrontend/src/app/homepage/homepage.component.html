@@ -1,30 +1,71 @@
-<body>
 
-<mat-card>
+  <div class="justify-inline">
   <h1>Wave</h1>
-  <p>homepage</p>
+  <button style="padding: 0.5em;
+  color: white;
+  font-size:40px;
+  border:transparent;
+  background:transparent;
+  font-family: 'Philosopher';" routerLink="/account-settings" mat-flat-button>Account Settings</button>
+  <br> <button style="padding: 0.5em;
+  color: white;
+  font-size:40px;
+  border:transparent;
+  background:transparent;
+  font-family: 'Philosopher';" routerLink="/logout" mat-flat-button>Logout</button>
+  </div>
+  <mat-grid-list cols="2" >
+    <mat-grid-tile>
+      <mat-card>
+        <div class="center">
+          <p>Create Room</p>
+        <div *ngIf="!isSpotifyConnected">
+          <p style="align-items: center; margin-left: 15rem;">
+            Before creating a new Room, we need you to
+          </p>
+          <button mat-flat-button><a href="/auth/spotify">Connect Spotify</a></button>
+        </div>
+        <div *ngIf="isSpotifyConnected">
+          <mat-form-field appearance="legacy" style="color:white;">
+            <mat-label style="color:white;">Room Name:</mat-label>
+            <input matInput [formControl]="roomName" placeholder="default: New Listenig Room!">
+          </mat-form-field>
+          <br>
+          <mat-slide-toggle [color]="color" style="color: white;" [(ngModel)]="explicitChecked">Allow Explicit</mat-slide-toggle>
+        
+        <br>
+        <mat-form-field appearance="legacy" style="color:white;">
+          <mat-label style="color:white;font-family: 'Philosopher';">Genres</mat-label>
+          <mat-select [formControl]="genreSelected" multiple>
+            <mat-select-trigger style="color:white;">
+              {{genreSelected.value ? genreSelected.value[0] : ''}}
+              <span *ngIf="genreSelected.value?.length > 1" class="example-additional-selection">
+                (+{{genreSelected.value.length - 1}} {{genreSelected.value?.length === 2 ? 'other' : 'others'}})
+              </span>
+            </mat-select-trigger>
+            <mat-option *ngFor="let genre of genreList" [value]="genre">{{genre}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <br>
+        <button mat-flat-button style="align-items: right;" (click)="createRoom()">Create Room</button>
+        </div>
+        </div>
+      </mat-card>
+    </mat-grid-tile>
 
-  <!-- <mat-form-field appearance="legacy" style="color:white;">
-    <mat-label style="color:white;">Enter your email</mat-label>
-    <input matInput [formControl]="email" required>
-    <mat-error *ngIf="email.invalid">{{getErrorMessageEmail()}}</mat-error>
-  </mat-form-field>
-  <br>
-  <mat-form-field appearance="legacy" style="color:white;">
-    <mat-label style="color:white;">Enter your password</mat-label>
-    <input matInput [formControl]="password" [type]="hide ? 'password' : 'text'" required>
-    <button mat-flat-button matSuffix style="background-color:transparent; border-color:transparent;"  (click)="hide = !hide">
-      <mat-icon >{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-    </button>
-  </mat-form-field>
-  <br>
-  <button mat-flat-button matSuffix color="#6fd8b8" style="float:right;">Sign In</button>
-  <br>
+    <mat-grid-tile>
+      <mat-card>
+        <div class="center-middle">
+          <p>Join Room</p>
+          <br>
+          <mat-form-field appearance="legacy" style="color:white;">
+            <mat-label style="color:white;">Room Id</mat-label>
+            <input matInput [formControl]="roomID">
+          </mat-form-field>
+          <br>
+          <button  mat-flat-button (click)="joinRoom()">Join Room</button>
+        </div>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
 
-  <div class="create-account">
-    <p>Don't have an account?</p>
-    <br>
-    <button mat-flat-button matSuffix color="#6fd8b8" routerLink="/create-account">Sign Up</button>
-  </div> -->
-</mat-card>
-</body>

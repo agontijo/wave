@@ -94,9 +94,9 @@ async function createUser(params) {
   return user;
 }
 
-async function setSpotifyToks(uname, accessToken, refreshToken) {
+async function setSpotifyToks(uname, accessToken, refreshToken, expireTime) {
   // TODO: Make this its own queriy for faster write time
-  return await _setSpotifyToksObject(uname, { accessToken, refreshToken });
+  return await _setSpotifyToksObject(uname, { accessToken, refreshToken, expireTime });
 }
 async function clearSpotifyToks(uname) { return await _setSpotifyToksObject(uname, {}); }
 async function _setSpotifyToksObject(uname, toks) {
@@ -126,7 +126,7 @@ async function refreshSpotifyToks(uname, refreshTok) {
   });
 
   // console.log(response.data.access_token);
-  await setSpotifyToks(uname, response.data.access_token, refreshTok);
+  await setSpotifyToks(uname, response.data.access_token, refreshTok,  Date.now() + response.data.expires_in * 1000);
   return response.data.access_token
 }
 

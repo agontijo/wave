@@ -5,13 +5,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppRoutingModule} from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
-
+import {MatGridListModule} from '@angular/material/grid-list';
 import { ChangeNameComponent } from './change-name/change-name.component';
 import { SpotifyConnectComponent } from './spotify-connect/spotify-connect.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { UserService } from './user.service';
 import { ChangeRoomNameComponent } from './change-room-name/change-room-name.component';
 import { StorebuttonsComponent } from './storebuttons/storebuttons.component';
+import {MatSelectModule} from '@angular/material/select';
 import { DisplayRoomComponent } from './display-room/display-room.component';
 
 import { MatCardModule } from '@angular/material/card';
@@ -27,6 +28,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {MatDialogModule} from '@angular/material/dialog';
 import { PasswordChangeComponent } from './password-change/password-change.component';
 import { CreateRoomComponent } from './create-room/create-room.component';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { AccountSettingsComponent } from './account-settings/account-settings.component';
+import { LogoutComponent } from './logout/logout.component';
 import { SpotifyService } from './spotify.service';
 
 
@@ -43,6 +47,8 @@ import { SpotifyService } from './spotify.service';
     SignInComponent,
     PasswordChangeComponent,
     CreateRoomComponent,
+    AccountSettingsComponent,
+    LogoutComponent,
     DisplayRoomComponent 
   ],
   imports: [
@@ -57,6 +63,9 @@ import { SpotifyService } from './spotify.service';
     MatIconModule,
     BrowserAnimationsModule,
     MatDialogModule,
+    MatGridListModule,
+    MatSelectModule,
+    MatSlideToggleModule,
   ],
   providers: [UserService, SpotifyService],
   bootstrap: [AppComponent]
