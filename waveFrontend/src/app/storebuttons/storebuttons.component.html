@@ -4,7 +4,7 @@
     <mat-form-field appearance="legacy" style="color:white;">
         <mat-label style="color:white;">Room Name:</mat-label>
         <input matInput [formControl]="roomName" placeholder="default: New Listenig Room!">
-      </mat-form-field>
+    </mat-form-field>
     <button mat-flat-button matSuffix (click)="createRoom()">Create Listening Room</button>
     <br>
     <button mat-flat-button class="nav-item nav-link-edit" [routerLink]="['/change-name']">Change Display Name</button>

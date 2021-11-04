@@ -1,0 +1,129 @@
+:host {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 14px;
+  color: #333;
+  box-sizing: border-box;
+  background-color:#6fd8b8;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+mat-card {
+  color: white;
+  width: 85%;
+  height: 75%;
+  border-radius: 1em;
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  background-color:#25473c;
+  font-family: 'Philosopher';
+
+}
+.justify-inline {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content:space-between;
+  font-size: 40px;
+
+}
+h1 {
+  padding: 1px;
+  margin-bottom: 1px;
+  margin-left:5%;
+  /* text-align:left; */
+  color:white;
+  font-size:70px;
+  font-family: 'Philosopher';
+}
+.horizontal {
+  display: flex;
+}
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
+p{
+  text-align:justify;
+  color:white;
+  font-size: 60px;
+  position: relative; 
+  margin-left: 15rem;
+  font-family: 'Philosopher';
+
+}
+mat-form-field {
+  text-align:justify;
+  color:white;
+  width: 50em;
+  font-size: 30px;
+  padding: 3rem;
+  background-color: transparent;
+  font-family: 'Philosopher';
+
+}
+mat-slide-toggle {
+  color: white;
+  width: 25em;
+  text-align: justify;
+  font-size: 30px;
+  padding: 1rem;
+  font-family: 'Philosopher';
+
+
+}
+::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
+  background-color: #6fd8b8;  /*replace with your color*/
+}
+::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
+background-color: #6fd8b8; /*replace with your color*/
+}
+
+button {
+  padding: 0.5em;
+  justify-content: center;
+  color: hsl(162, 57%, 64%);
+  font-size:40px;
+  border:transparent;
+  background:transparent;
+  font-family: 'Philosopher';
+}
+
+.create-account {
+    font-size: 18px;
+    display: flex;
+    width:65em;
+    justify-content: center;
+}
+
+.center {
+  justify-content: center;
+  display: block;
+  height: 80vh;
+  width: 80vw;
+  position:relative;
+}
