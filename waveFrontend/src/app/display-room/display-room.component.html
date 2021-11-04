@@ -1,4 +1,4 @@
-<button (click)="back()" type="button clearbutton">back</button>
+<button (click)="leaveroom()" type="button clearbutton">Leave Room</button>
 
 <h2>roomID: {{roomID}}</h2>
 <h2>host: {{host}}</h2>
@@ -15,6 +15,7 @@
         <mat-card-title-group>
           <mat-card-title>{{q.name}}</mat-card-title>
           <mat-card-subtitle>{{q.artists}}</mat-card-subtitle>
+          <mat-card-subtitle>Explicit: {{q.explicit}}</mat-card-subtitle>
         </mat-card-title-group>
     </mat-card>     
 </div>

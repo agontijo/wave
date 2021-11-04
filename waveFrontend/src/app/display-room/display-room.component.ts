@@ -68,9 +68,13 @@ export class DisplayRoomComponent implements OnInit {
             let _url = "/api/room/" + this.roomID + "/join";
             const joinData = {
               user: this.curruser,
+              room: this.roominfo,
+              
             };
+            console.log(this.roominfo)
             this._userServive.addUserToRoom(joinData, _url).subscribe(data => {this.userList = data;
             });
+            console.log(this.roominfo)
             console.log(this.userList)
             this.len = this.userList.length
             for (let i = 0; i < this.len; i++) {
@@ -144,7 +148,16 @@ export class DisplayRoomComponent implements OnInit {
       this.searchTrack()
     }
 
-    public back(){
+    public leaveroom(){
+      this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
+        let _url = "/api/room/" + this.roomID + "/leave";
+        const leaveData = {
+          user: this.curruser,
+          room: this.roominfo,
+        };
+        this._userServive.addUserToRoom(leaveData, _url).subscribe(data => {this.userList = data;
+        });
+      });
       this.router.navigate(['../storebuttons',], { relativeTo: this.route });
     }
 
