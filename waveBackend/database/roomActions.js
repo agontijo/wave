@@ -72,7 +72,7 @@ async function addUser(user, RoomID) {
   let item = room.Item;
 
   if (!item.userList?.includes(user)) item.userList.push(user);
-  console.log(item);
+  // console.log(item);
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
@@ -372,12 +372,19 @@ async function upvoteSong(RoomID, song_id, user) {
   for (s in room.queue) {
     if (s.id === song.id) {
       // add user to the upvote list, but only if they are not already on the list
-      if (!s.liked.includes(user)) s.liked.push(user);
-      // remove the user from the downvote list, but only if they were on the list already
-      if (s.disliked.includes(user)) {
-        index = s.disliked.indexOf(user);
-        s.disliked.splice(index, 1);
+      if (!s.liked.includes(user)) {
+        s.liked.push(user);
+        if (s.disliked.includes(user)) {
+          index = s.disliked.indexOf(user);
+          s.disliked.splice(index, 1);
+        }
       }
+      else {
+        index = s.liked.indexOf(user)
+        s.liked.splice(index,1)
+      }
+      // remove the user from the downvote list, but only if they were on the list already
+
       break;
     }
   }
@@ -405,7 +412,14 @@ async function downvoteSong(RoomID, song_id, user) {
   for (s in room.queue) {
     if (s.id === song.id) {
       // add user to the downvote list, but only if they are not already on the list
-      if (!s.disliked.includes(user)) s.disliked.push(user);
+      if (!s.disliked.includes(user)) {
+        s.disliked.push(user);
+      }
+      else {
+        index = s.disliked.indexOf(user)
+        s.disliked.splice(index,1)
+        break;
+      }
       // remove the user from the upvote list, but only if they were on the list already
       if (s.liked.includes(user)) {
         index = s.liked.indexOf(user);
