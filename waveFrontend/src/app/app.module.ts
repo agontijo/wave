@@ -32,6 +32,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { LogoutComponent } from './logout/logout.component';
 import { SpotifyService } from './spotify.service';
+import {MatSliderModule} from '@angular/material/slider';
+
 
 
 @NgModule({
@@ -49,7 +51,8 @@ import { SpotifyService } from './spotify.service';
     CreateRoomComponent,
     AccountSettingsComponent,
     LogoutComponent,
-    DisplayRoomComponent 
+    DisplayRoomComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -66,6 +69,7 @@ import { SpotifyService } from './spotify.service';
     MatGridListModule,
     MatSelectModule,
     MatSlideToggleModule,
+    MatSliderModule,
   ],
   providers: [UserService, SpotifyService],
   bootstrap: [AppComponent]

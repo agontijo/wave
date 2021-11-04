@@ -88,7 +88,7 @@ router.get(
 );
 
 router.get(
-  'volume',
+  '/volume',
   isAuth.isLoggedIn,
   isAuth.isSpotify,
   async (req, res) => {
