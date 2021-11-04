@@ -224,6 +224,7 @@ router.post(
       const data = await roomActions.downvoteSong(req.params.roomid, req.body.songID, req.user.uname);
       res.send(data);
     } catch (err) {
+      console.error(err);
       res.status(500).send(err.message);
     }
   }

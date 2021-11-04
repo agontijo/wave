@@ -368,11 +368,11 @@ async function upvoteSong(RoomID, song_id, user) {
   const host = (await userActs.getUser(room.host)).Item;
   const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
-  const thesong = undefined;
+  let thesong = undefined;
   // manually update song object
-  for (s in room.queue) {
+  for (let i = 0; i < room.queue.length; i++) {
+    const s = room.queue[i];
     if (s.id === song.id) {
-
       thesong = s;
       // add user to the upvote list, but only if they are not already on the list
       if (!s.liked.includes(user)) {
@@ -406,21 +406,19 @@ async function upvoteSong(RoomID, song_id, user) {
 }
 
 async function downvoteSong(RoomID, song_id, user) {
-  console.log("calledDownlote")
   const room = (await getRoom(RoomID)).Item;
-  const host = (await userActs.getUser(room.host)).Item;
+  // const host = (await userActs.getUser(room.host)).Item;
   // const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
-  const check = false;
-  const indexRem = undefined;
-
+  let check = false;
+  let indexRem = undefined;
   let thesong = undefined;
   // manually update song object
-  
+
   for (let i = 0; i < room.queue.length; i++) {
     const s = room.queue[i];
-    console.log(s.id == song_id);
-    if (s.id == song_id) {
+    // console.log(s.id == song_id);
+    if (s.id === song_id) {
       // add user to the downvote list, but only if they are not already on the list
       console.log(s);
       thesong = s;
@@ -443,7 +441,7 @@ async function downvoteSong(RoomID, song_id, user) {
       const totusers = await getNumberOfUsers(RoomID);
 
       console.log(`s.disliked.length = ${s.disliked.length}`)
-      if (s.disliked && s.disliked.length > (totusers / 2)) {
+      if (s.disliked && s.disliked.length > (totusers / 2) && totusers >= 3) {
         check = true
         indexRem = room.queue.indexOf(s)
       }
@@ -452,8 +450,6 @@ async function downvoteSong(RoomID, song_id, user) {
 
     }
   }
-  console.log("after");
-  // TODO: check if song meets downvote threshold, and remove it if it does
 
   if (check) {
     room.queue.splice(indexRem, 1)
@@ -481,7 +477,8 @@ async function moveSongToPrev(RoomID, song_id, user) {
 
   let index = 0;
 
-  for (s in room.queue) {
+  for (let i = 0; i < room.queue.length; i++) {
+    const s = room.queue[i];
     if (s.id === song.id) {
       // remove this song, and put it in the previous queue
       room.previous.push(s);
