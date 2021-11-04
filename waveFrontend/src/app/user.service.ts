@@ -50,8 +50,6 @@ export class UserService {
   }
 
   createRoom(body: any): Observable<any> {
-    console.log("creatingRoom");
-    console.log(body);
     return this.http.post<any>('api/room/create', body);
   }
 
@@ -68,8 +66,20 @@ export class UserService {
 
     return this.http.post<any>('/auth/local', userObj);
   }
+  signOut(): Observable<User>  {
+    
+    return this.http.get<any>('auth/logout');
+  }
 
   addUserToRoom(createBody: any, url: any): Observable<any> {
+    console.log(url);
+    return this.http.post<any>(url, createBody);
+  }
+  likeSong(createBody: any, url: any): Observable<any> {
+    console.log(url);
+    return this.http.post<any>(url, createBody);
+  }
+  dislikeSong(createBody: any, url: any): Observable<any> {
     console.log(url);
     return this.http.post<any>(url, createBody);
   }

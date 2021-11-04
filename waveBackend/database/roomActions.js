@@ -22,6 +22,7 @@ async function createRoom(params) {
   if (!params?.host) {
     throw 'Malformed Room Object';
   }
+  
 
   const room = {
     RoomID: generate.eightDigitHexID(),
@@ -70,8 +71,8 @@ async function addUser(user, RoomID) {
 
   let item = room.Item;
 
-  if (!item.userList.includes(user)) item.userList.push(user);
-
+  if (!item.userList?.includes(user)) item.userList.push(user);
+  // console.log(item);
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
@@ -311,15 +312,19 @@ async function getUsers(RoomID) {
 async function addSong(RoomID, song_id) {
   const room = (await getRoom(RoomID)).Item;
   const host = (await userActs.getUser(room.host)).Item;
-  const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
+  if (!host.spotifyTok.expireTime || host.spotifyTok.expireTime < Date.now()) {
+    host.spotifyTok.accessToken = await userActs.refreshSpotifyToks(host.uname, host.spotifyTok.refreshToken);
+  }
+
+  const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
     UpdateExpression: 'set #q = list_append(#q, :qval)',
-    ExpressionAttributeNames : {
-      "#q" : "queue"
+    ExpressionAttributeNames: {
+      "#q": "queue"
     },
     ExpressionAttributeValues: {
       ':qval': [{
@@ -337,6 +342,27 @@ async function addSong(RoomID, song_id) {
   });
 }
 
+async function removeSongAtIndex(RoomID, index) {
+  const room = (await getRoom(RoomID)).Item;
+
+  if (room.queue.length <= index) {
+    return -1;
+  }
+
+  await _updateRoom({
+    TableName: 'WVRooms',
+    Key: { RoomID },
+    UpdateExpression: `REMOVE queue[${index}]`,
+    ReturnValues: 'UPDATED_NEW'
+  });
+
+  return room.queue[index];
+}
+
+async function popSongFromQueue(RoomID) {
+  return await removeSongAtIndex(RoomID, 0);
+}
+
 async function upvoteSong(RoomID, song_id, user) {
   const room = (await getRoom(RoomID)).Item;
   const host = (await userActs.getUser(room.host)).Item;
@@ -346,12 +372,19 @@ async function upvoteSong(RoomID, song_id, user) {
   for (s in room.queue) {
     if (s.id === song.id) {
       // add user to the upvote list, but only if they are not already on the list
-      if (!s.liked.includes(user)) s.liked.push(user);
-      // remove the user from the downvote list, but only if they were on the list already
-      if (s.disliked.includes(user)) {
-        index = s.disliked.indexOf(user);
-        s.disliked.splice(index, 1);
+      if (!s.liked.includes(user)) {
+        s.liked.push(user);
+        if (s.disliked.includes(user)) {
+          index = s.disliked.indexOf(user);
+          s.disliked.splice(index, 1);
+        }
       }
+      else {
+        index = s.liked.indexOf(user)
+        s.liked.splice(index,1)
+      }
+      // remove the user from the downvote list, but only if they were on the list already
+
       break;
     }
   }
@@ -379,7 +412,14 @@ async function downvoteSong(RoomID, song_id, user) {
   for (s in room.queue) {
     if (s.id === song.id) {
       // add user to the downvote list, but only if they are not already on the list
-      if (!s.disliked.includes(user)) s.disliked.push(user);
+      if (!s.disliked.includes(user)) {
+        s.disliked.push(user);
+      }
+      else {
+        index = s.disliked.indexOf(user)
+        s.disliked.splice(index,1)
+        break;
+      }
       // remove the user from the upvote list, but only if they were on the list already
       if (s.liked.includes(user)) {
         index = s.liked.indexOf(user);
@@ -465,6 +505,8 @@ module.exports = {
   getNumberOfUsers,
   getUsers,
   addSong,
+  removeSongAtIndex,
+  popSongFromQueue,
   upvoteSong,
   downvoteSong,
   moveSongToPrev

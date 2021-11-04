@@ -51,11 +51,11 @@ router.post(
   async (req, res) => {
     try {
       const data = await roomActions.addUser(req.user.uname, req.params.roomid);
-      console.log(data);
       if (data?.Attributes) { res.status(200).send(data); }
       else { res.status(500).send(null); }
     } catch (err) {
-      res.status(500).send(err.message)
+      console.error(err);
+      res.status(500).send(err.message);
     }
   }
 );
@@ -172,6 +172,33 @@ router.post(
       res.send(data);
     } catch (err) {
       res.status(500).send(err.message);
+    }
+  }
+);
+
+router.get(
+  '/:roomid/nextsong',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    const room = (await roomActions.getRoom(req.params.roomid)).Item;
+    if (!room?.RoomID) {
+      res.status(410).send('Could not find room, likely gone');
+      return;
+    }
+    if (req.user.uname !== room.host) {
+      res.status(403).send('Only the host can pop the next song off of the queue');
+      return;
+    }
+    try {
+      const song = await roomActions.popSongFromQueue(room.RoomID);
+      if (song === -1) {
+        res.status(404).send('No song avalible')
+      } else {
+        res.send(song);
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Had trouble getting song from queue');
     }
   }
 );

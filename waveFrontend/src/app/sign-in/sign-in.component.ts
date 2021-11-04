@@ -42,7 +42,7 @@ export class SignInComponent implements OnInit {
       this._userServive.signIn(user).subscribe(
         (data: any )=> {
           console.log(data)
-          this.router.navigate(['storebuttons']);
+          this.router.navigate(['homepage']);
         },
         (error) => {
           this.openDialog();

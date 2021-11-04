@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
-import { NONE_TYPE } from '@angular/compiler';
 import { Component, OnInit, OnDestroy} from '@angular/core';
+import { NONE_TYPE, ThrowStmt } from '@angular/compiler';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
 import { Observable } from 'rxjs';
@@ -34,6 +34,13 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
   len: number = 0;
   roomusers = ""
   public roominfo!: Room;
+  likedSong = false;
+  dislikedSong = false;
+  selectedC= '#6fd8b8'
+  unseelctedC = '#333'
+  likedC = this.unseelctedC;
+  dislikedC = this.unseelctedC;
+  
 
   constructor(private _spotifyServive: SpotifyService, private _userServive: UserService, private http:HttpClientModule ,
     private route: ActivatedRoute,private router: Router) { }
@@ -86,6 +93,8 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
               this.roomusers += this.userList[i] + ", "
             }
           });
+          this.len = this.userList.length
+          
       });
      
       let timey = interval(30000);
@@ -136,7 +145,24 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
         //console.log(this.genre);
       });
     }
-
+    public likesong(curSongId: number) {
+      let songData = {
+        'roomid': this.roomID,
+        'songID': curSongId,
+        'uname': this.curruser.uname
+      }
+      this._userServive.likeSong(songData, '/api/room/'+this.roomID+'/likesongeSong').subscribe(data => this.likedC = this.selectedC);
+    }
+    public dislikedsong(curSongId:number) {
+      let songData = {
+        'roomid': this.roomID,
+        'songID': curSongId,
+        'uname': this.curruser.uname
+      }
+      this._userServive.likeSong(songData, '/api/room/'+this.roomID+'/likesongeSong').subscribe(data => 
+        this.dislikedC = this.selectedC
+        );
+    }
     public select(ids: number){
       const songData = {
         songID: ids,
@@ -149,7 +175,6 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
       this.songs = []
       this.searchQuery = ""
       this._spotifyServive.addSong(songData, url).subscribe(data => this.sc = data)
-      
     }
 
     public clear(){
