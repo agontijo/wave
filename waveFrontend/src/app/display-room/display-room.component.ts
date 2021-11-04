@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
+import { Component, OnInit, OnDestroy} from '@angular/core';
 import { NONE_TYPE, ThrowStmt } from '@angular/compiler';
-import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
 import { Observable } from 'rxjs';
@@ -13,13 +13,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { SpotifyService } from '../spotify.service';
 import { SongCheck } from '../songcheck';
 import { SongI } from '../songI';
+import {interval} from 'rxjs'
+
 
 @Component({
   selector: 'app-display-room',
   templateUrl: './display-room.component.html',
   styleUrls: ['./display-room.component.css']
 })
-export class DisplayRoomComponent implements OnInit {
+export class DisplayRoomComponent implements OnInit, OnDestroy {
 
   searchQuery = ""
   public curruser!: User;
@@ -50,6 +52,8 @@ export class DisplayRoomComponent implements OnInit {
     genresAllowed: string[] = []
     songThreshold: number | undefined
     roomID:number | undefined
+    data: any
+    timer: any
     
     ngOnInit(): void {
       // this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
@@ -84,6 +88,7 @@ export class DisplayRoomComponent implements OnInit {
             console.log(this.roominfo)
             console.log(this.userList)
             this.len = this.userList.length
+            this.roomusers = ""
             for (let i = 0; i < this.len; i++) {
               this.roomusers += this.userList[i] + ", "
             }
@@ -92,10 +97,16 @@ export class DisplayRoomComponent implements OnInit {
           
       });
      
-      
-      
-
+      let timey = interval(30000);
+      this.timer= timey.subscribe(t=> {
+        this.ngOnInit();}); 
     }
+
+
+    ngOnDestroy() {
+      this.timer.unsubscribe();
+    }
+    
     // <!-- <h2>Song Name: {{song.name}}</h2>
     // <img [src]="song.album.images[0].url" alt="" width="200" height ="200">
     // <h2>Artist: {{song.album.artists[0].name}}</h2>

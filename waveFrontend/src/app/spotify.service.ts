@@ -28,7 +28,8 @@ export class SpotifyService {
 
   // get tracks
   public getSongs(searchQuery: string): Observable<any> {
-    const trackURL = `/api/spotify/search?song=${searchQuery}`;
+    const trackURL = `/api/spotify/search?song=${searchQuery}`
+    console.log(trackURL)
     // let trackURL = "https://api.spotify.com/v1/search?q=" + searchQuery + "&type=track&limit=10";
     return this.http.get<any>(trackURL);
   }
