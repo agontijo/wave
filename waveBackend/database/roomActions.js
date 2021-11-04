@@ -71,7 +71,7 @@ async function addUser(user, RoomID) {
 
   let item = room.Item;
 
-  if (!item.userList?.includes(user)) item.userList.push(user);
+  if (item.userList && !item.userList.includes(user)) item.userList.push(user);
   // console.log(item);
   return await _updateRoom({
     TableName: 'WVRooms',
@@ -335,7 +335,8 @@ async function addSong(RoomID, song_id) {
         duration_ms: song.duration_ms,
         name: song.name,
         artists: song.artists.map(a => a.name),
-        explicit: song.explicit
+        explicit: song.explicit,
+        genre: "NA"
       }],
     },
     ReturnValues: 'UPDATED_NEW'
@@ -368,7 +369,7 @@ async function upvoteSong(RoomID, song_id, user) {
   const host = (await userActs.getUser(room.host)).Item;
   const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
-  const thesong;
+  // const thesong;
   // manually update song object
   for (s in room.queue) {
     if (s.id === song.id) {
@@ -413,7 +414,7 @@ async function downvoteSong(RoomID, song_id, user) {
   const check = false;
   const indexRem = undefined;
 
-  const thesong;
+  // const thesong;
 
   // manually update song object
   for (s in room.queue) {
