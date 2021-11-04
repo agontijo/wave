@@ -70,11 +70,12 @@ export class DisplayRoomComponent implements OnInit {
               user: this.curruser,
             };
             this._userServive.addUserToRoom(joinData, _url).subscribe(data => {this.userList = data;
-              for (let i = 0; i < this.len; i++) {
-                this.roomusers += this.userList[i] + ", "
-              }
-              this.len = this.userList.length
             });
+            console.log(this.userList)
+            this.len = this.userList.length
+            for (let i = 0; i < this.len; i++) {
+              this.roomusers += this.userList[i] + ", "
+            }
           });
       });
      
