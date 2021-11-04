@@ -65,15 +65,26 @@ export class CreateRoomComponent implements OnInit, OnDestroy {
     while (this.playback) {
       if (!device) {
         // Device not found at start, try to sync up
-        let devices = (await (await fetch('/api/spotify/device')).json()).devices;
-        let device = devices.length ? devices[0] : null
+        devices = (await (await fetch('/api/spotify/device')).json()).devices;
+        device = devices.length ? devices[0] : null
         timer(waitTime)
       } else if (this.roomID) {
         // There is a room, try to get a song and play it on the device
-        const res = await fetch(`/api/room/${this.roomID}/nextsong`);
+        let res = await fetch(`/api/room/${this.roomID}/nextsong`);
         if (res.ok) {
           const song = await res.json();
-          console.log(song)
+          console.log(song);
+          // res = await fetch('/api/spotify/play', {
+          //   method: 'PUT',
+          //   headers: { 'Content-Type': 'application/json' },
+          //   body: JSON.stringify({
+          //     device,
+          //     uris: [song.uri]
+          //   })
+          // });
+          // if (res.ok) {
+          //   await timer(song.duration_ms ?? waitTime);
+          // } else { await timer(waitTime); }
           await timer(waitTime);
         } else {
           await timer(waitTime)
