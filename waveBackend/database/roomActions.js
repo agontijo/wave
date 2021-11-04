@@ -312,15 +312,19 @@ async function getUsers(RoomID) {
 async function addSong(RoomID, song_id) {
   const room = (await getRoom(RoomID)).Item;
   const host = (await userActs.getUser(room.host)).Item;
-  const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
+  if (!host.spotifyTok.expireTime || host.spotifyTok.expireTime < Date.now()) {
+    host.spotifyTok.accessToken = await userActs.refreshSpotifyToks(host.uname, host.spotifyTok.refreshToken);
+  }
+
+  const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
     UpdateExpression: 'set #q = list_append(#q, :qval)',
-    ExpressionAttributeNames : {
-      "#q" : "queue"
+    ExpressionAttributeNames: {
+      "#q": "queue"
     },
     ExpressionAttributeValues: {
       ':qval': [{
@@ -336,6 +340,27 @@ async function addSong(RoomID, song_id) {
     },
     ReturnValues: 'UPDATED_NEW'
   });
+}
+
+async function removeSongAtIndex(RoomID, index) {
+  const room = (await getRoom(RoomID)).Item;
+
+  if (room.queue.length <= index) {
+    return -1;
+  }
+
+  await _updateRoom({
+    TableName: 'WVRooms',
+    Key: { RoomID },
+    UpdateExpression: `REMOVE queue[${index}]`,
+    ReturnValues: 'UPDATED_NEW'
+  });
+
+  return room.queue[index];
+}
+
+async function popSongFromQueue(RoomID) {
+  return await removeSongAtIndex(RoomID, 0);
 }
 
 async function upvoteSong(RoomID, song_id, user) {
@@ -435,6 +460,8 @@ module.exports = {
   getNumberOfUsers,
   getUsers,
   addSong,
+  removeSongAtIndex,
+  popSongFromQueue,
   upvoteSong,
   downvoteSong
 }
