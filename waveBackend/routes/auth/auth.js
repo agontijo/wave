@@ -74,7 +74,9 @@ router.post(
 router.get(
   '/spotify',
   isAuth.isLoggedIn,
-  passport.authenticate('spotify')
+  passport.authenticate('spotify', {
+    scope: ['user-read-playback-state'],
+  })
 );
 
 router.get(
