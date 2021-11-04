@@ -389,7 +389,7 @@ async function upvoteSong(RoomID, song_id, user) {
     }
   }
 
-  return await _updateRoom({
+  await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
     UpdateExpression: 'set queue = :q',
@@ -398,6 +398,8 @@ async function upvoteSong(RoomID, song_id, user) {
     },
     ReturnValues: 'UPDATED_NEW'
   });
+
+  return room.queue.liked;
 }
 
 async function downvoteSong(RoomID, song_id, user) {
@@ -444,6 +446,39 @@ async function downvoteSong(RoomID, song_id, user) {
     room.queue.splice(indexRem,1)
   }
 
+  await _updateRoom({
+    TableName: 'WVRooms',
+    Key: { RoomID },
+    UpdateExpression: 'set queue = :q',
+    ExpressionAttributeValues: {
+      ':q': room.queue,
+    },
+    ReturnValues: 'UPDATED_NEW'
+  });
+
+  return room.queue.disliked;
+}
+
+async function moveSongToPrev(RoomID, song_id, user) {
+  const room = (await getRoom(RoomID)).Item;
+  const host = (await userActs.getUser(room.host)).Item;
+  const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
+
+  _checkHost(user, room);
+
+  let index = 0;
+
+  for (s in room.queue) {
+    if (s.id === song.id) {
+      // remove this song, and put it in the previous queue
+      room.previous.push(s);
+      room.queue.splice(index, 1);
+
+      break;
+    }
+    index += 1;
+  }
+
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
@@ -477,5 +512,6 @@ module.exports = {
   removeSongAtIndex,
   popSongFromQueue,
   upvoteSong,
-  downvoteSong
+  downvoteSong,
+  moveSongToPrev
 }

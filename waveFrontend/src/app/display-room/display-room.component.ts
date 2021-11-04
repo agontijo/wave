@@ -68,7 +68,6 @@ export class DisplayRoomComponent implements OnInit {
           this.genresAllowed = this.roominfo.genresAllowed
           this.host = this.roominfo.host
           this.queue = this.roominfo.queue
-          console.log(this.queue)
           this.roomname = this.roominfo.roomname
           this.songThreshold = this.roominfo.songThreshold
           this.userList = this.roominfo.userList
@@ -76,9 +75,15 @@ export class DisplayRoomComponent implements OnInit {
             let _url = "/api/room/" + this.roomID + "/join";
             const joinData = {
               user: this.curruser,
+              room: this.roominfo,
+              
             };
+            console.log(this.roominfo)
             this._userServive.addUserToRoom(joinData, _url).subscribe(data => {this.userList = data;
             });
+            console.log(this.roominfo)
+            console.log(this.userList)
+            this.len = this.userList.length
             for (let i = 0; i < this.len; i++) {
               this.roomusers += this.userList[i] + ", "
             }
@@ -100,6 +105,7 @@ export class DisplayRoomComponent implements OnInit {
     //search track
     
     public searchTrack() {
+      this.songArr.length = 0
       this._spotifyServive.getSongs(this.searchQuery).subscribe((data) => {
         this.songs = data.tracks.items;
         this.songArr.length = 0
@@ -181,9 +187,19 @@ export class DisplayRoomComponent implements OnInit {
       console.log("ok");
       this.songs = []
       this.searchQuery = ""
+      this.searchTrack()
     }
 
-    public back(){
+    public leaveroom(){
+      this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
+        let _url = "/api/room/" + this.roomID + "/leave";
+        const leaveData = {
+          user: this.curruser,
+          room: this.roominfo,
+        };
+        this._userServive.addUserToRoom(leaveData, _url).subscribe(data => {this.userList = data;
+        });
+      });
       this.router.navigate(['../storebuttons',], { relativeTo: this.route });
     }
 
