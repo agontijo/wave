@@ -300,6 +300,10 @@ async function upvoteSong(RoomID, song_id, user) {
   const host = (await userActs.getUser(room.host)).Item;
   const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
+<<<<<<< Updated upstream
+=======
+  const thesong = undefined;
+>>>>>>> Stashed changes
   // manually update song object
   for (s in room.queue) {
     if (s.id === song.id) {
@@ -326,15 +330,41 @@ async function upvoteSong(RoomID, song_id, user) {
 }
 
 async function downvoteSong(RoomID, song_id, user) {
+  console.log("calledDownlote")
   const room = (await getRoom(RoomID)).Item;
   const host = (await userActs.getUser(room.host)).Item;
   const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
+<<<<<<< Updated upstream
+=======
+  const check = false;
+  const indexRem = undefined;
+
+  const thesong = undefined;
+  console.log("before for")
+>>>>>>> Stashed changes
   // manually update song object
+  console.log(room.queue)
   for (s in room.queue) {
-    if (s.id === song.id) {
+    console.log(s.id);
+    console.log(song.id)
+    if (s.id == song.id) {
       // add user to the downvote list, but only if they are not already on the list
+<<<<<<< Updated upstream
       if (!s.disliked.includes(user.uname)) s.liked.push(user.uname);
+=======
+      console.log(s);
+      thesong = s;
+
+      if (!s.disliked.includes(user)) {
+        s.disliked.push(user);
+      }
+      else {
+        index = s.disliked.indexOf(user)
+        s.disliked.splice(index,1)
+        break;
+      }
+>>>>>>> Stashed changes
       // remove the user from the upvote list, but only if they were on the list already
       if (s.liked.includes(user.uname)) {
         index = s.disliked.indexOf(user.uname);
@@ -343,7 +373,7 @@ async function downvoteSong(RoomID, song_id, user) {
       break;
     }
   }
-
+  console.log("after");
   // TODO: check if song meets downvote threshold, and remove it if it does
 
   return await _updateRoom({
