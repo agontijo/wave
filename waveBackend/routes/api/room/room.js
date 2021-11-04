@@ -50,15 +50,7 @@ router.post(
   isAuth.isLoggedIn,
   async (req, res) => {
     try {
-      console.log("here");
-      // TODO: Make this if its own function
-      if (req.user.currRoom !== "") {
-        try { await roomActions.destroyRoom(req.user.uname, req.user.currRoom); }
-        catch (err) { console.error(err); }
-      }
-      console.log("here2");
       const data = await roomActions.addUser(req.user.uname, req.params.roomid);
-      console.log(data);
       if (data?.Attributes) { res.status(200).send(data); }
       else { res.status(500).send(null); }
     } catch (err) {
@@ -230,6 +222,19 @@ router.post(
   async (req, res) => {
     try {
       const data = await roomActions.downvoteSong(req.params.roomid, req.body.songID, req.user.uname);
+      res.send(data);
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  }
+);
+
+router.post(
+  '/:roomid/endsong',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    try {
+      const data = await roomActions.moveSongToPrev(req.params.roomid, req.body.songID, req.user.uname);
       res.send(data);
     } catch (err) {
       res.status(500).send(err.message);

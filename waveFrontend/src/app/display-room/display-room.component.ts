@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { NONE_TYPE } from '@angular/compiler';
+import { NONE_TYPE, ThrowStmt } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
@@ -32,6 +32,13 @@ export class DisplayRoomComponent implements OnInit {
   len: number = 0;
   roomusers = ""
   public roominfo!: Room;
+  likedSong = false;
+  dislikedSong = false;
+  selectedC= '#6fd8b8'
+  unseelctedC = '#333'
+  likedC = this.unseelctedC;
+  dislikedC = this.unseelctedC;
+  
 
   constructor(private _spotifyServive: SpotifyService, private _userServive: UserService, private http:HttpClientModule ,
     private route: ActivatedRoute,private router: Router) { }
@@ -61,7 +68,6 @@ export class DisplayRoomComponent implements OnInit {
           this.genresAllowed = this.roominfo.genresAllowed
           this.host = this.roominfo.host
           this.queue = this.roominfo.queue
-          console.log(this.queue)
           this.roomname = this.roominfo.roomname
           this.songThreshold = this.roominfo.songThreshold
           this.userList = this.roominfo.userList
@@ -69,9 +75,15 @@ export class DisplayRoomComponent implements OnInit {
             let _url = "/api/room/" + this.roomID + "/join";
             const joinData = {
               user: this.curruser,
+              room: this.roominfo,
+              
             };
+            console.log(this.roominfo)
             this._userServive.addUserToRoom(joinData, _url).subscribe(data => {this.userList = data;
             });
+            console.log(this.roominfo)
+            console.log(this.userList)
+            this.len = this.userList.length
             for (let i = 0; i < this.len; i++) {
               this.roomusers += this.userList[i] + ", "
             }
@@ -93,6 +105,7 @@ export class DisplayRoomComponent implements OnInit {
     //search track
     
     public searchTrack() {
+      this.songArr.length = 0
       this._spotifyServive.getSongs(this.searchQuery).subscribe((data) => {
         this.songs = data.tracks.items;
         this.songArr.length = 0
@@ -121,7 +134,24 @@ export class DisplayRoomComponent implements OnInit {
         //console.log(this.genre);
       });
     }
-
+    public likesong(curSongId: number) {
+      let songData = {
+        'roomid': this.roomID,
+        'songID': curSongId,
+        'uname': this.curruser.uname
+      }
+      this._userServive.likeSong(songData, '/api/room/'+this.roomID+'/likesongeSong').subscribe(data => this.likedC = this.selectedC);
+    }
+    public dislikedsong(curSongId:number) {
+      let songData = {
+        'roomid': this.roomID,
+        'songID': curSongId,
+        'uname': this.curruser.uname
+      }
+      this._userServive.likeSong(songData, '/api/room/'+this.roomID+'/likesongeSong').subscribe(data => 
+        this.dislikedC = this.selectedC
+        );
+    }
     public select(ids: number){
       const songData = {
         songID: ids,
@@ -134,16 +164,25 @@ export class DisplayRoomComponent implements OnInit {
       this.songs = []
       this.searchQuery = ""
       this._spotifyServive.addSong(songData, url).subscribe(data => this.sc = data)
-      
     }
 
     public clear(){
       console.log("ok");
       this.songs = []
       this.searchQuery = ""
+      this.searchTrack()
     }
 
-    public back(){
+    public leaveroom(){
+      this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
+        let _url = "/api/room/" + this.roomID + "/leave";
+        const leaveData = {
+          user: this.curruser,
+          room: this.roominfo,
+        };
+        this._userServive.addUserToRoom(leaveData, _url).subscribe(data => {this.userList = data;
+        });
+      });
       this.router.navigate(['../storebuttons',], { relativeTo: this.route });
     }
 

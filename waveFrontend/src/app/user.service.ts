@@ -75,5 +75,13 @@ export class UserService {
     console.log(url);
     return this.http.post<any>(url, createBody);
   }
+  likeSong(createBody: any, url: any): Observable<any> {
+    console.log(url);
+    return this.http.post<any>(url, createBody);
+  }
+  dislikeSong(createBody: any, url: any): Observable<any> {
+    console.log(url);
+    return this.http.post<any>(url, createBody);
+  }
 
 }
