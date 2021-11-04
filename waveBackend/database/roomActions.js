@@ -68,7 +68,7 @@ async function addUser(user, RoomID) {
     Key: { RoomID },
     UpdateExpression: 'ADD users :val',
     ExpressionAttributeValues: {
-      ':val': {"SS":[user]},
+      ':val': { "SS": [user] },
     },
     ReturnValues: 'UPDATED_NEW'
   });
@@ -81,7 +81,7 @@ async function removeUser(user, RoomID) {
     Key: { RoomID },
     UpdateExpression: 'DELETE users :val',
     ExpressionAttributeValues: {
-      ':val': {"SS":[user]},
+      ':val': { "SS": [user] },
     },
     ReturnValues: 'UPDATED_NEW'
   });
@@ -150,18 +150,18 @@ async function addGenre(user, RoomID, genre) {
     TableName: 'WVRooms',
     Key: { RoomID },
   });
-  
+
   room = room.Item;
-  
+
   // Check if user is the host of the room
   _checkHost(user, room);
-  
+
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
     UpdateExpression: 'ADD genresAllowed :val',
     ExpressionAttributeValues: {
-      ':val': {"SS":[genre]},
+      ':val': { "SS": [genre] },
     },
     ReturnValues: 'UPDATED_NEW'
   });
@@ -186,7 +186,7 @@ async function removeGenre(user, RoomID, genre) {
     Key: { RoomID },
     UpdateExpression: 'DELETE genresAllowed :val',
     ExpressionAttributeValues: {
-      ':val': {"SS":[genre]},
+      ':val': { "SS": [genre] },
     },
     ReturnValues: 'UPDATED_NEW'
   });
@@ -276,8 +276,8 @@ async function addSong(RoomID, song_id) {
     TableName: 'WVRooms',
     Key: { RoomID },
     UpdateExpression: 'set #q = list_append(#q, :qval)',
-    ExpressionAttributeNames : {
-      "#q" : "queue"
+    ExpressionAttributeNames: {
+      "#q": "queue"
     },
     ExpressionAttributeValues: {
       ':qval': [{
@@ -300,10 +300,7 @@ async function upvoteSong(RoomID, song_id, user) {
   const host = (await userActs.getUser(room.host)).Item;
   const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
-<<<<<<< Updated upstream
-=======
   const thesong = undefined;
->>>>>>> Stashed changes
   // manually update song object
   for (s in room.queue) {
     if (s.id === song.id) {
@@ -335,14 +332,11 @@ async function downvoteSong(RoomID, song_id, user) {
   const host = (await userActs.getUser(room.host)).Item;
   const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
-<<<<<<< Updated upstream
-=======
   const check = false;
   const indexRem = undefined;
 
   const thesong = undefined;
   console.log("before for")
->>>>>>> Stashed changes
   // manually update song object
   console.log(room.queue)
   for (s in room.queue) {
@@ -350,9 +344,6 @@ async function downvoteSong(RoomID, song_id, user) {
     console.log(song.id)
     if (s.id == song.id) {
       // add user to the downvote list, but only if they are not already on the list
-<<<<<<< Updated upstream
-      if (!s.disliked.includes(user.uname)) s.liked.push(user.uname);
-=======
       console.log(s);
       thesong = s;
 
@@ -361,10 +352,9 @@ async function downvoteSong(RoomID, song_id, user) {
       }
       else {
         index = s.disliked.indexOf(user)
-        s.disliked.splice(index,1)
+        s.disliked.splice(index, 1)
         break;
       }
->>>>>>> Stashed changes
       // remove the user from the upvote list, but only if they were on the list already
       if (s.liked.includes(user.uname)) {
         index = s.disliked.indexOf(user.uname);
