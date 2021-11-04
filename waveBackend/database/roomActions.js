@@ -317,7 +317,9 @@ async function addSong(RoomID, song_id) {
     host.spotifyTok.accessToken = await userActs.refreshSpotifyToks(host.uname, host.spotifyTok.refreshToken);
   }
 
-  const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
+  const host_tok = host.spotifyTok.accessToken;
+  const song = await spotifyUtils.getTrack(song_id, host_tok);
+  const genre = (await spotifyUtils.getArtist(song.artists[0].id, host_tok)).genres[0];
 
   return await _updateRoom({
     TableName: 'WVRooms',
@@ -336,7 +338,7 @@ async function addSong(RoomID, song_id) {
         name: song.name,
         artists: song.artists.map(a => a.name),
         explicit: song.explicit,
-        genre: "NA"
+        genre
       }],
     },
     ReturnValues: 'UPDATED_NEW'
