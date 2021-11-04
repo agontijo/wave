@@ -368,9 +368,12 @@ async function upvoteSong(RoomID, song_id, user) {
   const host = (await userActs.getUser(room.host)).Item;
   const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
+  const thesong;
   // manually update song object
   for (s in room.queue) {
     if (s.id === song.id) {
+
+      thesong = s;
       // add user to the upvote list, but only if they are not already on the list
       if (!s.liked.includes(user)) {
         s.liked.push(user);
@@ -399,7 +402,7 @@ async function upvoteSong(RoomID, song_id, user) {
     ReturnValues: 'UPDATED_NEW'
   });
 
-  return room.queue.liked;
+  return thesong.liked;
 }
 
 async function downvoteSong(RoomID, song_id, user) {
@@ -410,10 +413,15 @@ async function downvoteSong(RoomID, song_id, user) {
   const check = false;
   const indexRem = undefined;
 
+  const thesong;
+
   // manually update song object
   for (s in room.queue) {
     if (s.id === song.id) {
       // add user to the downvote list, but only if they are not already on the list
+
+      thesong = s;
+
       if (!s.disliked.includes(user)) {
         s.disliked.push(user);
       }
@@ -456,7 +464,7 @@ async function downvoteSong(RoomID, song_id, user) {
     ReturnValues: 'UPDATED_NEW'
   });
 
-  return room.queue.disliked;
+  return thesong.disliked;
 }
 
 async function moveSongToPrev(RoomID, song_id, user) {
