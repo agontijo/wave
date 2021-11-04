@@ -24,7 +24,15 @@ async function getArtist(artist_id, access_token) {
   )).data;
 }
 
+async function getDevice(access_token) {
+  return (await _getWithAccessToken(
+    `https://api.spotify.com/v1/me/player/devices`,
+    access_token
+  )).data;
+}
+
 module.exports = {
   getTrack,
   getArtist,
+  getDevice,
 };
