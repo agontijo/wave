@@ -208,4 +208,17 @@ router.post(
   }
 );
 
+router.post(
+  '/:roomid/endsong',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    try {
+      const data = await roomActions.moveSongToPrev(req.params.roomid, req.body.songID, req.user.uname);
+      res.send(data);
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  }
+);
+
 module.exports = router;
