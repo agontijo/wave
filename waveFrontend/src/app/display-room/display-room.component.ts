@@ -140,7 +140,16 @@ export class DisplayRoomComponent implements OnInit {
         'songID': curSongId,
         'uname': this.curruser.uname
       }
-      this._userServive.likeSong(songData, '/api/room/'+this.roomID+'/likesongeSong').subscribe(data => this.likedC = this.selectedC);
+      this._userServive.likeSong(songData, '/api/room/'+this.roomID+'/likesongeSong').subscribe(data =>  {
+        if (data.includes(this.curruser)) {
+          this.likedC = this.selectedC;
+          this.dislikedC = this.unseelctedC;
+        } else {
+          this.likedC = this.unseelctedC;
+          this.unseelctedC;
+        }
+      
+      });
     }
     public dislikedsong(curSongId:number) {
       let songData = {
@@ -148,9 +157,17 @@ export class DisplayRoomComponent implements OnInit {
         'songID': curSongId,
         'uname': this.curruser.uname
       }
-      this._userServive.likeSong(songData, '/api/room/'+this.roomID+'/likesongeSong').subscribe(data => 
-        this.dislikedC = this.selectedC
-        );
+      this._userServive.dislikeSong(songData, '/api/room/'+this.roomID+'/likesongeSong').subscribe(data => 
+        {
+          if (data.includes(this.curruser)) {
+            this.dislikedC = this.selectedC;
+            this.likedC = this.unseelctedC;
+          } else {
+            this.dislikedC = this.unseelctedC;
+            this.likedC = this.selectedC;
+          }
+          
+        });
     }
     public select(ids: number){
       const songData = {
