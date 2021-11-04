@@ -65,5 +65,27 @@ router.get(
   }
 );
 
+router.get(
+  '/artist',
+  isAuth.isLoggedIn,
+  isAuth.isSpotify,
+  async (req, res) => {
+    if (!req.query.artist) { res.status(422).send('missing song query parameter'); return; }
+    try {
+
+      const response = await axios.get(`https://api.spotify.com/v1/artists/${req.query.artist}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${req.user.spotifyTok.accessToken}`
+        }
+      });
+      res.send(response.data);
+    } catch (e) {
+      console.error(e)
+      res.status(500).send('Something went wrong with spotify')
+    }
+  }
+);
+
 
 module.exports = router;

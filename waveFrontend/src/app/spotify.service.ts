@@ -24,14 +24,15 @@ export class SpotifyService {
 
     // get tracks
     public getSongs(searchQuery: string): Observable<any> {
-      let trackURL = "https://api.spotify.com/v1/search?q=" + searchQuery + "&type=track&limit=10";
+      const trackURL = `/api/spotify/search?song=${searchQuery}`;
+      // let trackURL = "https://api.spotify.com/v1/search?q=" + searchQuery + "&type=track&limit=10";
       return this.http.get<any>(trackURL, this.httpOptions);
     }
 
     public getArtist(searchQuery: number): Observable<any> {
       //let albumURL = "https://api.spotify.com/v1/search?q=" + searchQuery + "&type=track&limit=10";
-      let artistURL = "https://api.spotify.com/v1/artists/" + searchQuery;
-      
+      // let artistURL = "https://api.spotify.com/v1/artists/" + searchQuery;
+      const artistURL = `/api/spotify/artist?artist=${searchQuery}`;
       return this.http.get<any>(artistURL, this.httpOptions);
     }
 
