@@ -52,7 +52,7 @@ router.post(
     try {
       
       // TODO: Make this if its own function
-      if (req.user.currRoom === "") {
+      if (req.user.currRoom !== "") {
         try { await roomActions.destroyRoom(req.user.uname, req.user.currRoom); }
         catch (err) { console.error(err); }
       }
