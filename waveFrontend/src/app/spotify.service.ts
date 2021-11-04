@@ -11,7 +11,7 @@ import { SongCheck } from './songcheck';
 export class SpotifyService {
 
 
-  public authorizationKey = "Bearer BQBob4Xvzc2pVlBRhS5vbTjz2i7XpKxVikQ_G8Fc7ZwIqsschPzlSnRmspynaipJ6oOEWY-aZOA55NFhT4zmX2M34Ezt03vr4KfADanvxualG7ehkiiTP4udOh8BQkIWqXRVgbfmy8M6tTJb9iHfN4CUm1AQ5jA"
+  public authorizationKey = "Bearer BQAN2zyQ7clUO793tZ2j4x42BHt5NZY5ENFYCGRUtETJyv9VWLll5gU8Q1w5YCQp2vbISYwRcfI0_fIZWTN7VPGcXVtArarYtbXTexW05CTQVwmSk23vbtWPC4kt33y3NFXjb2YOqIwoh9R0RF7wbmPoicrRmtY"
   public httpOptions = {
     headers : new HttpHeaders({
       "Accept" : "application/json",
