@@ -389,7 +389,7 @@ async function upvoteSong(RoomID, song_id, user) {
     }
   }
 
-  return await _updateRoom({
+  await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
     UpdateExpression: 'set queue = :q',
@@ -398,6 +398,8 @@ async function upvoteSong(RoomID, song_id, user) {
     },
     ReturnValues: 'UPDATED_NEW'
   });
+
+  return room.queue.liked;
 }
 
 async function downvoteSong(RoomID, song_id, user) {
@@ -444,7 +446,7 @@ async function downvoteSong(RoomID, song_id, user) {
     room.queue.splice(indexRem,1)
   }
 
-  return await _updateRoom({
+  await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
     UpdateExpression: 'set queue = :q',
@@ -453,6 +455,8 @@ async function downvoteSong(RoomID, song_id, user) {
     },
     ReturnValues: 'UPDATED_NEW'
   });
+
+  return room.queue.disliked;
 }
 
 module.exports = {
