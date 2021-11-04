@@ -18,11 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // init cross origin scripting
 // TODO: Make more restrictive
-app.use(CORS({
-  origin: "*",
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(CORS({ origin: '*' }));
 
 // init cookies
 app.use(cookieSession({

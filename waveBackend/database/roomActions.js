@@ -22,7 +22,7 @@ async function createRoom(params) {
   if (!params?.host) {
     throw 'Malformed Room Object';
   }
-  
+
 
   const room = {
     RoomID: generate.eightDigitHexID(),
@@ -100,8 +100,8 @@ async function removeUser(user, RoomID) {
   }
 
   if (item.host == user) {
-    item.userList.forEach(async function(auser) {
-      await userActs.setCurrRoom(auser,'')
+    item.userList.forEach(async function (auser) {
+      await userActs.setCurrRoom(auser, '')
     })
 
     return await _destroyRoom({
@@ -387,7 +387,7 @@ async function upvoteSong(RoomID, song_id, user) {
       }
       else {
         index = s.liked.indexOf(user)
-        s.liked.splice(index,1)
+        s.liked.splice(index, 1)
       }
       // remove the user from the downvote list, but only if they were on the list already
 
@@ -430,7 +430,7 @@ async function downvoteSong(RoomID, song_id, user) {
       }
       else {
         index = s.disliked.indexOf(user)
-        s.disliked.splice(index,1)
+        s.disliked.splice(index, 1)
         break;
       }
       // remove the user from the upvote list, but only if they were on the list already
@@ -454,7 +454,7 @@ async function downvoteSong(RoomID, song_id, user) {
   // TODO: check if song meets downvote threshold, and remove it if it does
 
   if (check) {
-    room.queue.splice(indexRem,1)
+    room.queue.splice(indexRem, 1)
   }
 
   await _updateRoom({
@@ -470,32 +470,44 @@ async function downvoteSong(RoomID, song_id, user) {
   return thesong.disliked;
 }
 
-async function moveSongToPrev(RoomID, song_id, user) {
+async function moveSongToPrev(RoomID, song, user) {
   const room = (await getRoom(RoomID)).Item;
   const host = (await userActs.getUser(room.host)).Item;
-  const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
+  // const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
   _checkHost(user, room);
 
-  let index = 0;
+  // let index = 0;
 
-  for (s in room.queue) {
-    if (s.id === song.id) {
-      // remove this song, and put it in the previous queue
-      room.previous.push(s);
-      room.queue.splice(index, 1);
+  // for (s in room.queue) {
+  //   if (s.id === song.id) {
+  //     // remove this song, and put it in the previous queue
+  //     room.previous.push(s);
+  //     room.queue.splice(index, 1);
 
-      break;
-    }
-    index += 1;
-  }
+  //     break;
+  //   }
+  //   index += 1;
+  // }
 
+  // return await _updateRoom({
+  //   TableName: 'WVRooms',
+  //   Key: { RoomID },
+  //   UpdateExpression: 'set queue = :q',
+  //   ExpressionAttributeValues: {
+  //     ':q': room.queue,
+  //   },
+  //   ReturnValues: 'UPDATED_NEW'
+  // });
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
-    UpdateExpression: 'set queue = :q',
+    UpdateExpression: 'set #q = list_append(#q, :qval)',
+    ExpressionAttributeNames: {
+      "#q": "previous"
+    },
     ExpressionAttributeValues: {
-      ':q': room.queue,
+      ':qval': [song],
     },
     ReturnValues: 'UPDATED_NEW'
   });

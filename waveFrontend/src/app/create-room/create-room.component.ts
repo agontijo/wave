@@ -66,7 +66,7 @@ export class CreateRoomComponent implements OnInit, OnDestroy {
       if (!device) {
         // Device not found at start, try to sync up
         devices = (await (await fetch('/api/spotify/device')).json()).devices;
-        device = devices.length ? devices[0] : null
+        device = devices.length ? devices[0] : null;
         timer(waitTime)
       } else if (this.roomID) {
         // There is a room, try to get a song and play it on the device
@@ -86,6 +86,13 @@ export class CreateRoomComponent implements OnInit, OnDestroy {
           //   await timer(song.duration_ms ?? waitTime);
           // } else { await timer(waitTime); }
           await timer(waitTime);
+          await fetch(`/api/room/${this.roomID}/endsong`, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              song
+            })
+          });
         } else {
           await timer(waitTime)
         }
