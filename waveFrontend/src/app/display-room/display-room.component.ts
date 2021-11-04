@@ -212,7 +212,7 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
         this._userServive.addUserToRoom(leaveData, _url).subscribe(data => {this.userList = data;
         });
       });
-      this.router.navigate(['../storebuttons',], { relativeTo: this.route });
+      this.router.navigate(['../homepage',], { relativeTo: this.route });
     }
 
 }
