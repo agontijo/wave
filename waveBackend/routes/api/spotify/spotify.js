@@ -87,5 +87,28 @@ router.get(
   }
 );
 
+router.get(
+  'volume',
+  isAuth.isLoggedIn,
+  isAuth.isSpotify,
+  async (req, res) => {
+    if (!req.query.vol) {res.status(422).send('missing volume parameter'); return; }
+    try {
+
+      const response = await axios.put(`https://api.spotify.com/v1/me/player/volume?volume_percent=${req.query.vol}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${req.user.spotifyTok.accessToken}`
+        }
+      });
+      res.send(response.data);
+    } catch (e) {
+      console.error(e)
+      res.status(500).send('Something wrong with spotify volume change')
+    }
+
+  }
+);
+
 
 module.exports = router;
