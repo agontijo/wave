@@ -17,7 +17,7 @@
         </mat-form-field>
         <br>
         <button mat-flat-button class="nav-item nav-link-edit" [routerLink]="['/password-change']">Change Password</button>
-        <button mat-flat-button href="/auth/spotify" *ngIf="!isSpotifyConnected">Connect Spotify</button>
-        <button mat-flat-button href="/auth/spotify/disconnect" *ngIf="isSpotifyConnected">Disconnect Spotify</button>
+        <a href="/auth/spotify" *ngIf="!isSpotifyConnected">Connect Spotify</a>
+        <a href="/auth/spotify/disconnect" *ngIf="isSpotifyConnected">Disconnect Spotify</a>
         <button mat-flat-button (click)="deleteAccount()">Delete Account</button>
     </mat-card>

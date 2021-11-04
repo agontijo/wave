@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { NONE_TYPE } from '@angular/compiler';
+import { NONE_TYPE, ThrowStmt } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
@@ -32,6 +32,13 @@ export class DisplayRoomComponent implements OnInit {
   len: number = 0;
   roomusers = ""
   public roominfo!: Room;
+  likedSong = false;
+  dislikedSong = false;
+  selectedC= '#6fd8b8'
+  unseelctedC = '#333'
+  likedC = this.unseelctedC;
+  dislikedC = this.unseelctedC;
+  
 
   constructor(private _spotifyServive: SpotifyService, private _userServive: UserService, private http:HttpClientModule ,
     private route: ActivatedRoute,private router: Router) { }
@@ -121,7 +128,24 @@ export class DisplayRoomComponent implements OnInit {
         //console.log(this.genre);
       });
     }
-
+    public likesong(curSongId: number) {
+      let songData = {
+        'roomid': this.roomID,
+        'songID': curSongId,
+        'uname': this.curruser.uname
+      }
+      this._userServive.likeSong(songData, '/api/room/'+this.roomID+'/likesongeSong').subscribe(data => this.likedC = this.selectedC);
+    }
+    public dislikedsong(curSongId:number) {
+      let songData = {
+        'roomid': this.roomID,
+        'songID': curSongId,
+        'uname': this.curruser.uname
+      }
+      this._userServive.likeSong(songData, '/api/room/'+this.roomID+'/likesongeSong').subscribe(data => 
+        this.dislikedC = this.selectedC
+        );
+    }
     public select(ids: number){
       const songData = {
         songID: ids,
@@ -134,7 +158,6 @@ export class DisplayRoomComponent implements OnInit {
       this.songs = []
       this.searchQuery = ""
       this._spotifyServive.addSong(songData, url).subscribe(data => this.sc = data)
-      
     }
 
     public clear(){

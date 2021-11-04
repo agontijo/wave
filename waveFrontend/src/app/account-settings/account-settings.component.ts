@@ -52,10 +52,10 @@ export class AccountSettingsComponent implements OnInit {
       this._userServive.getCurrUser().subscribe(data => {
         this.tempusers = data;
         if (Object.keys(this.tempusers?.spotifyTok).length == 0) {
-          this.isSpotifyConnected = true;
+          this.isSpotifyConnected = false;
         }
         else {
-          this.isSpotifyConnected = false;
+          this.isSpotifyConnected = true;
         }
         if (this.tempusers.currRoom) {
           this._userServive.getRoom(this.tempusers).subscribe(res => {
