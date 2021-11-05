@@ -97,7 +97,7 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
           
       });
      
-      let timey = interval(30000);
+      let timey = interval(60000);
       this.timer= timey.subscribe(t=> {
         this.ngOnInit();}); 
     }
@@ -105,6 +105,9 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
       this.timer.unsubscribe();
+      clearInterval(this.timer);
+      console.log("destroy");
+      this.ngOnDestroy
     }
     
     // <!-- <h2>Song Name: {{song.name}}</h2>

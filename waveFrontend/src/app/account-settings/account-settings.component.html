@@ -20,4 +20,5 @@
         <a href="/auth/spotify" *ngIf="!isSpotifyConnected">Connect Spotify</a>
         <a href="/auth/spotify/disconnect" *ngIf="isSpotifyConnected">Disconnect Spotify</a>
         <button mat-flat-button (click)="deleteAccount()">Delete Account</button>
+        <button (click)="back()">Back</button>
     </mat-card>

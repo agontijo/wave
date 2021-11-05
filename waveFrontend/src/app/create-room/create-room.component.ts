@@ -38,4 +38,8 @@ export class CreateRoomComponent implements OnInit {
       );
     }
 
+    back() {
+      this.router.navigate(['../homepage',], { relativeTo: this.route });
+    }
+
 }
