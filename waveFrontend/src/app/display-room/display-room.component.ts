@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SpotifyService } from '../spotify.service';
 import { SongCheck } from '../songcheck';
 import { SongI } from '../songI';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {interval} from 'rxjs'
 
 
@@ -34,17 +35,9 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
   len: number = 0;
   roomusers = ""
   public roominfo!: Room;
-  likedSong = false;
-  dislikedSong = false;
-  selectedC= '#6fd8b8'
-  unseelctedC = '#333'
-  likedC = this.unseelctedC;
-  dislikedC = this.unseelctedC;
-  _snackBar: any;
   durationInSeconds = 5;
-  
 
-  constructor(private _spotifyServive: SpotifyService, private _userServive: UserService, private http:HttpClientModule ,
+  constructor(private _snackBar: MatSnackBar, private _spotifyServive: SpotifyService, private _userServive: UserService, private http:HttpClientModule ,
     private route: ActivatedRoute,private router: Router) { }
     host:string = ''
     queue: any[] = []
@@ -86,11 +79,8 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
               room: this.roominfo,
               
             };
-            console.log(this.roominfo)
             this._userServive.addUserToRoom(joinData, _url).subscribe(data => {this.userList = data;
             });
-            console.log(this.roominfo)
-            console.log(this.userList)
             this.len = this.userList.length
             this.roomusers = ""
             for (let i = 0; i < this.len; i++) {
@@ -113,13 +103,6 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
       console.log("destroy");
       this.ngOnDestroy
     }
-    
-    // <!-- <h2>Song Name: {{song.name}}</h2>
-    // <img [src]="song.album.images[0].url" alt="" width="200" height ="200">
-    // <h2>Artist: {{song.album.artists[0].name}}</h2>
-    // <h2>Explcit: {{song.explicit}}</h2>
-    // <h2>Explcit: {{song.album.artists[0].id}}</h2>
-    // {{getGenre(song.album.artists[0].id)}} -->
     //search track
     
     public searchTrack() {
@@ -159,14 +142,12 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
         'uname': this.curruser.uname
       }
       this._userServive.likeSong(songData, '/api/room/'+this.roomID+'/likeSong').subscribe(data =>  {
-        if (data.includes(this.curruser)) {
-          this.likedC = this.selectedC;
-          this.dislikedC = this.unseelctedC;
-          this.openSnackBarL;
+        if (data.includes(this.curruser.uname)) {
+          this.openSnackBarL();
         } else {
-          this.likedC = this.unseelctedC;
-          this.unseelctedC;
+          this.openSnackBarLD();
         }
+        console.log(data);
       
       });
     }
@@ -193,13 +174,11 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
       }
       this._userServive.dislikeSong(songData, '/api/room/'+this.roomID+'/dislikeSong').subscribe(data => 
         {
-          // if (data.includes(this.curruser)) {
-          //   this.dislikedC = this.selectedC;
-          //   this.likedC = this.unseelctedC;
-          // } else {
-          //   this.dislikedC = this.unseelctedC;
-          //   this.likedC = this.selectedC;
-          // }
+          if (data.includes(this.curruser.uname)) {
+            this.openSnackBarD();
+          } else {
+            this.openSnackBarDD();
+          }
           console.log(data);
           
         });
@@ -223,13 +202,27 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
       this._spotifyServive.addSong(songData, url).subscribe(data => this.sc = data)
     }
 
+    openSnackBarLD() {
+      this._snackBar.openFromComponent(LikedDComponent, {
+        duration: this.durationInSeconds * 1000,
+      });
+    }
+    openSnackBarD() {
+      this._snackBar.openFromComponent(DislikedComponent, {
+        duration: this.durationInSeconds * 1000,
+      });
+    }
+    openSnackBarDD() {
+      this._snackBar.openFromComponent(DislikedDComponent, {
+        duration: this.durationInSeconds * 1000,
+      });
+    }
     public clear(){
       console.log("ok");
       this.songs = []
       this.searchQuery = ""
       this.searchTrack()
     }
-
     public leaveroom(){
       this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
         let _url = "/api/room/" + this.roomID + "/leave";
@@ -247,24 +240,27 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
 @Component({
   selector: 'liked',
   templateUrl: 'liked.html',
-  styles: [
-    `
-    .colorS {
-      color: aquamarine;
-    }
-  `,
-  ],
+  styles: [],
 })
 export class LikedComponent {}
+
+@Component({
+  selector: 'likedd',
+  templateUrl: 'likedd.html',
+  styles: [],
+})
+export class LikedDComponent {}
+
 @Component({
   selector: 'disliked',
   templateUrl: 'disliked.html',
-  styles: [
-    `
-    .colorS {
-      color: aquamarine;
-    }
-  `,
-  ],
+  styles: [],
 })
-export class disLikedComponent {}
+export class DislikedComponent {}
+
+@Component({
+  selector: 'dislikedd',
+  templateUrl: 'dislikedd.html',
+  styles: [],
+})
+export class DislikedDComponent {}

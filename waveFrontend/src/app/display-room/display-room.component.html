@@ -1,4 +1,4 @@
-<button (click)="leaveroom()" type="button clearbutton">Leave Room</button>
+<button mat-flat-button (click)="leaveroom()" type="button clearbutton">Leave Room</button>
 
 <h2>roomID: {{roomID}}</h2>
 <h2>host: {{host}}</h2>
@@ -25,8 +25,17 @@
           <mat-card-subtitle>{{q.artists}}</mat-card-subtitle>
           <mat-card-subtitle>Explicit: {{q.explicit}}</mat-card-subtitle>
           <mat-card-subtitle>Genre: {{q.genre}}</mat-card-subtitle>
-          <mat-card-subtitle><mat-icon (click)="likesong(q.id)">thumb_up</mat-icon></mat-card-subtitle>
-          <mat-card-subtitle><mat-icon (click)="dislikedsong(q.id)">thumb_down</mat-icon></mat-card-subtitle>
+          <mat-card-subtitle>
+            <button mat-icon-button (click)="likesong(q.id)"style="color: black; background-color: transparent; border-color: transparent;">
+                <mat-icon >thumb_up</mat-icon>
+            </button>
+        </mat-card-subtitle>
+          <mat-card-subtitle>
+            <button mat-icon-button (click)="dislikedsong(q.id)" style="color: black; background-color: transparent; border-color: transparent;">
+                <mat-icon>thumb_down</mat-icon>
+            </button>
+              
+            </mat-card-subtitle>
         </mat-card-title-group>
     </mat-card>     
 </div>

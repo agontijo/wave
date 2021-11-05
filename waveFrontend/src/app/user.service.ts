@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from './user';
 import { Observable } from 'rxjs';
 import { Room } from './room';
@@ -8,7 +9,12 @@ import { Room } from './room';
 export class UserService {
 
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private route: ActivatedRoute,
+    private router: Router
+  ) { }
+
   url = "http://localhost:3000"
   getCurrUser(): Observable<User> {
     return this.http.get<User>("/api/user/");
@@ -66,8 +72,8 @@ export class UserService {
 
     return this.http.post<any>('/auth/local', userObj);
   }
-  signOut(): Observable<User>  {
-    
+  signOut(): Observable<User> {
+
     return this.http.get<any>('auth/logout');
   }
 
@@ -79,8 +85,16 @@ export class UserService {
     console.log(url);
     return this.http.post<any>(url, createBody);
   }
-  deleteAccount(username: String){
-    return this.http.post<any>('/' + username + '/deleteaccount', username);
+  async deleteAccount(username: String) {
+    console.log("delete " + username)
+    // let obj = {
+    //   'uname': username
+    // }
+    // return this.http.post<any>(`http://localhost:3000/api/user/${username}/deleteaccount`, obj);
+    const response = await fetch(`/api/user/${username}/deleteaccount`, { method: "POST" });
+    if (response.ok) {
+      this.router.navigate(['../homepage',], { relativeTo: this.route });
+    }
   }
   dislikeSong(createBody: any, url: any): Observable<any> {
     console.log(url);
