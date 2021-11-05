@@ -368,15 +368,19 @@ async function popSongFromQueue(RoomID) {
 
 async function upvoteSong(RoomID, song_id, user) {
   const room = (await getRoom(RoomID)).Item;
-  const host = (await userActs.getUser(room.host)).Item;
-  const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
+  //const host = (await userActs.getUser(room.host)).Item;
+ // const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
-  // const thesong;
+  let thesong = undefined;
   // manually update song object
-  for (s in room.queue) {
-    if (s.id === song.id) {
 
+console.log('camehere');
+
+  for (let i = 0; i < room.queue.length; i++) {
+    const s = room.queue[i];
+    if (s.id === song_id) {
       thesong = s;
+      console.log(s)
       // add user to the upvote list, but only if they are not already on the list
       if (!s.liked.includes(user)) {
         s.liked.push(user);
@@ -405,27 +409,31 @@ async function upvoteSong(RoomID, song_id, user) {
     ReturnValues: 'UPDATED_NEW'
   });
 
+  console.log(thesong.liked);
+
   return thesong.liked;
 }
 
 async function downvoteSong(RoomID, song_id, user) {
   const room = (await getRoom(RoomID)).Item;
-  const host = (await userActs.getUser(room.host)).Item;
-  const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
+  // const host = (await userActs.getUser(room.host)).Item;
+  // const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
-  const check = false;
-  const indexRem = undefined;
-
-  // const thesong;
-
+  let check = false;
+  let indexRem = undefined;
+  let thesong = undefined;
   // manually update song object
-  for (s in room.queue) {
-    if (s.id === song.id) {
-      // add user to the downvote list, but only if they are not already on the list
 
+  for (let i = 0; i < room.queue.length; i++) {
+    const s = room.queue[i];
+    // console.log(s.id == song_id);
+    if (s.id === song_id) {
+      // add user to the downvote list, but only if they are not already on the list
+      console.log(s);
       thesong = s;
 
       if (!s.disliked.includes(user)) {
+        console.log(`Is s.disliked arr ${Array.isArray(s.disliked)}`);
         s.disliked.push(user);
       }
       else {
@@ -441,7 +449,8 @@ async function downvoteSong(RoomID, song_id, user) {
 
       const totusers = await getNumberOfUsers(RoomID);
 
-      if (s.disliked.length > (totusers / 2)) {
+      console.log(`s.disliked.length = ${s.disliked.length}`)
+      if (s.disliked && s.disliked.length > (totusers / 2) && totusers >= 3) {
         check = true
         indexRem = room.queue.indexOf(s)
       }
@@ -450,8 +459,6 @@ async function downvoteSong(RoomID, song_id, user) {
 
     }
   }
-
-  // TODO: check if song meets downvote threshold, and remove it if it does
 
   if (check) {
     room.queue.splice(indexRem, 1)
