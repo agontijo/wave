@@ -91,13 +91,19 @@ router.put(
   isAuth.isLoggedIn,
   isAuth.isSpotify,
   async (req, res) => {
+    console.log('yo');
     if (!req.query.vol) {res.status(422).send('missing volume parameter'); return; }
     try {
 
       //console.log(req.query.vol);
       //console.log(req.body.device);
 
-      axios.defaults.headers.common['Authorization'] = `Bearer ${req.user.spotifyTok.accessToken}`;
+      const host = await userActions.getUser(req.query.host);
+      console.log(host);
+      return
+
+
+      // axios.defaults.headers.common['Authorization'] = `Bearer ${req.user.spotifyTok.accessToken}`;
 
       await axios.put(`https://api.spotify.com/v1/me/player/volume?volume_percent=${req.query.vol}&device_id=${req.body.device}`, {}, 
         {

@@ -172,7 +172,9 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
     }
     
     public changeVolume(event: any) {
-      this._spotifyServive.changeVolume(event.value);
+      if (this.host) {
+        this._spotifyServive.changeVolume(event.value, this.host);
+      }
     }
     formatLabel(value: number) {
       if (value >= 100) {
