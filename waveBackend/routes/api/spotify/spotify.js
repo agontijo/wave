@@ -86,7 +86,7 @@ router.get(
   }
 );
 
-router.get(
+router.put(
   '/volume',
   isAuth.isLoggedIn,
   isAuth.isSpotify,
@@ -94,13 +94,19 @@ router.get(
     if (!req.query.vol) {res.status(422).send('missing volume parameter'); return; }
     try {
 
-      const response = await axios.put(`https://api.spotify.com/v1/me/player/volume?volume_percent=${req.query.vol}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${req.user.spotifyTok.accessToken}`
-        }
+      //console.log(req.query.vol);
+      //console.log(req.body.device);
+
+      axios.defaults.headers.common['Authorization'] = `Bearer ${req.user.spotifyTok.accessToken}`;
+
+      await axios.put(`https://api.spotify.com/v1/me/player/volume?volume_percent=${req.query.vol}&device_id=${req.body.device}`, {}, 
+        {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${req.user.spotifyTok.accessToken}`
       });
-      res.send(response.data);
+
+      res.sendStatus(204);
+      //res.send(response.data);
     } catch (e) {
       console.error(e)
       res.status(500).send('Something wrong with spotify volume change')
@@ -129,11 +135,12 @@ router.put(
   isAuth.isSpotify,
   async (req, res) => {
     try {
-      res.send(await spotifyUtil.playOnDevice(
+      await spotifyUtil.playOnDevice(
         req.body.device,
         req.body.uris,
         req.user.spotifyTok.accessToken
-      ));
+      )
+      res.sendStatus(204);
     } catch (e) {
       console.error(e);
       res.status(500).send('Something went wrong with spotify play (Does token have correct permissions?)')

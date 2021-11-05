@@ -1,6 +1,6 @@
 export interface Room {
+    previous: any[];
     songThreshold: number;
-    previous: string[];
     queue: string[];
     RoomID: string;
     genresAllowed: string[];
