@@ -57,8 +57,14 @@ export class CreateRoomComponent implements OnInit, OnDestroy {
     if (this.playback) { return; }
 
     const timer = (ms: number) => new Promise(res => setTimeout(res, ms));
-    let devices = (await (await fetch('/api/spotify/device')).json()).devices;
-    let device = devices.length ? devices[0] : null
+    let devices = null;
+    let device = null;
+    try {
+      devices = (await (await fetch('/api/spotify/device')).json()).devices;
+      device = devices.length ? devices[0] : null
+    } catch (error) {
+      
+    }
     const waitTime = 5000;
     console.log(device);
     this.playback = true;
