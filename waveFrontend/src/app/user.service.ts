@@ -93,7 +93,7 @@ export class UserService {
     // return this.http.post<any>(`http://localhost:3000/api/user/${username}/deleteaccount`, obj);
     const response = await fetch(`/api/user/${username}/deleteaccount`, { method: "POST" });
     if (response.ok) {
-      this.router.navigate(['../homepage',], { relativeTo: this.route });
+      this.router.navigate(['../',], { relativeTo: this.route });
     }
   }
   dislikeSong(createBody: any, url: any): Observable<any> {
