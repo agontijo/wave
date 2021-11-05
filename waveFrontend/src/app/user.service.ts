@@ -81,7 +81,10 @@ export class UserService {
   }
   deleteAccount(username: String){
     console.log("delete " + username)
-    return this.http.post<any>(`http://localhost:3000/api/user/${username}/deleteaccount`, `{'uname': ${username}}`);
+    let obj = {
+      'uname': username
+    }
+    return this.http.post<any>(`http://localhost:3000/api/user/${username}/deleteaccount`, obj);
   }
   dislikeSong(createBody: any, url: any): Observable<any> {
     console.log(url);

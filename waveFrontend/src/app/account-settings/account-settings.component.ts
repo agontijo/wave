@@ -45,9 +45,9 @@ export class AccountSettingsComponent implements OnInit {
     
     }
     deleteAccount(){
-      this.openDialog()
+      //this.openDialog()
       this._userServive.deleteAccount(this.tempusers.uname).subscribe((data) => {
-        this.openDialog();
+        //this.openDialog();
         console.log("success");
         this.router.navigate(['sign-in']);
       },
