@@ -51,6 +51,8 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
     data: any
     timer: any
     
+    new_vol: string = '';
+
     ngOnInit(): void {
       // this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
       //   console.log(this.curruser.spotifyTok.get(accessToken))
@@ -152,11 +154,16 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
       });
     }
     
-    public changeVolume(event: any) {
+    public _changeVolume(event: any) {
+      this.new_vol = event.value
+    }
+
+    public changeVolume() {
       if (this.host) {
-        this._spotifyServive.changeVolume(event.value, this.host);
+        this._spotifyServive.changeVolume(this.new_vol, this.host);
       }
     }
+
     formatLabel(value: number) {
       if (value >= 100) {
         return Math.round(value / 100);

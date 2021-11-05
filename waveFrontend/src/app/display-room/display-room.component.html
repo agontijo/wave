@@ -15,7 +15,9 @@
   step="1"
   min="0"
   max="100"
-  aria-label="units" (input)="changeVolume($event)"></mat-slider>
+  aria-label="units" (input)="_changeVolume($event)">
+</mat-slider>
+<button (click)="changeVolume()">Set Voume</button>
 
 <h2> QUEUE </h2>
 <div class = "row" *ngFor="let q of queue">  
