@@ -39,13 +39,22 @@ export class AccountSettingsComponent implements OnInit {
         spotifyTok: this.tempusers.spotifyTok,
         uname: this.tempusers.uname,
         currRoom: this.tempusers.currRoom};
-  
+        console.log(newNameData);
       let url = "/api/user/" + this.tempusers.uname + "/displayname";
       this._userServive.changeDisplayName(newNameData, url).subscribe(data => this.tempusers = data)
     
     }
     deleteAccount(){
       this.openDialog()
+      this._userServive.deleteAccount(this.tempusers.uname).subscribe((data) => {
+        this.openDialog();
+        console.log("success");
+        this.router.navigate(['sign-in']);
+      },
+      (error) => {
+        console.log("error");
+      }
+      );
     }
     
     ngOnInit(): void {
@@ -72,9 +81,13 @@ export class AccountSettingsComponent implements OnInit {
       
     }
 
+    back() {
+      this.router.navigate(['../homepage',], { relativeTo: this.route });
+    }
+
 }
 @Component({
-  selector: 'dialog-element-',
+  selector: 'app-dialog-element',
   templateUrl: 'dialog-element.html',
 })
 export class DialogElement {

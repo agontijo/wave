@@ -16,7 +16,7 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
 
 const routes: Routes = [
   { path: '', component: SignInComponent },
-  { path: '', component: SignInComponent},
+  { path: 'sign-in', component: SignInComponent},
   { path: 'create-account', component: CreateAccountComponent },
   { path: 'homepage', component: HomepageComponent},
   { path: 'spotify-connect', component: SpotifyConnectComponent },
@@ -27,7 +27,7 @@ const routes: Routes = [
   { path: 'storebuttons', component: StorebuttonsComponent },
   { path: 'password-change', component: PasswordChangeComponent },
   { path: 'logout', component:LogoutComponent},
-  { path: 'account-settings', component: AccountSettingsComponent},
+  { path: 'account-settings', component:AccountSettingsComponent},
   { path: '**', component: PageNotFoundComponent }];
 
 @NgModule({

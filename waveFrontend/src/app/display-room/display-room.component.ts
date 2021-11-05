@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
+import { Component, OnInit, OnDestroy} from '@angular/core';
 import { NONE_TYPE, ThrowStmt } from '@angular/compiler';
-import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
 import { Observable } from 'rxjs';
@@ -14,13 +14,15 @@ import { SpotifyService } from '../spotify.service';
 import { SongCheck } from '../songcheck';
 import { SongI } from '../songI';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {interval} from 'rxjs'
+
 
 @Component({
   selector: 'app-display-room',
   templateUrl: './display-room.component.html',
   styleUrls: ['./display-room.component.css']
 })
-export class DisplayRoomComponent implements OnInit {
+export class DisplayRoomComponent implements OnInit, OnDestroy {
 
   searchQuery = ""
   public curruser!: User;
@@ -39,12 +41,15 @@ export class DisplayRoomComponent implements OnInit {
     private route: ActivatedRoute,private router: Router) { }
     host:string = ''
     queue: any[] = []
+    previous: any[] = []
     userList: string[] = []
     roomname: string = ''
     allowExplicit:boolean = true
     genresAllowed: string[] = []
     songThreshold: number | undefined
     roomID:number | undefined
+    data: any
+    timer: any
     
     ngOnInit(): void {
       // this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
@@ -66,6 +71,7 @@ export class DisplayRoomComponent implements OnInit {
           this.roomname = this.roominfo.roomname
           this.songThreshold = this.roominfo.songThreshold
           this.userList = this.roominfo.userList
+          this.previous = this.roominfo.previous
           this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
             let _url = "/api/room/" + this.roomID + "/join";
             const joinData = {
@@ -76,6 +82,7 @@ export class DisplayRoomComponent implements OnInit {
             this._userServive.addUserToRoom(joinData, _url).subscribe(data => {this.userList = data;
             });
             this.len = this.userList.length
+            this.roomusers = ""
             for (let i = 0; i < this.len; i++) {
               this.roomusers += this.userList[i] + ", "
             }
@@ -84,9 +91,17 @@ export class DisplayRoomComponent implements OnInit {
           
       });
      
-      
-      
+      let timey = interval(60000);
+      this.timer= timey.subscribe(t=> {
+        this.ngOnInit();}); 
+    }
 
+
+    ngOnDestroy() {
+      this.timer.unsubscribe();
+      clearInterval(this.timer);
+      console.log("destroy");
+      this.ngOnDestroy
     }
     //search track
     
@@ -136,6 +151,19 @@ export class DisplayRoomComponent implements OnInit {
       
       });
     }
+    
+    public changeVolume(event: any) {
+      this._spotifyServive.changeVolume(event.value);
+    }
+    formatLabel(value: number) {
+      if (value >= 100) {
+        return Math.round(value / 100);
+      }
+  
+      return value;
+    }
+    
+
     public dislikedsong(curSongId:number) {
       let songData = {
         'roomid': this.roomID,
@@ -153,6 +181,11 @@ export class DisplayRoomComponent implements OnInit {
           
         });
     }
+    openSnackBarL() {
+      this._snackBar.openFromComponent(LikedComponent, {
+        duration: this.durationInSeconds * 1000,
+      });
+    }
     public select(ids: number){
       const songData = {
         songID: ids,
@@ -166,11 +199,7 @@ export class DisplayRoomComponent implements OnInit {
       this.searchQuery = ""
       this._spotifyServive.addSong(songData, url).subscribe(data => this.sc = data)
     }
-    openSnackBarL() {
-      this._snackBar.openFromComponent(LikedComponent, {
-        duration: this.durationInSeconds * 1000,
-      });
-    }
+
     openSnackBarLD() {
       this._snackBar.openFromComponent(LikedDComponent, {
         duration: this.durationInSeconds * 1000,
@@ -203,13 +232,6 @@ export class DisplayRoomComponent implements OnInit {
         });
       });
       this.router.navigate(['../homepage',], { relativeTo: this.route });
-    }
-
-    formatLabel(value: number) {
-      if (value >= 100) {
-        return Math.round(value / 100) + '%';
-      }
-      return value;
     }
 
 }

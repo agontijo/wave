@@ -1,4 +1,5 @@
 export interface Room {
+    previous: any[];
     songThreshold: number;
     queue: string[];
     RoomID: string;

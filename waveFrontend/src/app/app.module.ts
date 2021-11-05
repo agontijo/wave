@@ -34,6 +34,9 @@ import { LogoutComponent } from './logout/logout.component';
 import { SpotifyService } from './spotify.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -68,7 +71,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatSelectModule,
     MatSlideToggleModule,
     MatSliderModule,
-
   ],
   providers: [UserService, SpotifyService,     MatSnackBar,],
   bootstrap: [AppComponent]

@@ -71,7 +71,7 @@ async function addUser(user, RoomID) {
 
   let item = room.Item;
 
-  if (!item.userList?.includes(user)) item.userList.push(user);
+  if (item.userList && !item.userList.includes(user)) item.userList.push(user);
   // console.log(item);
   return await _updateRoom({
     TableName: 'WVRooms',
@@ -317,7 +317,9 @@ async function addSong(RoomID, song_id) {
     host.spotifyTok.accessToken = await userActs.refreshSpotifyToks(host.uname, host.spotifyTok.refreshToken);
   }
 
-  const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
+  const host_tok = host.spotifyTok.accessToken;
+  const song = await spotifyUtils.getTrack(song_id, host_tok);
+  const genre = (await spotifyUtils.getArtist(song.artists[0].id, host_tok)).genres[0];
 
   return await _updateRoom({
     TableName: 'WVRooms',
@@ -335,7 +337,8 @@ async function addSong(RoomID, song_id) {
         duration_ms: song.duration_ms,
         name: song.name,
         artists: song.artists.map(a => a.name),
-        explicit: song.explicit
+        explicit: song.explicit,
+        genre
       }],
     },
     ReturnValues: 'UPDATED_NEW'
@@ -474,33 +477,44 @@ async function downvoteSong(RoomID, song_id, user) {
   return thesong.disliked;
 }
 
-async function moveSongToPrev(RoomID, song_id, user) {
+async function moveSongToPrev(RoomID, song, user) {
   const room = (await getRoom(RoomID)).Item;
   const host = (await userActs.getUser(room.host)).Item;
-  const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
+  // const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
   _checkHost(user, room);
 
-  let index = 0;
+  // let index = 0;
 
-  for (let i = 0; i < room.queue.length; i++) {
-    const s = room.queue[i];
-    if (s.id === song.id) {
-      // remove this song, and put it in the previous queue
-      room.previous.push(s);
-      room.queue.splice(index, 1);
+  // for (s in room.queue) {
+  //   if (s.id === song.id) {
+  //     // remove this song, and put it in the previous queue
+  //     room.previous.push(s);
+  //     room.queue.splice(index, 1);
 
-      break;
-    }
-    index += 1;
-  }
+  //     break;
+  //   }
+  //   index += 1;
+  // }
 
+  // return await _updateRoom({
+  //   TableName: 'WVRooms',
+  //   Key: { RoomID },
+  //   UpdateExpression: 'set queue = :q',
+  //   ExpressionAttributeValues: {
+  //     ':q': room.queue,
+  //   },
+  //   ReturnValues: 'UPDATED_NEW'
+  // });
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
-    UpdateExpression: 'set queue = :q',
+    UpdateExpression: 'set #q = list_append(#q, :qval)',
+    ExpressionAttributeNames: {
+      "#q": "previous"
+    },
     ExpressionAttributeValues: {
-      ':q': room.queue,
+      ':qval': [song],
     },
     ReturnValues: 'UPDATED_NEW'
   });
