@@ -40,6 +40,8 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
   unseelctedC = '#333'
   likedC = this.unseelctedC;
   dislikedC = this.unseelctedC;
+  _snackBar: any;
+  durationInSeconds = 5;
   
 
   constructor(private _spotifyServive: SpotifyService, private _userServive: UserService, private http:HttpClientModule ,
@@ -160,6 +162,7 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
         if (data.includes(this.curruser)) {
           this.likedC = this.selectedC;
           this.dislikedC = this.unseelctedC;
+          this.openSnackBarL;
         } else {
           this.likedC = this.unseelctedC;
           this.unseelctedC;
@@ -198,6 +201,11 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
           console.log(data);
           
         });
+    }
+    openSnackBarL() {
+      this._snackBar.openFromComponent(LikedComponent, {
+        duration: this.durationInSeconds * 1000,
+      });
     }
     public select(ids: number){
       const songData = {
