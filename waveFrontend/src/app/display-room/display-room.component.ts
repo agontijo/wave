@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SpotifyService } from '../spotify.service';
 import { SongCheck } from '../songcheck';
 import { SongI } from '../songI';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-display-room',
@@ -32,13 +33,9 @@ export class DisplayRoomComponent implements OnInit {
   len: number = 0;
   roomusers = ""
   public roominfo!: Room;
-  likedSong = false;
-  dislikedSong = false;
-  likedC = false;
-  dislikedC = false;
-  
+  durationInSeconds = 5;
 
-  constructor(private _spotifyServive: SpotifyService, private _userServive: UserService, private http:HttpClientModule ,
+  constructor(private _snackBar: MatSnackBar, private _spotifyServive: SpotifyService, private _userServive: UserService, private http:HttpClientModule ,
     private route: ActivatedRoute,private router: Router) { }
     host:string = ''
     queue: any[] = []
@@ -131,10 +128,9 @@ export class DisplayRoomComponent implements OnInit {
       }
       this._userServive.likeSong(songData, '/api/room/'+this.roomID+'/likeSong').subscribe(data =>  {
         if (data.includes(this.curruser.uname)) {
-          this.likedC = true;
-          this.dislikedC = false;
+          this.openSnackBarL();
         } else {
-          this.likedC = false;
+          this.openSnackBarLD();
         }
         console.log(data);
       
@@ -149,11 +145,9 @@ export class DisplayRoomComponent implements OnInit {
       this._userServive.dislikeSong(songData, '/api/room/'+this.roomID+'/dislikeSong').subscribe(data => 
         {
           if (data.includes(this.curruser.uname)) {
-            this.dislikedC = true;
-            this.likedC = false;
-            console.log(this.dislikedC);
+            this.openSnackBarD();
           } else {
-            this.dislikedC = true;
+            this.openSnackBarDD();
           }
           console.log(data);
           
@@ -172,7 +166,26 @@ export class DisplayRoomComponent implements OnInit {
       this.searchQuery = ""
       this._spotifyServive.addSong(songData, url).subscribe(data => this.sc = data)
     }
-
+    openSnackBarL() {
+      this._snackBar.openFromComponent(LikedComponent, {
+        duration: this.durationInSeconds * 1000,
+      });
+    }
+    openSnackBarLD() {
+      this._snackBar.openFromComponent(LikedDComponent, {
+        duration: this.durationInSeconds * 1000,
+      });
+    }
+    openSnackBarD() {
+      this._snackBar.openFromComponent(DislikedComponent, {
+        duration: this.durationInSeconds * 1000,
+      });
+    }
+    openSnackBarDD() {
+      this._snackBar.openFromComponent(DislikedDComponent, {
+        duration: this.durationInSeconds * 1000,
+      });
+    }
     public clear(){
       console.log("ok");
       this.songs = []
@@ -206,9 +219,24 @@ export class DisplayRoomComponent implements OnInit {
   styles: [],
 })
 export class LikedComponent {}
+
+@Component({
+  selector: 'likedd',
+  templateUrl: 'likedd.html',
+  styles: [],
+})
+export class LikedDComponent {}
+
 @Component({
   selector: 'disliked',
   templateUrl: 'disliked.html',
   styles: [],
 })
-export class diikedComponent {}
+export class DislikedComponent {}
+
+@Component({
+  selector: 'dislikedd',
+  templateUrl: 'dislikedd.html',
+  styles: [],
+})
+export class DislikedDComponent {}
