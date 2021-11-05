@@ -55,7 +55,7 @@ export class CreateAccountComponent implements OnInit {
         (data: any) => {
           console.log("at data")
           console.log(data)
-          this.router.navigate(['storebuttons']);
+          this.router.navigate(['homepage']);
   
         },
         (error) => {

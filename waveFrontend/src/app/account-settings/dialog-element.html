@@ -1,6 +1,12 @@
 <h1 mat-dialog-title>!!!Warning!!!</h1>
 <br>
-<div mat-dialog-content>Are you sure you want to </div>
+<div mat-dialog-content>Are you sure you want to permenantly delete the account?</div>
 <div mat-dialog-actions>
-  <button mat-button mat-dialog-close (click)="close()">Close</button>
+  <!-- <button mat-button mat-dialog-close (click)="close()">Close</button>
+  <button mat-button mat-dialog-close (click)="reallyDelete ()">Delete</button> -->
+<div mat-dialog-action>
+  <button mat-button (click)="onCancel()">No Thanks</button>
+  <button mat-button mat-dialog-close="data.ok" (click)="reallyDelete()"
+             cdkFocusInitial>Ok</button>
+</div>
 </div>

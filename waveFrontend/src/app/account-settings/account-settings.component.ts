@@ -1,13 +1,13 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NONE_TYPE } from '@angular/compiler';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Room } from '../room';
 import { User } from '../user';
 import { UserService } from '../user.service';
-
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-account-settings',
@@ -26,7 +26,7 @@ export class AccountSettingsComponent implements OnInit {
     genresAllowed = NONE_TYPE
     songThreshold = NONE_TYPE
     roomID:number | undefined
-    tempusers!: User;
+    public tempusers!: User;
     isSpotifyConnected = false
     public room!: Room;
     roombutton = false;
@@ -45,9 +45,9 @@ export class AccountSettingsComponent implements OnInit {
     
     }
     deleteAccount(){
-      //this.openDialog()
-      this._userServive.deleteAccount(this.tempusers.uname)
-      
+      this.openDialog()
+    
+ 
 
       // .subscribe((data) => {
       //   //this.openDialog();
@@ -80,7 +80,17 @@ export class AccountSettingsComponent implements OnInit {
       });
     }
     openDialog() {
-      this.dialog.open(DialogElement);
+      let goToSignin = false;
+      let dialogRef = this.dialog.open(DialogElement, {data: {ok: true, cancel:false}});
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+        if (result === true){
+          console.log("deleting")
+          this._userServive.deleteAccount(this.tempusers.uname)
+          this.router.navigate(['../'])
+        }
+
+      });
       
     }
 
@@ -94,9 +104,21 @@ export class AccountSettingsComponent implements OnInit {
   templateUrl: 'dialog-element.html',
 })
 export class DialogElement {
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog, public dialogRef: MatDialogRef<DialogElement>,
+  @Inject(MAT_DIALOG_DATA) public data: any) { }
+  ok = true;
+  cancel = false;
 
   close() {
-    this.dialog.closeAll();
+    this.dialogRef.close(false)
+  }
+  reallyDelete() {
+      console.log(this.dialogRef._containerInstance)
+      // this.dialogRef.close(
+      this.dialogRef.close(true)
+
+  }
+  onCancel(): void {
+    this.dialogRef.close();
   }
 }
