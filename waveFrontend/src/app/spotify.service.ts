@@ -44,7 +44,7 @@ export class SpotifyService {
     const volumeURL = `/api/spotify/volume?volume=${searchQuery}`;
     return this.http.get<any>(volumeURL);
   }
-
+  
   addSong(createBody: any, url: any): Observable<SongCheck> {
     return this.http.post<any>(url, createBody);
   }
