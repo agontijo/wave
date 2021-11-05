@@ -30,7 +30,7 @@ export class CreateRoomComponent implements OnInit, OnDestroy {
   roomID: number | undefined
 
   playback: boolean = false;
-  waitForDevice: boolean = false; // TODO: Make this true durring sprint review so that phone can connect in real time
+  waitForDevice: boolean = true; // TODO: Make this true durring sprint review so that phone can connect in real time
 
   ngOnInit(): void {
     this.route.queryParams
@@ -75,18 +75,17 @@ export class CreateRoomComponent implements OnInit, OnDestroy {
         if (res.ok) {
           const song = await res.json();
           console.log(song);
-          // res = await fetch('/api/spotify/play', {
-          //   method: 'PUT',
-          //   headers: { 'Content-Type': 'application/json' },
-          //   body: JSON.stringify({
-          //     device,
-          //     uris: [song.uri]
-          //   })
-          // });
-          // if (res.ok) {
-          //   await timer(song.duration_ms ?? waitTime);
-          // } else { await timer(waitTime); }
-          await timer(waitTime);
+          res = await fetch('/api/spotify/play', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              device: device.id,
+              uris: [song.uri]
+            })
+          });
+          if (res.ok) {
+            await timer(song.duration_ms ?? waitTime);
+          } else { await timer(waitTime); }
           await fetch(`/api/room/${this.roomID}/endsong`, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
