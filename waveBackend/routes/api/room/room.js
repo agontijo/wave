@@ -234,7 +234,7 @@ router.post(
   isAuth.isLoggedIn,
   async (req, res) => {
     try {
-      const data = await roomActions.moveSongToPrev(req.params.roomid, req.body.songID, req.user.uname);
+      const data = await roomActions.moveSongToPrev(req.params.roomid, req.body.song, req.user.uname);
       res.send(data);
     } catch (err) {
       res.status(500).send(err.message);

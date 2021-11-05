@@ -39,7 +39,7 @@ export class AccountSettingsComponent implements OnInit {
         spotifyTok: this.tempusers.spotifyTok,
         uname: this.tempusers.uname,
         currRoom: this.tempusers.currRoom};
-  
+        console.log(newNameData);
       let url = "/api/user/" + this.tempusers.uname + "/displayname";
       this._userServive.changeDisplayName(newNameData, url).subscribe(data => this.tempusers = data)
     
@@ -70,6 +70,10 @@ export class AccountSettingsComponent implements OnInit {
     openDialog() {
       this.dialog.open(DialogElement);
       
+    }
+
+    back() {
+      this.router.navigate(['../homepage',], { relativeTo: this.route });
     }
 
 }
