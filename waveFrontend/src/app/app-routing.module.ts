@@ -12,7 +12,7 @@ import { PasswordChangeComponent } from './password-change/password-change.compo
 import { CreateRoomComponent } from './create-room/create-room.component';
 import { DisplayRoomComponent } from './display-room/display-room.component';
 import { LogoutComponent } from './logout/logout.component';
-import * as accountSettingsComponent from './account-settings/account-settings.component';
+import { AccountSettingsComponent } from './account-settings/account-settings.component';
 
 const routes: Routes = [
   { path: '', component: SignInComponent },
@@ -27,7 +27,7 @@ const routes: Routes = [
   { path: 'storebuttons', component: StorebuttonsComponent },
   { path: 'password-change', component: PasswordChangeComponent },
   { path: 'logout', component:LogoutComponent},
-  { path: 'account-settings', component:accountSettingsComponent.AccountSettingsComponent},
+  { path: 'account-settings', component: AccountSettingsComponent},
   { path: '**', component: PageNotFoundComponent }];
 
 @NgModule({

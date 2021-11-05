@@ -20,4 +20,5 @@
         <a href="/auth/spotify" *ngIf="!isSpotifyConnected">Connect Spotify</a>
         <a href="/auth/spotify/disconnect" *ngIf="isSpotifyConnected">Disconnect Spotify</a>
         <button mat-flat-button (click)="deleteAccount()">Delete Account</button>
+        <button mat-flat-button [routerLink]="['/change-room-name']">Change Room Name</button>
     </mat-card>
