@@ -46,15 +46,18 @@ export class AccountSettingsComponent implements OnInit {
     }
     deleteAccount(){
       //this.openDialog()
-      this._userServive.deleteAccount(this.tempusers.uname).subscribe((data) => {
-        //this.openDialog();
-        console.log("success");
-        this.router.navigate(['sign-in']);
-      },
-      (error) => {
-        console.log("error");
-      }
-      );
+      this._userServive.deleteAccount(this.tempusers.uname)
+      
+
+      // .subscribe((data) => {
+      //   //this.openDialog();
+      //   console.log("success");
+      //   this.router.navigate(['sign-in']);
+      // },
+      // (error) => {
+      //   console.log("error");
+      // }
+      // );
     }
     
     ngOnInit(): void {

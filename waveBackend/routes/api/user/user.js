@@ -78,8 +78,9 @@ router.post(
       return
     }
     try {
-      await userActions.deleteUser(req.user.uname)
-      res.sendStatus(204);
+      await userActions.deleteUser(req.user.uname);
+      res.redirect('/auth/logout');
+      // res.sendStatus(204);
     } catch (err) {
       res.status(500).send(err.message)
     }
