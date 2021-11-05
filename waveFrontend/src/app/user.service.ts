@@ -79,6 +79,9 @@ export class UserService {
     console.log(url);
     return this.http.post<any>(url, createBody);
   }
+  deleteAccount(username: String){
+    return this.http.post<any>('/' + username + '/deleteaccount', username);
+  }
   dislikeSong(createBody: any, url: any): Observable<any> {
     console.log(url);
     return this.http.post<any>(url, createBody);
