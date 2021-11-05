@@ -159,10 +159,11 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
         'uname': this.curruser.uname
       }
       this._userServive.likeSong(songData, '/api/room/'+this.roomID+'/likeSong').subscribe(data =>  {
-        if (data.includes(this.curruser)) {
+        console.log(data);
+        if (data.includes(this.curruser.uname)) {
           this.likedC = this.selectedC;
           this.dislikedC = this.unseelctedC;
-          this.openSnackBarL;
+          this.openSnackBarL();
         } else {
           this.likedC = this.unseelctedC;
           this.unseelctedC;
@@ -191,13 +192,23 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
       }
       this._userServive.dislikeSong(songData, '/api/room/'+this.roomID+'/dislikeSong').subscribe(data => 
         {
-          // if (data.includes(this.curruser)) {
-          //   this.dislikedC = this.selectedC;
-          //   this.likedC = this.unseelctedC;
-          // } else {
-          //   this.dislikedC = this.unseelctedC;
-          //   this.likedC = this.selectedC;
-          // }
+          let songData = {
+            'roomid': this.roomID,
+            'songID': curSongId,
+            'uname': this.curruser.uname
+          }
+          this._userServive.likeSong(songData, '/api/room/'+this.roomID+'/likeSong').subscribe(data =>  {
+            console.log(data);
+            if (data.includes(this.curruser.uname)) {
+              this.likedC = this.selectedC;
+              this.dislikedC = this.unseelctedC;
+              this.openSnackBarL();
+            } else {
+              this.likedC = this.unseelctedC;
+              this.unseelctedC;
+            }
+          
+          });
           console.log(data);
           
         });
