@@ -11,12 +11,13 @@ async function _getWithAccessToken(uri, access_token) {
 
 async function _putWithAccessToken(uri, data, access_token) {
   const yo = `Bearer ${access_token}`;
-  console.log(yo);
-  return await axios.put(uri, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': yo
-    }
+  //console.log(yo);
+  axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+
+  return await axios.put(uri, data, 
+    {
+    'Content-Type': 'application/json',
+    'Authorization': yo
   });
 }
 
