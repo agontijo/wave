@@ -91,20 +91,26 @@ router.put(
   isAuth.isLoggedIn,
   isAuth.isSpotify,
   async (req, res) => {
-    if (!req.query.vol) {res.status(422).send('missing volume parameter'); return; }
+    console.log('here');
+    if (!req.query.vol) { res.status(422).send('missing volume parameter'); return; }
     try {
 
       //console.log(req.query.vol);
       //console.log(req.body.device);
 
-      axios.defaults.headers.common['Authorization'] = `Bearer ${req.user.spotifyTok.accessToken}`;
+      const host = (await userActions.getUser(req.query.host)).Item;
+      const devices = (await spotifyUtil.getDevice(host.spotifyTok.accessToken)).devices;
+      // console.log(devices);
+      if (devices.length) {
+        const dev_id = devices[0].id;
 
-      await axios.put(`https://api.spotify.com/v1/me/player/volume?volume_percent=${req.query.vol}&device_id=${req.body.device}`, {}, 
-        {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${req.user.spotifyTok.accessToken}`
-      });
-
+        axios.defaults.headers.common['Authorization'] = `Bearer ${req.user.spotifyTok.accessToken}`;
+        await axios.put(`https://api.spotify.com/v1/me/player/volume?volume_percent=${req.query.vol}&device_id=${dev_id}`, {},
+          {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${host.spotifyTok.accessToken}`
+          });
+      }
       res.sendStatus(204);
       //res.send(response.data);
     } catch (e) {

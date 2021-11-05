@@ -40,9 +40,14 @@ export class SpotifyService {
     const artistURL = `/api/spotify/artist?artist=${searchQuery}`;
     return this.http.get<any>(artistURL);
   }
-  public changeVolume(searchQuery: string) {
-    const volumeURL = `/api/spotify/volume?volume=${searchQuery}`;
-    return this.http.get<any>(volumeURL);
+  public changeVolume(searchQuery: string, host: string) {
+    const volumeURL = `/api/spotify/volume?vol=${searchQuery}&host=${host}`;
+    console.log(volumeURL);
+    
+    // TODO: Fix this, I made it ugly
+
+    // return this.http.put<any>(volumeURL, {});
+    fetch(volumeURL, { method: "PUT" });
   }
   
   addSong(createBody: any, url: any): Observable<SongCheck> {
