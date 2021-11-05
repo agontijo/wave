@@ -40,6 +40,10 @@ export class SpotifyService {
     const artistURL = `/api/spotify/artist?artist=${searchQuery}`;
     return this.http.get<any>(artistURL);
   }
+  public changeVolume(searchQuery: string) {
+    const volumeURL = `/api/spotify/volume?volume=${searchQuery}`;
+    return this.http.get<any>(volumeURL);
+  }
 
   addSong(createBody: any, url: any): Observable<SongCheck> {
     return this.http.post<any>(url, createBody);

@@ -165,6 +165,19 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
       
       });
     }
+    
+    public changeVolume(event: any) {
+      this._spotifyServive.changeVolume(event.value);
+    }
+    formatLabel(value: number) {
+      if (value >= 100) {
+        return Math.round(value / 100);
+      }
+  
+      return value;
+    }
+    
+
     public dislikedsong(curSongId:number) {
       let songData = {
         'roomid': this.roomID,
@@ -219,3 +232,27 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
     }
 
 }
+@Component({
+  selector: 'liked',
+  templateUrl: 'liked.html',
+  styles: [
+    `
+    .colorS {
+      color: aquamarine;
+    }
+  `,
+  ],
+})
+export class LikedComponent {}
+@Component({
+  selector: 'disliked',
+  templateUrl: 'disliked.html',
+  styles: [
+    `
+    .colorS {
+      color: aquamarine;
+    }
+  `,
+  ],
+})
+export class disLikedComponent {}

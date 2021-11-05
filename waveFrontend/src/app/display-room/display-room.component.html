@@ -8,6 +8,14 @@
 </div> -->
 <h2>users: {{roomusers}}</h2>
 <h2># of users: {{len}}</h2>
+<mat-slider
+  thumbLabel
+  [displayWith]="formatLabel"
+  tickInterval="100"
+  step="1"
+  min="0"
+  max="100"
+  aria-label="units" (input)="changeVolume($event)"></mat-slider>
 
 <h2> QUEUE </h2>
 <div class = "row" *ngFor="let q of queue">  
