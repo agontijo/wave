@@ -80,7 +80,8 @@ export class UserService {
     return this.http.post<any>(url, createBody);
   }
   deleteAccount(username: String){
-    return this.http.post<any>('/' + username + '/deleteaccount', username);
+    console.log("delete " + username)
+    return this.http.post<any>(`http://localhost:3000/api/user/${username}/deleteaccount`, `{'uname': ${username}}`);
   }
   dislikeSong(createBody: any, url: any): Observable<any> {
     console.log(url);
