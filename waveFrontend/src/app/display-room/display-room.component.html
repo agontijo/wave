@@ -30,6 +30,19 @@
         </mat-card-title-group>
     </mat-card>     
 </div>
+<br>
+<h2> Previous Played </h2>
+<div class = "row" *ngFor="let p of previous">  
+    <mat-card class="example-card">
+        <mat-card-title-group>
+          <mat-card-title>{{p.name}}</mat-card-title>
+          <mat-card-subtitle>{{p.artists}}</mat-card-subtitle>
+          <mat-card-subtitle>Explicit: {{p.explicit}}</mat-card-subtitle>
+          <mat-card-subtitle>Genre: {{p.genre}}</mat-card-subtitle>
+        </mat-card-title-group>
+    </mat-card>     
+</div>
+
 
 <br> 
 <br> 

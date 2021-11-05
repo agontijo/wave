@@ -46,6 +46,7 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,private router: Router) { }
     host:string = ''
     queue: any[] = []
+    previous: any[] = []
     userList: string[] = []
     roomname: string = ''
     allowExplicit:boolean = true
@@ -75,6 +76,7 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
           this.roomname = this.roominfo.roomname
           this.songThreshold = this.roominfo.songThreshold
           this.userList = this.roominfo.userList
+          this.previous = this.roominfo.previous
           this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
             let _url = "/api/room/" + this.roomID + "/join";
             const joinData = {
