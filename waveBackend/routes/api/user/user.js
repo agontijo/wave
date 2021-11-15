@@ -68,6 +68,25 @@ router.post(
   }
 );
 
+
+router.post(
+  '/:uname/deleteaccount',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    if (req.params.uname !== req.user.uname) {
+      res.status(403).send('Forbidden!');
+      return
+    }
+    try {
+      await userActions.deleteUser(req.user.uname);
+      res.redirect('/auth/logout');
+      // res.sendStatus(204);
+    } catch (err) {
+      res.status(500).send(err.message)
+    }
+  }
+);
+
 // TODO: Fix or remove!!
 
 // router.get(

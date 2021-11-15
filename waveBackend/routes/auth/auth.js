@@ -74,7 +74,9 @@ router.post(
 router.get(
   '/spotify',
   isAuth.isLoggedIn,
-  passport.authenticate('spotify')
+  passport.authenticate('spotify', {
+    scope: ['user-read-playback-state', 'user-modify-playback-state'],
+  })
 );
 
 router.get(
@@ -82,7 +84,7 @@ router.get(
   passport.authenticate('spotify', { failureRedirect: '/auth/failure' }),
   (req, res) => {
     if (!req.user) { res.status(500).send('Failded to attach spotify credentials to user'); }
-    else { res.redirect('/storebuttons'); }
+    else { res.redirect('/homepage'); }
   }
 );
 
@@ -92,7 +94,7 @@ router.get(
   async (req, res) => {
     try {
       await userActions.clearSpotifyToks(req.user.uname);
-      res.redirect('/storebuttons');
+      res.redirect('/homepage');
     } catch (err) { res.status(500).send(err); }
   }
 )
@@ -100,6 +102,7 @@ router.get(
 // BORING STUFF
 router.get('/failure', (req, res) => res.status(401).send("Not Authenticated!"));
 router.get('/logout', (req, res) => {
+  console.log("in the be")
   req.session = null;
   req.logout();
   res.redirect('/');

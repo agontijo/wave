@@ -1,6 +1,101 @@
-<p>roomID: {{roomID}}</p>
-<p>host: {{host}}</p>
-<p>roomName: {{roomname}}</p>
+<button mat-flat-button (click)="leaveroom()" type="button clearbutton">Leave Room</button>
+
+<h2>roomID: {{roomID}}</h2>
+<h2>host: {{host}}</h2>
+<h2>roomName: {{roomname}}</h2>
+<!-- <button mat-flat-button [routerLink]="['/change-room-name']">Change Room Name</button> -->
+<!-- <div class = "row" *ngFor="let u of userList">  
+    <p>users: {{u}}</p>
+</div> -->
+<h2>users: {{roomusers}}</h2>
+<h2># of users: {{len}}</h2>
+<mat-slider
+  thumbLabel
+  [displayWith]="formatLabel"
+  tickInterval="100"
+  step="1"
+  min="0"
+  max="100"
+  aria-label="units" (input)="_changeVolume($event)">
+</mat-slider>
+<button (click)="changeVolume()">Set Voume</button>
+
+<h2> QUEUE </h2>
+<div class = "row" *ngFor="let q of queue">  
+    <mat-card class="example-card">
+        <mat-card-title-group>
+          <mat-card-title>{{q.name}}</mat-card-title>
+          <mat-card-subtitle>{{q.artists}}</mat-card-subtitle>
+          <mat-card-subtitle>Explicit: {{q.explicit}}</mat-card-subtitle>
+          <mat-card-subtitle>Genre: {{q.genre}}</mat-card-subtitle>
+          <mat-card-subtitle>
+            <button mat-icon-button (click)="likesong(q.id)"style="color: black; background-color: transparent; border-color: transparent;">
+                <mat-icon >thumb_up</mat-icon>
+            </button>
+        </mat-card-subtitle>
+          <mat-card-subtitle>
+            <button mat-icon-button (click)="dislikedsong(q.id)" style="color: black; background-color: transparent; border-color: transparent;">
+                <mat-icon>thumb_down</mat-icon>
+            </button>
+              
+            </mat-card-subtitle>
+        </mat-card-title-group>
+    </mat-card>     
+</div>
+<br>
+<h2> Previous Played </h2>
+<div class = "row" *ngFor="let p of previous">  
+    <mat-card class="example-card">
+        <mat-card-title-group>
+          <mat-card-title>{{p.name}}</mat-card-title>
+          <mat-card-subtitle>{{p.artists}}</mat-card-subtitle>
+          <mat-card-subtitle>Explicit: {{p.explicit}}</mat-card-subtitle>
+          <mat-card-subtitle>Genre: {{p.genre}}</mat-card-subtitle>
+        </mat-card-title-group>
+    </mat-card>     
+</div>
+
+
+<br> 
+<br> 
+<br> 
+<div>
+    <input id="searchSong" [(ngModel)]="searchQuery" (keyup.enter)="searchTrack()"  placeholder="Search Song"/>  <button (click)="clear()" type="button clearbutton">clear</button>
+</div>
+
+<!-- <pre>{{songs | json}}</pre>  -->
+
+
+
+<div class = "row" *ngFor="let song of songArr">  
+    <br> 
+    <mat-card class="example-card">
+        <mat-card-title-group>
+          <mat-card-title>{{song.songName}}</mat-card-title>
+          <mat-card-subtitle>{{song.artistName}}</mat-card-subtitle>
+          <mat-card-subtitle>Explicit: {{song.explicit}}</mat-card-subtitle>
+          <mat-card-subtitle>Genre: {{song.genre}}</mat-card-subtitle>
+          <mat-card-title>
+            <mat-card-actions>
+                <button mat-button (click)="select(song.id)" type="button button">Choose Song</button>
+            </mat-card-actions>
+          </mat-card-title>
+          <img mat-card-lg-image src={{song.imgSrc}}>
+        </mat-card-title-group>
+    </mat-card>     
+</div>
+
+
+
+
+
+
+<!-- <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Google_Images_2015_logo.svg/1200px-Google_Images_2015_logo.svg.png" class="img-fluid img-thumbnail" alt=""> -->
+
+
+
+
+
 <!-- <p>user: {{user}}</p> -->
 
 <!-- private route: ActivatedRoute,private router: Router) { }

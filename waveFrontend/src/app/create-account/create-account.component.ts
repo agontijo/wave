@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { UserService } from '../user.service';
 import { ActivatedRoute, Router } from '@angular/router';
-// import { ConsoleLogger } from '@aws-amplify/core';
 import { HttpClientModule } from '@angular/common/http';
-import { NONE_TYPE } from '@angular/compiler';
 import { MatDialog } from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 @Component({
   selector: 'app-create-account',
@@ -56,7 +55,7 @@ export class CreateAccountComponent implements OnInit {
         (data: any) => {
           console.log("at data")
           console.log(data)
-          this.router.navigate(['storebuttons']);
+          this.router.navigate(['homepage']);
   
         },
         (error) => {

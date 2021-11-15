@@ -60,15 +60,15 @@
     font-size: 40px;
   }
   mat-form-field {
-      text-align:left;
-      color:white;
-      width: 50em;
-      margin-left:10%;
-      font-size: 20px;
+    text-align:left;
+    color:white;
+    width: 70vw;
+    margin-left:10%;
+    font-size: 20px;
   }
   button {
     padding: 0.5em;
-    color:#6fd8b8;
+    color:#000000;
     margin-right: 8%;
     font-size:30px;
     border:transparent;

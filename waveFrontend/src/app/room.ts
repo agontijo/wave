@@ -1,10 +1,11 @@
 export interface Room {
+    previous: any[];
     songThreshold: number;
-    queue: String[];
+    queue: string[];
     RoomID: string;
-    genresAllowed: String[];
+    genresAllowed: string[];
     host: string;
-    user: String[];
+    userList: string[];
     allowExplicit: boolean;
-    roomname: String;
+    roomname: string;
 }

@@ -57,7 +57,7 @@ export class ChangeRoomNameComponent implements OnInit {
 
 
   gotoHomepage() {
-    this.router.navigate(['../storebuttons',], { relativeTo: this.route });
+    this.router.navigate(['../homepage',], { relativeTo: this.route });
   }
 
 
