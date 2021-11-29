@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Room } from '../room';
 import { User } from '../user';
 import { UserService } from '../user.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-homepage',
@@ -14,7 +15,7 @@ import { UserService } from '../user.service';
 })
 export class HomepageComponent implements OnInit {
 
-  constructor(private _userServive: UserService, private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
+  constructor(private _userServive: UserService, private http: HttpClient, private route: ActivatedRoute, private router: Router, private toastr: ToastrService) { }
   title = 'Homepage';
   color = "#6fd8b8";
   
@@ -105,5 +106,6 @@ export class HomepageComponent implements OnInit {
         }})
       },
       (error) => { console.log("unable to join room")})
+      this.toastr.success("You Joined a Room")
   }
 }
