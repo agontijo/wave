@@ -248,7 +248,7 @@ router.post(
   ':roomid/kick/:uid',
   isAuth.isLoggedIn,
   async (req, res) => {
-    res.status(501).send('not implimented')
+    res.status(501).send('Not Implemented')
   }
   );
 
