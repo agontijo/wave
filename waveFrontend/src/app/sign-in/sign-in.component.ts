@@ -7,6 +7,7 @@ import { User } from '../user';
 import { NONE_TYPE } from '@angular/compiler';
 import { UserService } from '../user.service';
 import {MatDialog} from '@angular/material/dialog';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-sign-in',
@@ -16,7 +17,7 @@ import {MatDialog} from '@angular/material/dialog';
 export class SignInComponent implements OnInit {
 
   constructor(private _userServive: UserService, private http:HttpClientModule,
-     private route: ActivatedRoute, private router: Router, public dialog: MatDialog) { }
+     private route: ActivatedRoute, private router: Router, public dialog: MatDialog, private toastr: ToastrService) { }
   title = 'Wave';
   hide = true;
   email = new FormControl('');
@@ -51,6 +52,10 @@ export class SignInComponent implements OnInit {
       )
     }
   ngOnInit(): void {
+  }
+
+  forgetPass() {
+    this.toastr.info("Check email for password information")
   }
 
 }
