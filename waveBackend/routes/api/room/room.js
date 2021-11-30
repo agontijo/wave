@@ -244,4 +244,12 @@ router.post(
   }
 );
 
+router.post(
+  ':roomid/kick/:uid',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    res.status(501).send('not implimented')
+  }
+  );
+
 module.exports = router;
