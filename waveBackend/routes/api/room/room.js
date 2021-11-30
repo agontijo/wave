@@ -245,12 +245,21 @@ router.post(
 );
 
 router.post(
-  ':roomid/kick/',
+  '/:roomid/kick/',
   isAuth.isLoggedIn,
   async (req, res) => {
-    console.log(`Attempting to kick '${req.body.uname}'`)
-    res.status(501).send('Not Implemented')
+    console.log(`Attempting to kick '${req.body.uname} from room: ${req.params.roomid}'`);
+    res.status(501).send('Not Implemented');
   }
-  );
+);
+
+router.post(
+  '/:roomid/admit',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    console.log(`Attempting to admit '${req.body.uname}' from room: ${req.params.roomid}`);
+    res.status(501).send('Not Implemented');
+  }
+);
 
 module.exports = router;

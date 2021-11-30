@@ -32,8 +32,11 @@ async function createRoom(params) {
     previous: Array.isArray(params.previous) ? params.previous : [],    // Previously played songs
     roomname: params.name ?? "New Listening Room!",
     allowExplicit: params.allowExplicit ?? true,
+    popularSort: params.popularSort ?? false,
     genresAllowed: Array.isArray(params.genresAllowed) ? params.genresAllowed : [],
     songThreshold: isNaN(params.songThreshold) ? 0.5 : params.songThreshold,
+    waitingRoom: Array.isArray(params.waiting) ? params.waiting : [],
+    bannedList: Array.isArray(params.banned) ? params.banned : [],
   };
 
   await _createRoom({
