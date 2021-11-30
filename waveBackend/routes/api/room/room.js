@@ -245,9 +245,10 @@ router.post(
 );
 
 router.post(
-  ':roomid/kick/:uid',
+  ':roomid/kick/',
   isAuth.isLoggedIn,
   async (req, res) => {
+    console.log(`Attempting to kick '${req.body.uname}'`)
     res.status(501).send('Not Implemented')
   }
   );
