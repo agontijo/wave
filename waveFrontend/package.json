@@ -22,6 +22,7 @@
     "@angular/router": "~12.2.0",
     "@aws-amplify/ui-angular": "^1.0.28",
     "angular-spotify": "^1.5.1",
+    "angular2-qrcode": "^2.0.3",
     "aws-amplify": "^4.3.1",
     "rxjs": "~6.6.0",
     "rxjs-compat": "^6.6.7",
@@ -29,7 +30,7 @@
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~12.2.5",
+    "@angular-devkit/build-angular": "^13.0.4",
     "@angular/cli": "^12.2.9",
     "@angular/compiler-cli": "~12.2.0",
     "@types/jasmine": "~3.8.0",

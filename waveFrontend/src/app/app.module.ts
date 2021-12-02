@@ -33,7 +33,7 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
 import { LogoutComponent } from './logout/logout.component';
 import { SpotifyService } from './spotify.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { QRCodeModule } from 'angular2-qrcode';
 
 
 
@@ -71,6 +71,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatSelectModule,
     MatSlideToggleModule,
     MatSliderModule,
+    QRCodeModule,
   ],
   providers: [UserService, SpotifyService,     MatSnackBar,],
   bootstrap: [AppComponent]
