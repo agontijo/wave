@@ -33,7 +33,7 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
   public sc!: SongCheck;
   songArr = new Array<SongI>(0);
   len: number = 0;
-  roomusers = ""
+  roomusers: any;
   public roominfo!: Room;
   durationInSeconds = 5;
 
@@ -84,10 +84,10 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
             this._userServive.addUserToRoom(joinData, _url).subscribe(data => {this.userList = data;
             });
             this.len = this.userList.length
-            this.roomusers = ""
-            for (let i = 0; i < this.len; i++) {
-              this.roomusers += this.userList[i] + ", "
-            }
+            this.roomusers = this.userList
+            // for (let i = 0; i < this.len; i++) {
+            //   this.roomusers += this.userList[i] + ", "
+            // }
           });
           this.len = this.userList.length
           

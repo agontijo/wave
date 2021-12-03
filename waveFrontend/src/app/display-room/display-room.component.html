@@ -7,7 +7,19 @@
 <!-- <div class = "row" *ngFor="let u of userList">  
     <p>users: {{u}}</p>
 </div> -->
-<h2>users: {{roomusers}}</h2>
+<!-- <h2>users: {{roomusers}}</h2> -->
+
+<h2> USERS </h2>
+<div class = "row" *ngFor="let r of roomusers">  
+  <mat-card class="example-card">
+    <mat-card-title-group>
+      <mat-card-title>{{r}}</mat-card-title>
+        <button mat-icon-button style="color: rgb(255, 0, 0); background-color: transparent; border-color: transparent;" *ngIf="host == curruser.uname" >
+            <mat-icon>remove_circle</mat-icon>
+        </button>
+    </mat-card-title-group>
+  </mat-card>  
+</div>
 <h2># of users: {{len}}</h2>
 <mat-slider
   thumbLabel
