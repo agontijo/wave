@@ -102,7 +102,6 @@ router.get(
 // BORING STUFF
 router.get('/failure', (req, res) => res.status(401).send("Not Authenticated!"));
 router.get('/logout', (req, res) => {
-  console.log("in the be")
   req.session = null;
   req.logout();
   res.redirect('/');
