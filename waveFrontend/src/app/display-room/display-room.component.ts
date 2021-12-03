@@ -48,6 +48,9 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
     genresAllowed: string[] = []
     songThreshold: number | undefined
     roomID:number | undefined
+    waitingRoom: any[] = [];
+    bannedList: any[] = [];
+    popularSort: boolean | undefined;
     data: any
     timer: any
     
@@ -74,6 +77,9 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
           this.songThreshold = this.roominfo.songThreshold
           this.userList = this.roominfo.userList
           this.previous = this.roominfo.previous
+          this.bannedList = this.roominfo.bannedList
+          this.waitingRoom = this.roominfo.waitingRoom
+          this.popularSort = this.roominfo.popularSort
           this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
             let _url = "/api/room/" + this.roomID + "/join";
             const joinData = {

@@ -33,6 +33,12 @@
 <button (click)="changeVolume()">Set Voume</button>
 
 <h2> QUEUE </h2>
+<div *ngIf="popularSort == false">  
+  <h3>(In-order Sorted Queue)</h3>
+</div>
+<div class = "row" *ngIf="popularSort != false">  
+  <h3>(Popular Sorted Queue)</h3>
+</div>
 <div class = "row" *ngFor="let q of queue">  
     <mat-card class="example-card">
         <mat-card-title-group>
