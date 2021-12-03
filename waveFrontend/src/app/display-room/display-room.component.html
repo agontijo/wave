@@ -49,7 +49,11 @@
             <button mat-icon-button (click)="dislikedsong(q.id)" style="color: black; background-color: transparent; border-color: transparent;">
                 <mat-icon>thumb_down</mat-icon>
             </button>
-              
+            </mat-card-subtitle>
+            <mat-card-subtitle>
+              <button mat-icon-button style="color: rgb(255, 0, 0); background-color: transparent; border-color: transparent;" *ngIf="host == curruser.uname" >
+                <mat-icon>remove_circle</mat-icon>
+            </button>
             </mat-card-subtitle>
         </mat-card-title-group>
     </mat-card>     
