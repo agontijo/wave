@@ -33,7 +33,7 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
   public sc!: SongCheck;
   songArr = new Array<SongI>(0);
   len: number = 0;
-  roomusers = ""
+  roomusers: any;
   public roominfo!: Room;
   durationInSeconds = 5;
 
@@ -48,6 +48,9 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
     genresAllowed: string[] = []
     songThreshold: number | undefined
     roomID:number | undefined
+    waitingRoom: any[] = [];
+    bannedList: any[] = [];
+    popularSort: boolean | undefined;
     data: any
     timer: any
     
@@ -74,6 +77,9 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
           this.songThreshold = this.roominfo.songThreshold
           this.userList = this.roominfo.userList
           this.previous = this.roominfo.previous
+          this.bannedList = this.roominfo.bannedList
+          this.waitingRoom = this.roominfo.waitingRoom
+          this.popularSort = this.roominfo.popularSort
           this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
             let _url = "/api/room/" + this.roomID + "/join";
             const joinData = {
@@ -84,10 +90,10 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
             this._userServive.addUserToRoom(joinData, _url).subscribe(data => {this.userList = data;
             });
             this.len = this.userList.length
-            this.roomusers = ""
-            for (let i = 0; i < this.len; i++) {
-              this.roomusers += this.userList[i] + ", "
-            }
+            this.roomusers = this.userList
+            // for (let i = 0; i < this.len; i++) {
+            //   this.roomusers += this.userList[i] + ", "
+            // }
           });
           this.len = this.userList.length
           

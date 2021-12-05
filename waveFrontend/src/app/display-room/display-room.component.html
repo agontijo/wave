@@ -7,7 +7,19 @@
 <!-- <div class = "row" *ngFor="let u of userList">  
     <p>users: {{u}}</p>
 </div> -->
-<h2>users: {{roomusers}}</h2>
+<!-- <h2>users: {{roomusers}}</h2> -->
+
+<h2> USERS </h2>
+<div class = "row" *ngFor="let r of roomusers">  
+  <mat-card class="example-card">
+    <mat-card-title-group>
+      <mat-card-title>{{r}}</mat-card-title>
+        <button mat-icon-button style="color: rgb(255, 0, 0); background-color: transparent; border-color: transparent;" *ngIf="host == curruser.uname" >
+            <mat-icon>remove_circle</mat-icon>
+        </button>
+    </mat-card-title-group>
+  </mat-card>  
+</div>
 <h2># of users: {{len}}</h2>
 <mat-slider
   thumbLabel
@@ -21,6 +33,21 @@
 <button (click)="changeVolume()">Set Voume</button>
 
 <h2> QUEUE </h2>
+<div *ngIf="popularSort == false">  
+  <h3>(In-order Sorted Queue)</h3>
+</div>
+<div class = "row" *ngIf="popularSort != false">  
+  <h3>(Popular Sorted Queue)</h3>
+</div>
+<div class = "row" *ngIf="host == curruser.uname">  
+  <div *ngIf="popularSort == false">  
+    <button mat-flat-button type="button clearbutton">Switch to Popular Sorted Queue</button>
+  </div>
+  <div class = "row" *ngIf="popularSort != false">  
+    <button mat-flat-button type="button clearbutton">Switch to In-order Sorted Queue</button>
+  </div>
+</div>
+
 <div class = "row" *ngFor="let q of queue">  
     <mat-card class="example-card">
         <mat-card-title-group>
@@ -37,7 +64,11 @@
             <button mat-icon-button (click)="dislikedsong(q.id)" style="color: black; background-color: transparent; border-color: transparent;">
                 <mat-icon>thumb_down</mat-icon>
             </button>
-              
+            </mat-card-subtitle>
+            <mat-card-subtitle>
+              <button mat-icon-button style="color: rgb(255, 0, 0); background-color: transparent; border-color: transparent;" *ngIf="host == curruser.uname" >
+                <mat-icon>remove_circle</mat-icon>
+            </button>
             </mat-card-subtitle>
         </mat-card-title-group>
     </mat-card>     
