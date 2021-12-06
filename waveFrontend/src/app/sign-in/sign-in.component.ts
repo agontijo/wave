@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, Validators, FormGroup} from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 // import { ConsoleLogger } from '@aws-amplify/core';
 import { HttpClientModule } from '@angular/common/http';
@@ -15,13 +16,17 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./sign-in.component.css']
 })
 export class SignInComponent implements OnInit {
-
   constructor(private _userServive: UserService, private http:HttpClientModule,
-     private route: ActivatedRoute, private router: Router, public dialog: MatDialog, private toastr: ToastrService) { }
+     private route: ActivatedRoute, private router: Router, public dialog: MatDialog, private toastr: ToastrService, private formBuilder: FormBuilder) { }
   title = 'Wave';
   hide = true;
   email = new FormControl('');
   password = new FormControl('');
+  registerForm: FormGroup | undefined;
+
+  user_forget = "";
+  showModal: boolean | undefined;
+
 
     getErrorMessageEmail() {
       if (this.email.hasError('required')) {
@@ -55,7 +60,21 @@ export class SignInComponent implements OnInit {
   }
 
   forgetPass() {
+    this.pass_hide();
     this.toastr.info("Check email for password information")
+    console.log(this.user_forget)
+    this.user_forget = "";
+  }
+
+  pass_show()
+  {
+    this.showModal = true; 
+    
+  }
+
+  pass_hide()
+  {
+    this.showModal = false;
   }
 
 }

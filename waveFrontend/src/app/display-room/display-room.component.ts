@@ -98,7 +98,6 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
             // }
           });
           this.len = this.userList.length
-          
       });
      
       let timey = interval(60000);
@@ -249,6 +248,18 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
         });
       });
       this.router.navigate(['../homepage',], { relativeTo: this.route });
+    }
+
+    public reorder() {
+      console.log("hey")
+    }
+
+    public inorder() {
+      
+    }
+
+    public popular() {
+      
     }
 
 }

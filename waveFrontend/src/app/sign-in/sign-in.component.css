@@ -8,6 +8,10 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  .modal { 
+    color: rgb(0, 0, 0) !important; 
+ }
+
   mat-card {
     color: white;
     width: 85%;

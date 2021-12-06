@@ -28,8 +28,28 @@
       </div>
 
       <div class="create-account">
-        <button mat-flat-button matSuffix color="#6fd8b8" (click)="forgetPass()">Forgot Password?</button>
+        <button mat-flat-button matSuffix color="#6fd8b8" (click)="pass_show()">Forgot Password?</button>
       </div>
+
+      <div [style.display]="showModal ? 'block' : 'none'" class="modal" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="myModalLabel">Forget Password</h4>
+            </div>
+            <div class="modal-body">
+                <input id="user_forget" [(ngModel)]="user_forget" placeholder="username"/>
+                <button data-dismiss="modal" (click)="forgetPass()">Submit</button>
+                <button type="button" data-dismiss="modal" (click) = "pass_hide()">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+      
+      
     </div>
   </mat-card>
   </body>
+
