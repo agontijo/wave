@@ -53,6 +53,7 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
     popularSort: boolean | undefined;
     data: any
     timer: any
+    isMod: boolean | undefined;
     
     new_vol: string = '';
 
@@ -80,6 +81,7 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
           this.bannedList = this.roominfo.bannedList
           this.waitingRoom = this.roominfo.waitingRoom
           this.popularSort = this.roominfo.popularSort
+          this.isMod = this.roominfo.isMod
           this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
             let _url = "/api/room/" + this.roomID + "/join";
             const joinData = {

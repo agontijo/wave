@@ -8,7 +8,7 @@
     <p>users: {{u}}</p>
 </div> -->
 <!-- <h2>users: {{roomusers}}</h2> -->
-
+<h2># of users: {{len}}</h2>
 <h2> USERS </h2>
 <div class = "row" *ngFor="let r of roomusers">  
   <mat-card class="example-card">
@@ -20,7 +20,27 @@
     </mat-card-title-group>
   </mat-card>  
 </div>
-<h2># of users: {{len}}</h2>
+
+
+<div class = "row" *ngIf="host == curruser.uname">  
+  <div class = "column" *ngIf="isMod == true"> 
+    <h2> Waiting List</h2>
+    <div class = "a" *ngFor="let w of waitingRoom">  
+      <mat-card class="example-card">
+        <mat-card-title-group>
+          <mat-card-title>{{w}}</mat-card-title>
+            <button mat-icon-button style="color: rgb(1, 172, 24); background-color: transparent; border-color: transparent;">
+                <mat-icon>check_circle</mat-icon>
+            </button>
+            <button mat-icon-button style="color: rgb(255, 0, 0); background-color: transparent; border-color: transparent;">
+              <mat-icon>block</mat-icon>
+          </button>
+        </mat-card-title-group>
+      </mat-card>  
+    </div>
+  </div>
+</div>
+
 <mat-slider
   thumbLabel
   [displayWith]="formatLabel"
@@ -31,6 +51,7 @@
   aria-label="units" (input)="_changeVolume($event)">
 </mat-slider>
 <button (click)="changeVolume()">Set Voume</button>
+
 
 <h2> QUEUE </h2>
 <div *ngIf="popularSort == false">  
