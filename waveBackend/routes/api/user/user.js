@@ -7,6 +7,7 @@ const router = express.Router();
 
 // Get a user of with username = uname
 router.get('/', (req, res) => {
+  console.log(req.body);
   if (req.user) { res.send(req.user); }
   else { res.send(null); }
 })

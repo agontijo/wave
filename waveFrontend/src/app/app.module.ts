@@ -34,6 +34,7 @@ import { LogoutComponent } from './logout/logout.component';
 import { SpotifyService } from './spotify.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ToastrModule } from 'ngx-toastr';
+import { QRCodeModule } from 'angular2-qrcode';
 
 
 
@@ -72,6 +73,7 @@ import { ToastrModule } from 'ngx-toastr';
     MatSlideToggleModule,
     MatSliderModule,
     ToastrModule.forRoot(),
+    QRCodeModule,
   ],
   providers: [UserService, SpotifyService,     MatSnackBar,],
   bootstrap: [AppComponent]

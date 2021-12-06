@@ -1,8 +1,11 @@
 const axios = require('axios');
 const qs = require('qs');
 
+var nodemailer = require('nodemailer');
+
 const AWS = require('./awsconfig.js');
 const emailMapActions = require('./emailMapActions.js');
+const { WellArchitected } = require('aws-sdk');
 
 // Protected helper functions
 async function _updateUser(params) {
@@ -161,6 +164,50 @@ async function deleteUser(uname) {
 
 }
 
+async function sendEmail (uname) {
+  console.log(uname);
+  const auser = await getUser(uname);
+  if (auser?.Item == undefined) {throw Error('invalid_username')}
+  const email = auser.Item.email;
+  console.log(email)
+
+  let mailTransporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'waveproject407@gmail.com',
+      pass: '407wave#project',
+    }
+  });
+  let s4 = () => {
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+  }
+  let newpswd = s4() + "mtMT!";
+  console.log(newpswd);
+
+  await setUserPassword(uname, newpswd);
+
+  let email_body = "Dear Wave User " + uname + "\n" + " Your new password is " + newpswd;
+
+  let mailDetails = {
+    from: 'waveproject407@gmail.com',
+    to: email,
+    subject: "Reseting Your Wave Account Password",
+    text: email_body
+  };
+  console.log("here4");
+
+  mailTransporter.sendMail(mailDetails, function (err, info) {
+    if (err) {
+      console.log(err);
+      throw Error("could_not")
+    }
+    else {
+      console.log(info.messageId);
+    }
+  });
+
+}
+
 
 module.exports = {
   _updateUser,
@@ -176,4 +223,5 @@ module.exports = {
   clearSpotifyToks,
   setCurrRoom,
   deleteUser,
+  sendEmail,
 };

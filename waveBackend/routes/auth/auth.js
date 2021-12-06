@@ -20,6 +20,7 @@ router.post(
   loginPreProc.resolveUname,
   passport.authenticate('local'),
   (req, res) => {
+    console.log(req.body);
     if (!req.user) {
       res.status(401).send("Username or password incorrect");
     }
@@ -106,5 +107,29 @@ router.get('/logout', (req, res) => {
   req.logout();
   res.redirect('/');
 });
+
+router.post(
+  '/resetpassword',
+  async (req, res) => {
+    console.log(req.body.username);
+    try {
+      await userActions.sendEmail(req.body.username);
+      res.status(200).send("mailsent");
+      /*if (check == "error"){
+        res.status(500).send("error_in_send");
+        console.log("error_send");
+      }
+      else {
+        console.log("success_send");
+        res.status(200).send("success_send");
+      }*/
+      //res.redirect('/');
+    } catch (err) { 
+      console.log("someerror;");
+      console.log(err);
+      res.status(422).send(err);
+    }
+  }
+);
 
 module.exports = router;
