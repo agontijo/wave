@@ -11,4 +11,5 @@ export interface Room {
     waitingRoom: any[];
     bannedList: any[];
     popularSort: boolean;
+    isMod: boolean;
 }

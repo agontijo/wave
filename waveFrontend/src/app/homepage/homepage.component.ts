@@ -30,6 +30,7 @@ export class HomepageComponent implements OnInit {
   roomName = new FormControl('New Listening Room');
   explicitChecked = false;
   roomID = new FormControl();
+  isMod = false;
 
   genreSelected = new FormControl();
   genreList = ["HipHop", "Rap", "Indie", "Pop"]
@@ -71,7 +72,7 @@ export class HomepageComponent implements OnInit {
       allowExplicit: this.explicitChecked,
       genresAllowed: this.genreSelected.value,
       songThreshold: NONE_TYPE,
-
+      isMod: this.isMod,
     }
     this._userServive.createRoom(room).subscribe(
       (data) => {
