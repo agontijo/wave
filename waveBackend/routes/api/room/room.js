@@ -262,4 +262,13 @@ router.post(
   }
 );
 
+router.post(
+  '/:roomid/deny/',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    console.log(`Attempting to deny '${req.body.uname} from room: ${req.params.roomid}'`);
+    res.status(501).send('Not Implemented');
+  }
+);
+
 module.exports = router;
