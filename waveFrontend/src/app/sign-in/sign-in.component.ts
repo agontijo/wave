@@ -26,6 +26,7 @@ export class SignInComponent implements OnInit {
 
   user_forget = "";
   showModal: boolean | undefined;
+  returnval: any
 
 
     getErrorMessageEmail() {
@@ -64,6 +65,10 @@ export class SignInComponent implements OnInit {
     this.toastr.info("Check email for password information")
     console.log(this.user_forget)
     this.user_forget = "";
+    const ResetUser = {
+      username: this.user_forget
+    };
+    this._userServive.resetPass(ResetUser).subscribe(data => { this.returnval = data;});
   }
 
   pass_show()

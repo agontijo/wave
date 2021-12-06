@@ -101,4 +101,8 @@ export class UserService {
     return this.http.post<any>(url, createBody);
   }
 
+  resetPass(createBody: any): Observable<any> {
+    return this.http.post<any>("/auth/resetpassword", createBody);
+  }
+
 }
