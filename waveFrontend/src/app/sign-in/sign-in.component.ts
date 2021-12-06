@@ -68,7 +68,7 @@ export class SignInComponent implements OnInit {
     const ResetUser = {
       username: this.user_forget
     };
-    this._userServive.resetPass(ResetUser).subscribe(data => { this.returnval = data;});
+    this._userServive.resetPass(ResetUser).subscribe(data => { this.returnval = data; console.log(this.returnval)});
   }
 
   pass_show()

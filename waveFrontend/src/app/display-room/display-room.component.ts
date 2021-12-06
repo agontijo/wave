@@ -54,6 +54,7 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
     data: any
     timer: any
     isMod: boolean | undefined;
+    popqueue: any[] = []
     
     new_vol: string = '';
 
@@ -98,6 +99,11 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
             // }
           });
           this.len = this.userList.length
+          if (this.popularSort == true) {
+            console.log("hey")
+            this.popqueue = this.queue
+            this.popqueue.sort((a, b) => ((a.liked.length - a.disliked.length) > (b.liked.length - b.disliked.length) ? -1 : 1));
+          }
       });
      
       let timey = interval(60000);
