@@ -321,6 +321,9 @@ async function addSong(RoomID, song_id) {
   const song = await spotifyUtils.getTrack(song_id, host_tok);
   const genre = (await spotifyUtils.getArtist(song.artists[0].id, host_tok)).genres[0];
 
+  let err = _checkSongFilterMatch(song, genre, room);
+  if (err < 0) return err;
+
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
@@ -338,11 +341,38 @@ async function addSong(RoomID, song_id) {
         name: song.name,
         artists: song.artists.map(a => a.name),
         explicit: song.explicit,
-        genre
+        genre,
+        listId: Date.now()
       }],
     },
     ReturnValues: 'UPDATED_NEW'
   });
+}
+
+// returns 0 if the song fits the filters
+// -1 : genre not allowed
+// -2 : explicit song not allowed
+function _checkSongFilterMatch(songObj, genreString, roomObj) {
+  // if the room has no genre filter, ignore
+  if (roomObj.genresAllowed && roomObj.genresAllowed.length > 0) {
+    // if the song has no genre, ignore
+    if (genreString !== "") {
+      // check if the genre string is allowed
+      if (genresAllowed.indexOf(genreString) == -1) {
+        // not found, do not allow song
+        return -1;
+      }
+    }
+  }
+
+  // if the room allows explicit songs, ignore
+  if (!roomObj.allowExplicit) {
+    // if the song is explicit, do not allow
+    if (songObj.explicit) {
+      return -2;
+    }
+  }
+  return 0;
 }
 
 async function removeSongAtIndex(RoomID, index) {
@@ -520,6 +550,34 @@ async function moveSongToPrev(RoomID, song, user) {
   });
 }
 
+async function removeSong(RoomID, listId) {
+  const room = (await getRoom(RoomID)).Item;
+
+  for (let i = 0; i < room.queue.length; i++) {
+    const s = room.queue[i];
+    // console.log(s.id == song_id);
+    if (s.listId === listId) {
+      // remove song
+      let index = room.queue.indexOf(s)
+      s.disliked.splice(index, 1)
+      
+      //console.log(s);
+      break;
+
+    }
+  }
+
+  return await _updateRoom({
+    TableName: 'WVRooms',
+    Key: { RoomID },
+    UpdateExpression: 'set queue = :q',
+    ExpressionAttributeValues: {
+      ':q': room.queue,
+    },
+    ReturnValues: 'UPDATED_NEW'
+  });
+}
+
 module.exports = {
   _getRoom,
   _updateRoom,
@@ -543,5 +601,6 @@ module.exports = {
   popSongFromQueue,
   upvoteSong,
   downvoteSong,
-  moveSongToPrev
+  moveSongToPrev,
+  removeSong
 }
