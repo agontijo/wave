@@ -245,6 +245,28 @@ router.post(
 );
 
 router.post(
+  '/:roomid/waitlist',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    try {
+      const room = (await roomActions.getRoom(req.params.roomid)).Item;
+      if (room.bannedList.includes(req.user.uname)) {
+        res.status(403).send("User has been banned from this room");
+        return;
+      }
+      const data = await roomActions.addUser(
+        req.user.uname, req.params.roomid, 'waitingRoom'
+      );
+      if (data?.Attributes) { res.status(200).send(data); }
+      else { res.status(500).send(null); }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send(err.message);
+    }
+  }
+);
+
+router.post(
   '/:roomid/kick/',
   isAuth.isLoggedIn,
   async (req, res) => {
