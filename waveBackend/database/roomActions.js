@@ -67,7 +67,7 @@ async function getRoom(RoomID) {
   });
 }
 
-async function addUser(user, RoomID) {
+async function addUser(user, RoomID, userList='userList') {
   let room = await _getRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
@@ -80,7 +80,7 @@ async function addUser(user, RoomID) {
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
-    UpdateExpression: 'set userList = :u',
+    UpdateExpression: `set ${userList} = :u`,
     ExpressionAttributeValues: {
       ':u': item.userList,
     },
@@ -89,7 +89,15 @@ async function addUser(user, RoomID) {
 
 }
 
-async function removeUser(user, RoomID) {
+async function admitUser(RoomID, user, host) {
+  const room = (await getRoom(RoomID)).Item;
+  _checkHost(host, room);
+  if (room.waitingRoom?.includes(user)) removeUser(user, RoomID, 'waitingRoom');
+  else throw Error(`User '${user}' is not trying to enter room '${RoomID}'`);
+  return await addUser(user, RoomID)
+}
+
+async function removeUser(user, RoomID, userList='userList') {
   let room = await _getRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
@@ -118,7 +126,7 @@ async function removeUser(user, RoomID) {
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
-    UpdateExpression: 'set userList = :u',
+    UpdateExpression: `set ${userList} = :u`,
     ExpressionAttributeValues: {
       ':u': item.userList,
     },
