@@ -33,11 +33,15 @@ export class UserService {
   }
   
   kickUser(roomId:any, body:any) :Observable<any> {
-    return this.http.post<any>(`/api/room/` + roomId + `/kick`, body);
+    return this.http.post<any>(`/api/room/` + roomId + '/kick', body);
   }
 
   denyUser(roomId:any, body:any) :Observable<any> {
-    return this.http.post<any>(`/api/room/` + roomId + `/deny`, body);
+    return this.http.post<any>(`/api/room/` + roomId + '/deny', body);
+  }
+
+  acceptUser(roomId:any, body:any) :Observable<any> {
+    return this.http.post<any>(`/api/room/` + roomId + '/admit', body);
   }
 
   registerUser(userObj: any): Observable<User> {

@@ -10,7 +10,7 @@ export class WaitingRoomComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log("here")
+    
   }
 
 }
