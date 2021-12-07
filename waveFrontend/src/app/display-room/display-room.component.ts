@@ -33,7 +33,7 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
   public sc!: SongCheck;
   songArr = new Array<SongI>(0);
   len: number = 0;
-  roomusers = ""
+  roomusers: any;
   public roominfo!: Room;
   durationInSeconds = 5;
 
@@ -49,8 +49,13 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
     genresAllowed: string[] = []
     songThreshold: number | undefined
     roomID:number | undefined = 0
-    data: any 
-    timer: any 
+    waitingRoom: any[] = [];
+    bannedList: any[] = [];
+    popularSort: boolean | undefined;
+    data: any
+    timer: any
+    isMod: boolean | undefined;
+    popqueue: any[] = []
     isHost = false
     new_vol: string = '';
     name = 'Angular ' + VERSION.major;
@@ -80,6 +85,10 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
           this.songThreshold = this.roominfo.songThreshold
           this.userList = this.roominfo.userList
           this.previous = this.roominfo.previous
+          this.bannedList = this.roominfo.bannedList
+          this.waitingRoom = this.roominfo.waitingRoom
+          this.popularSort = this.roominfo.popularSort
+          this.isMod = this.roominfo.isMod
           this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
             let _url = "/api/room/" + this.roomID + "/join";
             const joinData = {
@@ -90,14 +99,19 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
             this._userServive.addUserToRoom(joinData, _url).subscribe(data => {this.userList = data;
             });
             this.len = this.userList.length
-            this.roomusers = ""
-            for (let i = 0; i < this.len; i++) {
-              this.roomusers += this.userList[i] + ", "
-            }
+            this.roomusers = this.userList
+            // for (let i = 0; i < this.len; i++) {
+            //   this.roomusers += this.userList[i] + ", "
+            // }
           });
           this.len = this.userList.length
           this.isHost = (this.curruser.uname == this.host)
           
+          if (this.popularSort == true) {
+            console.log("hey")
+            this.popqueue = this.queue
+            this.popqueue.sort((a, b) => ((a.liked.length - a.disliked.length) > (b.liked.length - b.disliked.length) ? -1 : 1));
+          }
       });
      
       let timey = interval(60000);
@@ -248,6 +262,18 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
         });
       });
       this.router.navigate(['../homepage',], { relativeTo: this.route });
+    }
+
+    public reorder() {
+      console.log("hey")
+    }
+
+    public inorder() {
+      
+    }
+
+    public popular() {
+      
     }
 
 }

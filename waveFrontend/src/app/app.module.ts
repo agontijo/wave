@@ -35,6 +35,10 @@ import { LogoutComponent } from './logout/logout.component';
 import { SpotifyService } from './spotify.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgxQRCodeModule } from '@techiediaries/ngx-qrcode';
+import { ToastrModule } from 'ngx-toastr';
+
+
+
 
 @NgModule({
   declarations: [
@@ -72,6 +76,7 @@ import { NgxQRCodeModule } from '@techiediaries/ngx-qrcode';
     QRCodeModule,
     MatSliderModule,
     NgxQRCodeModule,
+    ToastrModule.forRoot(),
   ],
   providers: [UserService, SpotifyService,     MatSnackBar,],
   bootstrap: [AppComponent]

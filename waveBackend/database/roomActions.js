@@ -37,6 +37,7 @@ async function createRoom(params) {
     songThreshold: isNaN(params.songThreshold) ? 0.5 : params.songThreshold,
     waitingRoom: Array.isArray(params.waiting) ? params.waiting : [],
     bannedList: Array.isArray(params.banned) ? params.banned : [],
+    isMod: params.isMod ? true : false
   };
 
   await _createRoom({
@@ -372,12 +373,12 @@ async function popSongFromQueue(RoomID) {
 async function upvoteSong(RoomID, song_id, user) {
   const room = (await getRoom(RoomID)).Item;
   //const host = (await userActs.getUser(room.host)).Item;
- // const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
+  // const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
   let thesong = undefined;
   // manually update song object
 
-console.log('camehere');
+  console.log('camehere');
 
   for (let i = 0; i < room.queue.length; i++) {
     const s = room.queue[i];

@@ -8,4 +8,8 @@ export interface Room {
     userList: string[];
     allowExplicit: boolean;
     roomname: string;
+    waitingRoom: any[];
+    bannedList: any[];
+    popularSort: boolean;
+    isMod: boolean;
 }
