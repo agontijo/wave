@@ -191,7 +191,7 @@ router.get(
       return;
     }
     try {
-      const song = await roomActions.popSongFromQueue(room.RoomID);
+      const song = await roomActions.popSongFromQueue(room);
       if (song === -1) {
         res.status(404).send('No song avalible')
       } else {
