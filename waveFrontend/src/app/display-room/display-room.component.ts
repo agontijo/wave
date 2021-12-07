@@ -119,7 +119,19 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
       this.ngOnDestroy
     }
     //search track
-    
+    public kickUser(k:any) {
+      let body = {
+        uname: k
+      }
+      this._userServive.kickUser(this.roomID, body).subscribe((data) => {
+        console.log("success kicking " + k);
+
+      },
+      (error) => {
+        console.log(" error kicking " + k + " out of the room")
+      },
+      );
+    } 
     public searchTrack() {
       this.songArr.length = 0
       this._spotifyServive.getSongs(this.searchQuery).subscribe((data) => {
