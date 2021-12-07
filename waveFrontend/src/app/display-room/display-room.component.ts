@@ -156,6 +156,21 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
       },
       );
     } 
+
+        // deny user
+    public acceptUser(w:any) {
+      let body = {
+        uname: w
+      }
+      this._userServive.acceptUser(this.roomID, body).subscribe((data) => {
+       console.log("success denying " + w);    
+      },
+      (error) => {
+        console.log(" error denying " + w + " out of the room")
+      },
+      );
+    } 
+
     //search track
     
     public searchTrack() {
