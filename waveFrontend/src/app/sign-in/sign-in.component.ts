@@ -64,11 +64,11 @@ export class SignInComponent implements OnInit {
     this.pass_hide();
     this.toastr.info("Check email for password information")
     console.log(this.user_forget)
-    this.user_forget = "";
     const ResetUser = {
       username: this.user_forget
     };
-    this._userServive.resetPass(ResetUser).subscribe(data => { this.returnval = data; console.log(this.returnval)});
+    this._userServive.resetPass(ResetUser).subscribe(data => { this.returnval = data;});
+    this.user_forget = ""
   }
 
   pass_show()

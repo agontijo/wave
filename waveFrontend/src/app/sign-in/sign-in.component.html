@@ -35,11 +35,12 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title" id="myModalLabel">Forget Password</h4>
+              <h4 class="modal-title" id="myModalLabel">Forget Password? Enter Username</h4>
             </div>
             <div class="modal-body">
                 <input id="user_forget" [(ngModel)]="user_forget" placeholder="username"/>
                 <button data-dismiss="modal" (click)="forgetPass()">Submit</button>
+                <br>
                 <button type="button" data-dismiss="modal" (click) = "pass_hide()">Close</button>
             </div>
           </div>
