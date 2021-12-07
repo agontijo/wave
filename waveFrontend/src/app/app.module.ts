@@ -35,6 +35,7 @@ import { SpotifyService } from './spotify.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ToastrModule } from 'ngx-toastr';
 import { QRCodeModule } from 'angular2-qrcode';
+import { WaitingRoomComponent } from './waiting-room/waiting-room.component';
 
 
 
@@ -54,6 +55,7 @@ import { QRCodeModule } from 'angular2-qrcode';
     AccountSettingsComponent,
     LogoutComponent,
     DisplayRoomComponent,
+    WaitingRoomComponent,
 
   ],
   imports: [

@@ -95,18 +95,26 @@ export class HomepageComponent implements OnInit {
     this._userServive.getRoomFromID(this.roomID.value).subscribe(
       (data) => {
         console.log(data)
-        this.router.navigate(['display-room'], {queryParams: {
-          roomID: data.RoomID, 
-          allowExplicit: data.allowExplicit,
-          genresAllowed: data.genresAllowed,
-          host: data.host,
-          queue:data.queue,
-          roomname: data.roomname,
-          songThreshold:data.songThreshold,
-          userList:data.userList,
+        if (data.isMod == false) {
+          this.router.navigate(['display-room'], {queryParams: {
+            roomID: data.RoomID, 
+            allowExplicit: data.allowExplicit,
+            genresAllowed: data.genresAllowed,
+            host: data.host,
+            queue:data.queue,
+            roomname: data.roomname,
+            songThreshold:data.songThreshold,
+            userList:data.userList,
         }})
+        this.toastr.success("You Joined a Room")
+      }
+      else {
+        console.log("hello")
+        this.toastr.info("You are in the waiting room")
+        this.router.navigate(['../waiting-room'], { relativeTo: this.route });
+      }
       },
       (error) => { console.log("unable to join room")})
-      this.toastr.success("You Joined a Room")
+
   }
 }
