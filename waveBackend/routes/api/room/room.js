@@ -271,4 +271,13 @@ router.post(
   }
 );
 
+router.post(
+  '/:roomid/sortorder',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    console.log(`Setting popular sort order = ${req.body.popularSort}`)
+    res.status(501).send('Not Implemented');
+  }
+)
+
 module.exports = router;
