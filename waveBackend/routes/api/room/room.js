@@ -170,7 +170,30 @@ router.post(
     try {
       const data = await roomActions.addSong(req.params.roomid, req.body.songID);
       console.log(data);
+      // check if addsong returned a specific error code and generate a message accordingly
+      if (data != null && data == -1) {
+        // genre not allowed error
+        res.status(403).send('Could not add song. Genre not allowed in room filters.');
+      } else if (data != null && data == -2) {
+        // explicit song not allowed error
+        res.status(403).send('Could not add song. Room does not allow explicit songs.');
+      }
       res.send(data);
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  }
+);
+
+router.post(
+  '/:roomid/removeSong',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    try {
+      const data = await roomActions.removeSong(req.params.roomid, req.body.listId);
+      console.log(data);
+      res.send(data);
+      
     } catch (err) {
       res.status(500).send(err.message);
     }
