@@ -248,8 +248,17 @@ router.post(
   '/:roomid/kick/',
   isAuth.isLoggedIn,
   async (req, res) => {
-    console.log(`Attempting to kick '${req.body.uname} from room: ${req.params.roomid}'`);
-    res.status(501).send('Not Implemented');
+    try {
+      const data = await roomActions.kickUser(
+        req.params.roomid,
+        req.user.uname,
+        req.body.uname
+      );
+      res.send(data);
+    } catch (e) {
+      console.error(e);
+      res.status(500).send(e.message);
+    }
   }
 );
 
@@ -257,8 +266,17 @@ router.post(
   '/:roomid/admit',
   isAuth.isLoggedIn,
   async (req, res) => {
-    console.log(`Attempting to admit '${req.body.uname}' from room: ${req.params.roomid}`);
-    res.status(501).send('Not Implemented');
+    try {
+      const data = await roomActions.admitUser(
+        req.params.roomid,
+        req.user.uname,
+        req.body.uname
+      );
+      res.send(data);
+    } catch (e) {
+      console.error(e);
+      res.status(500).send(e.message);
+    }
   }
 );
 
@@ -266,8 +284,17 @@ router.post(
   '/:roomid/deny/',
   isAuth.isLoggedIn,
   async (req, res) => {
-    console.log(`Attempting to deny '${req.body.uname} from room: ${req.params.roomid}'`);
-    res.status(501).send('Not Implemented');
+    try {
+      const data = await roomActions.denyUser(
+        req.params.roomid,
+        req.user.uname,
+        req.body.uname
+      );
+      res.send(data);
+    } catch (e) {
+      console.error(e);
+      res.status(500).send(e.message);
+    }
   }
 );
 
