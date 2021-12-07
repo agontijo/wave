@@ -13,12 +13,14 @@ import { CreateRoomComponent } from './create-room/create-room.component';
 import { DisplayRoomComponent } from './display-room/display-room.component';
 import { LogoutComponent } from './logout/logout.component';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
+import { WaitingRoomComponent } from './waiting-room/waiting-room.component';
 
 const routes: Routes = [
   { path: '', component: SignInComponent },
   { path: 'sign-in', component: SignInComponent},
   { path: 'create-account', component: CreateAccountComponent },
   { path: 'homepage', component: HomepageComponent},
+  { path: 'waiting-room', component: WaitingRoomComponent},
   { path: 'spotify-connect', component: SpotifyConnectComponent },
   { path: 'change-name', component: ChangeNameComponent },
   { path: 'change-room-name', component: ChangeRoomNameComponent },
