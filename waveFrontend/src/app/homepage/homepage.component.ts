@@ -111,7 +111,12 @@ export class HomepageComponent implements OnInit {
       else {
         console.log("hello")
         this.toastr.info("You are in the waiting room")
-        this.router.navigate(['../waiting-room'], { relativeTo: this.route });
+        this.router.navigate(['../waiting-room'], { 
+          relativeTo: this.route,
+          queryParams: {
+            roomID: this.roomID.value
+          }
+        });
       }
       },
       (error) => { console.log("unable to join room")})

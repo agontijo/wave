@@ -86,12 +86,23 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
           this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
             if (this.bannedList.includes(this.curruser.uname)) {
               // If the user has been banned from the room kick them to homepage
-              this.router.navigate(['/homepage']);
-            } else if (this.isMod && !this.userList.includes(this.curruser.uname)) {
+              this.router.navigateByUrl("/homepage");
+            }
+            
+            if (this.isMod && !this.userList.includes(this.curruser.uname)) {
               // User attempted to get arround the waiting list in moderating mode
               // redirect them to the waiting screen
+              this.router.navigate(['../waiting-room'], { 
+                relativeTo: this.route,
+                queryParams: {
+                  roomID: this.roomID
+                }
+              });
+            }
 
-              //TODO: redirect
+            if (this.isMod) {
+              // User has already joined the room by admin approval
+              return;
             }
             
             let _url = "/api/room/" + this.roomID + "/join";
