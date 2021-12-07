@@ -118,7 +118,7 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
       console.log("destroy");
       this.ngOnDestroy
     }
-    //search track
+    // kick user
     public kickUser(k:any) {
       let body = {
         uname: k
@@ -132,6 +132,22 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
       },
       );
     } 
+    // deny user
+    public denyUser(w:any) {
+      let body = {
+        uname: w
+      }
+      this._userServive.denyUser(this.roomID, body).subscribe((data) => {
+        console.log("success denying " + w);
+
+      },
+      (error) => {
+        console.log(" error denying " + w + " out of the room")
+      },
+      );
+    } 
+    //search track
+    
     public searchTrack() {
       this.songArr.length = 0
       this._spotifyServive.getSongs(this.searchQuery).subscribe((data) => {

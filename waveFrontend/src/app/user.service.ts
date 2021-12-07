@@ -36,6 +36,10 @@ export class UserService {
     return this.http.post<any>(`/api/room/` + roomId + `/kick`, body);
   }
 
+  denyUser(roomId:any, body:any) :Observable<any> {
+    return this.http.post<any>(`/api/room/` + roomId + `/deny`, body);
+  }
+
   registerUser(userObj: any): Observable<User> {
     return this.http.post<User>(this.url
       + "/auth/local/", userObj);
