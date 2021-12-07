@@ -174,10 +174,10 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
         uname: w
       }
       this._userServive.acceptUser(this.roomID, body).subscribe((data) => {
-       console.log("success denying " + w);    
+       console.log("success accepting " + w);    
       },
       (error) => {
-        console.log(" error denying " + w + " out of the room")
+        console.log(" error accepting " + w + " into the room")
       },
       );
     } 
