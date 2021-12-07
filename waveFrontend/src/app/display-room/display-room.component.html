@@ -9,6 +9,14 @@
 </div> -->
 <h2>users: {{roomusers}}</h2>
 <h2># of users: {{len}}</h2>
+
+<ngx-qrcode *ngIf=isHost
+  [elementType]="elementType"
+  [errorCorrectionLevel]="correctionLevel"
+  [value]="value"
+  alt="Demo QR Code"
+  cssClass="bshadow"></ngx-qrcode>
+  n
 <mat-slider
   thumbLabel
   [displayWith]="formatLabel"

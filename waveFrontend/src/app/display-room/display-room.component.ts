@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { Component, OnInit, OnDestroy} from '@angular/core';
+import { Component, OnInit, OnDestroy, VERSION} from '@angular/core';
 import { NONE_TYPE, ThrowStmt } from '@angular/compiler';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
@@ -15,6 +15,7 @@ import { SongCheck } from '../songcheck';
 import { SongI } from '../songI';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {interval} from 'rxjs'
+import { NgxQrcodeElementTypes, NgxQrcodeErrorCorrectionLevels } from '@techiediaries/ngx-qrcode';
 
 
 @Component({
@@ -23,7 +24,6 @@ import {interval} from 'rxjs'
   styleUrls: ['./display-room.component.css']
 })
 export class DisplayRoomComponent implements OnInit, OnDestroy {
-
   searchQuery = ""
   public curruser!: User;
   auth_tok = "";
@@ -37,7 +37,8 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
   public roominfo!: Room;
   durationInSeconds = 5;
 
-  constructor(private _snackBar: MatSnackBar, private _spotifyServive: SpotifyService, private _userServive: UserService, private http:HttpClientModule ,
+
+  constructor(private _snackBar: MatSnackBar, private _spotifyServive: SpotifyService, private _userServive: UserService, private http:HttpClientModule,
     private route: ActivatedRoute,private router: Router) { }
     host:string = ''
     queue: any[] = []
@@ -47,11 +48,15 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
     allowExplicit:boolean = true
     genresAllowed: string[] = []
     songThreshold: number | undefined
-    roomID:number | undefined
-    data: any
-    timer: any
-    
+    roomID:number | undefined = 0
+    data: any 
+    timer: any 
+    isHost = false
     new_vol: string = '';
+    name = 'Angular ' + VERSION.major;
+    elementType = NgxQrcodeElementTypes.URL;
+    correctionLevel = NgxQrcodeErrorCorrectionLevels.HIGH;
+    value = 'http://localhost:4200/display-room?roomID=' + this.roomID;
 
     ngOnInit(): void {
       // this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
@@ -62,6 +67,7 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
         .subscribe(params => {
           console.log(params); // { order: "popular" }
           this.roomID = params.roomID
+          this.value='http://localhost:4200/display-room?roomID=' + this.roomID;
         }
       );
       
@@ -90,6 +96,7 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
             }
           });
           this.len = this.userList.length
+          this.isHost = (this.curruser.uname == this.host)
           
       });
      
