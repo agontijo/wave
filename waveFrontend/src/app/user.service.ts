@@ -31,6 +31,18 @@ export class UserService {
   changePassword(createBody: any, url: any): Observable<User> {
     return this.http.post<User>(url, createBody);
   }
+  
+  kickUser(roomId:any, body:any) :Observable<any> {
+    return this.http.post<any>(`/api/room/` + roomId + '/kick', body);
+  }
+
+  denyUser(roomId:any, body:any) :Observable<any> {
+    return this.http.post<any>(`/api/room/` + roomId + '/deny', body);
+  }
+
+  acceptUser(roomId:any, body:any) :Observable<any> {
+    return this.http.post<any>(`/api/room/` + roomId + '/admit', body);
+  }
 
   registerUser(userObj: any): Observable<User> {
     return this.http.post<User>(this.url

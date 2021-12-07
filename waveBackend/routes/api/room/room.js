@@ -245,11 +245,42 @@ router.post(
 );
 
 router.post(
+  '/:roomid/waitlist',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    try {
+      const room = (await roomActions.getRoom(req.params.roomid)).Item;
+      if (room.bannedList.includes(req.user.uname)) {
+        res.status(403).send("User has been banned from this room");
+        return;
+      }
+      const data = await roomActions.addUser(
+        req.user.uname, req.params.roomid, 'waitingRoom'
+      );
+      if (data?.Attributes) { res.status(200).send(data); }
+      else { res.status(500).send(null); }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send(err.message);
+    }
+  }
+);
+
+router.post(
   '/:roomid/kick/',
   isAuth.isLoggedIn,
   async (req, res) => {
-    console.log(`Attempting to kick '${req.body.uname} from room: ${req.params.roomid}'`);
-    res.status(501).send('Not Implemented');
+    try {
+      const data = await roomActions.kickUser(
+        req.params.roomid,
+        req.user.uname,
+        req.body.uname
+      );
+      res.send(data);
+    } catch (e) {
+      console.error(e);
+      res.status(500).send(e.message);
+    }
   }
 );
 
@@ -257,8 +288,17 @@ router.post(
   '/:roomid/admit',
   isAuth.isLoggedIn,
   async (req, res) => {
-    console.log(`Attempting to admit '${req.body.uname}' from room: ${req.params.roomid}`);
-    res.status(501).send('Not Implemented');
+    try {
+      const data = await roomActions.admitUser(
+        req.params.roomid,
+        req.user.uname,
+        req.body.uname
+      );
+      res.send(data);
+    } catch (e) {
+      console.error(e);
+      res.status(500).send(e.message);
+    }
   }
 );
 
@@ -266,8 +306,17 @@ router.post(
   '/:roomid/deny/',
   isAuth.isLoggedIn,
   async (req, res) => {
-    console.log(`Attempting to deny '${req.body.uname} from room: ${req.params.roomid}'`);
-    res.status(501).send('Not Implemented');
+    try {
+      const data = await roomActions.denyUser(
+        req.params.roomid,
+        req.user.uname,
+        req.body.uname
+      );
+      res.send(data);
+    } catch (e) {
+      console.error(e);
+      res.status(500).send(e.message);
+    }
   }
 );
 

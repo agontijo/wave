@@ -23,7 +23,7 @@
     <mat-card-title-group>
       <mat-card-title>{{r}}</mat-card-title>
         <button mat-icon-button style="color: rgb(255, 0, 0); background-color: transparent; border-color: transparent;" *ngIf="host == curruser.uname" >
-            <mat-icon>remove_circle</mat-icon>
+            <mat-icon (click)="kickUser(r)">remove_circle</mat-icon>
         </button>
     </mat-card-title-group>
   </mat-card>  
@@ -38,10 +38,10 @@
         <mat-card-title-group>
           <mat-card-title>{{w}}</mat-card-title>
             <button mat-icon-button style="color: rgb(1, 172, 24); background-color: transparent; border-color: transparent;">
-                <mat-icon>check_circle</mat-icon>
+                <mat-icon (click)="acceptUser(w)">check_circle</mat-icon>
             </button>
             <button mat-icon-button style="color: rgb(255, 0, 0); background-color: transparent; border-color: transparent;">
-              <mat-icon>block</mat-icon>
+              <mat-icon (click)="denyUser(w)">block</mat-icon>
           </button>
         </mat-card-title-group>
       </mat-card>  

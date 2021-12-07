@@ -90,6 +90,27 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
           this.popularSort = this.roominfo.popularSort
           this.isMod = this.roominfo.isMod
           this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
+            if (this.bannedList.includes(this.curruser.uname)) {
+              // If the user has been banned from the room kick them to homepage
+              this.router.navigateByUrl("/homepage");
+            }
+            
+            if (this.isMod && !this.userList.includes(this.curruser.uname)) {
+              // User attempted to get arround the waiting list in moderating mode
+              // redirect them to the waiting screen
+              this.router.navigate(['../waiting-room'], { 
+                relativeTo: this.route,
+                queryParams: {
+                  roomID: this.roomID
+                }
+              });
+            }
+
+            if (this.isMod) {
+              // User has already joined the room by admin approval
+              return;
+            }
+            
             let _url = "/api/room/" + this.roomID + "/join";
             const joinData = {
               user: this.curruser,
@@ -126,6 +147,49 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
       console.log("destroy");
       this.ngOnDestroy
     }
+    // kick user
+    public kickUser(k:any) {
+      let body = {
+        uname: k
+      }
+      this._userServive.kickUser(this.roomID, body).subscribe((data) => {
+        console.log("success kicking " + k);
+
+      },
+      (error) => {
+        console.log(" error kicking " + k + " out of the room")
+      },
+      );
+    } 
+    // deny user
+    public denyUser(w:any) {
+      let body = {
+        uname: w
+      }
+      this._userServive.denyUser(this.roomID, body).subscribe((data) => {
+        console.log("success denying " + w);
+
+      },
+      (error) => {
+        console.log(" error denying " + w + " out of the room")
+      },
+      );
+    } 
+
+        // deny user
+    public acceptUser(w:any) {
+      let body = {
+        uname: w
+      }
+      this._userServive.acceptUser(this.roomID, body).subscribe((data) => {
+       console.log("success accepting " + w);    
+      },
+      (error) => {
+        console.log(" error accepting " + w + " into the room")
+      },
+      );
+    } 
+
     //search track
     
     public searchTrack() {

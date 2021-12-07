@@ -67,7 +67,7 @@ async function getRoom(RoomID) {
   });
 }
 
-async function addUser(user, RoomID) {
+async function addUser(user, RoomID, userList = 'userList') {
   let room = await _getRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
@@ -75,21 +75,21 @@ async function addUser(user, RoomID) {
 
   let item = room.Item;
 
-  if (item.userList && !item.userList.includes(user)) item.userList.push(user);
+  if (item[userList] && !item[userList].includes(user)) item[userList].push(user);
   // console.log(item);
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
-    UpdateExpression: 'set userList = :u',
+    UpdateExpression: `set ${userList} = :u`,
     ExpressionAttributeValues: {
-      ':u': item.userList,
+      ':u': item[userList],
     },
     ReturnValues: 'UPDATED_NEW'
   });
 
 }
 
-async function removeUser(user, RoomID) {
+async function removeUser(user, RoomID, userList = 'userList') {
   let room = await _getRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
@@ -97,34 +97,58 @@ async function removeUser(user, RoomID) {
 
   let item = room.Item;
 
-  if (item.userList.includes(user)) {
-    index = item.userList.indexOf(user);
-    item.userList.splice(index, 1);
+  if (item[userList].includes(user)) {
+    index = item[userList].indexOf(user);
+    item[userList].splice(index, 1);
     await userActs.setCurrRoom(user, '')
   }
 
-  if (item.host == user) {
-    item.userList.forEach(async function (auser) {
+  // This block should only be entered if a host is leaving their own room
+  if (item.host == user && userList === 'userList') {
+    item[userList].forEach(async function (auser) {
       await userActs.setCurrRoom(auser, '')
-    })
+    });
 
     return await _destroyRoom({
       TableName: 'WVRooms',
       Key: { RoomID }
     });
-
   }
 
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
-    UpdateExpression: 'set userList = :u',
+    UpdateExpression: `set ${userList} = :u`,
     ExpressionAttributeValues: {
-      ':u': item.userList,
+      ':u': item[userList],
     },
     ReturnValues: 'UPDATED_NEW'
   });
 
+}
+
+async function admitUser(RoomID, host, user) {
+  return await _adminMoveUser(RoomID, host, user, 'waitingRoom', 'userList');
+}
+
+async function denyUser(RoomID, host, user) {
+  return await _adminMoveUser(RoomID, host, user, 'waitingRoom', null);
+}
+
+async function kickUser(RoomID, host, user) {
+  return await _adminMoveUser(RoomID, host, user, 'userList', 'bannedList');
+}
+
+async function _adminMoveUser(RoomID, host, user, from, to) {
+  const room = (await getRoom(RoomID)).Item;
+  _checkHost(host, room);
+  if (room[from]?.includes(user)) {
+    const data = await removeUser(user, RoomID, from);
+    if (!to) return data;
+  } else {
+    throw Error(`Could not remove user '${user}' from list: ${from} in room: '${RoomID}'`);
+  }
+  return await addUser(user, RoomID, to)
 }
 
 async function destroyRoom(user, RoomID) {
@@ -547,5 +571,8 @@ module.exports = {
   popSongFromQueue,
   upvoteSong,
   downvoteSong,
-  moveSongToPrev
+  moveSongToPrev,
+  admitUser,
+  denyUser,
+  kickUser,
 }
