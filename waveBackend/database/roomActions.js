@@ -136,7 +136,7 @@ async function denyUser(RoomID, host, user) {
 }
 
 async function kickUser(RoomID, host, user) {
-  return await _adminMoveUser(RoomID, host, user, 'userList', null);
+  return await _adminMoveUser(RoomID, host, user, 'userList', 'bannedList');
 }
 
 async function _adminMoveUser(RoomID, host, user, from, to) {
