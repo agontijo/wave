@@ -1,9 +1,11 @@
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { UserService } from './user.service';
 import { SongCheck } from './songcheck';
+import { catchError } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +25,8 @@ export class SpotifyService {
     private _userServive: UserService,
     private http: HttpClient,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) { }
 
   // get tracks
@@ -50,8 +53,16 @@ export class SpotifyService {
     fetch(volumeURL, { method: "PUT" });
   }
   
-  addSong(createBody: any, url: any): Observable<SongCheck> {
-    return this.http.post<any>(url, createBody);
+  addSong(createBody: any, url: any): Observable<any> {
+    return this.http.post<any>(url, createBody)
+    .pipe(
+      catchError((err) => {
+        this.toastr.error(err.error)
+        //Handle the error here
+
+        return throwError(err);    //Rethrow it back to component
+      })
+    )
   }
 
 }

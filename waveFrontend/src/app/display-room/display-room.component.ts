@@ -16,7 +16,7 @@ import { SongI } from '../songI';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {interval} from 'rxjs'
 import { NgxQrcodeElementTypes, NgxQrcodeErrorCorrectionLevels } from '@techiediaries/ngx-qrcode';
-
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-display-room',
@@ -39,7 +39,7 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
 
 
   constructor(private _snackBar: MatSnackBar, private _spotifyServive: SpotifyService, private _userServive: UserService, private http:HttpClientModule,
-    private route: ActivatedRoute,private router: Router) { }
+    private route: ActivatedRoute,private router: Router, private toastr: ToastrService) { }
     host:string = ''
     queue: any[] = []
     previous: any[] = []

@@ -33,7 +33,7 @@ export class HomepageComponent implements OnInit {
   isMod = false;
 
   genreSelected = new FormControl();
-  genreList = ["HipHop", "Rap", "Indie", "Pop"]
+  genreList = ["hip hop", "rap", "indie", "pop"]
 
     getErrorMessageEmail() {
       if (this.email.hasError('required')) {
