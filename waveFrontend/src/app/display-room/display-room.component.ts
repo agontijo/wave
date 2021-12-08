@@ -126,6 +126,7 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
             // }
           });
           this.len = this.userList.length
+          this.roomusers = this.userList
           this.isHost = (this.curruser.uname == this.host)
           
           if (this.popularSort == true) {
