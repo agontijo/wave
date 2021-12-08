@@ -2,6 +2,7 @@ const AWS = require('./awsconfig.js');
 const userActs = require('./userActions.js');
 const generate = require('../utils/generators.js');
 const spotifyUtils = require('../utils/spotifyUtils');
+const { isString } = require('../utils/helpers');
 
 async function _getRoom(params) {
   const dc = new AWS.DynamoDB.DocumentClient();
@@ -404,7 +405,8 @@ function _checkSongFilterMatch(songObj, genreString, roomObj) {
 }
 
 async function removeSongAtIndex(RoomID, index) {
-  const room = (await getRoom(RoomID)).Item;
+  const room = isString(RoomID) ? (await getRoom(RoomID)).Item : RoomID;
+  RoomID = room.RoomID;
 
   if (room.queue.length <= index) {
     return -1;
@@ -421,7 +423,21 @@ async function removeSongAtIndex(RoomID, index) {
 }
 
 async function popSongFromQueue(RoomID) {
-  return await removeSongAtIndex(RoomID, 0);
+  const room = isString(RoomID) ? (await getRoom(RoomID)).Item : RoomID;
+  RoomID = room.RoomID;
+  if (room.popularSort) {
+    return await removeSongAtIndex(
+      room,
+      room
+        .queue
+        .map(s => s.liked.length - s.disliked.length)
+        .reduce(
+          (maxi, curr, i, arr) => maxi = curr > arr[maxi] ? i : maxi,
+          0
+        )
+    );
+  }
+  return await removeSongAtIndex(room, 0);
 }
 
 async function upvoteSong(RoomID, song_id, user) {
@@ -537,7 +553,7 @@ async function downvoteSong(RoomID, song_id, user) {
 
 async function moveSongToPrev(RoomID, song, user) {
   const room = (await getRoom(RoomID)).Item;
-  const host = (await userActs.getUser(room.host)).Item;
+  // const host = (await userActs.getUser(room.host)).Item;
   // const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
   _checkHost(user, room);
@@ -594,16 +610,26 @@ async function removeSong(RoomID, listId) {
 
     }
   }
+async function setPopQueueFiled(RoomID, host, isPop) {
+  const room = isString(RoomID) ? (await getRoom(RoomID)).Item : RoomID;
+  RoomID = room.RoomID;
+
+  _checkHost(host, room);
 
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
-    UpdateExpression: 'set queue = :q',
+    UpdateExpression: 'set popularSort = :p',
     ExpressionAttributeValues: {
-      ':q': room.queue,
+      ':p': isPop,
     },
     ReturnValues: 'UPDATED_NEW'
   });
+}
+
+async function togglePopularQueueSort(RoomID, host) {
+  const room = isString(RoomID) ? (await getRoom(RoomID)).Item : RoomID;
+  return await setPopQueueFiled(room, host, !room.popularSort);
 }
 
 module.exports = {
@@ -633,5 +659,6 @@ module.exports = {
   admitUser,
   denyUser,
   kickUser,
-  removeSong
+  removeSong,
+  togglePopularQueueSort,
 }

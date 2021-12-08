@@ -214,7 +214,7 @@ router.get(
       return;
     }
     try {
-      const song = await roomActions.popSongFromQueue(room.RoomID);
+      const song = await roomActions.popSongFromQueue(room);
       if (song === -1) {
         res.status(404).send('No song avalible')
       } else {
@@ -334,6 +334,23 @@ router.post(
         req.params.roomid,
         req.user.uname,
         req.body.uname
+      );
+      res.send(data);
+    } catch (e) {
+      console.error(e);
+      res.status(500).send(e.message);
+    }
+  }
+);
+
+router.post(
+  '/:roomid/sortorder',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    try {
+      const data = await roomActions.togglePopularQueueSort(
+        req.params.roomid,
+        req.user.uname
       );
       res.send(data);
     } catch (e) {
