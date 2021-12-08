@@ -95,7 +95,7 @@ export class HomepageComponent implements OnInit {
     this._userServive.getRoomFromID(this.roomID.value).subscribe(
       (data) => {
         console.log(data)
-        if (data.isMod == false) {
+        if (data.isMod == false || this.tempusers.uname == this.room.host) {
           this.router.navigate(['display-room'], {queryParams: {
             roomID: data.RoomID, 
             allowExplicit: data.allowExplicit,
