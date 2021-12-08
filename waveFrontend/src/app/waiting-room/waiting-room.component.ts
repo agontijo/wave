@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Room } from '../room';
 import { User } from '../user';
 import { UserService } from '../user.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-waiting-room',
@@ -17,6 +18,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private toastr: ToastrService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -52,6 +54,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
           !room.waitingRoom.includes(uname)
         ) {
           this.router.navigateByUrl('/homepage')
+          this.toastr.error("Denied Entry to Room")
         }
       } catch (e) {
         // Err out, go to homepage
@@ -84,5 +87,6 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
         userList: room.userList,
       }
     });
+    this.toastr.success("You Joined a Room")
   }
 }
