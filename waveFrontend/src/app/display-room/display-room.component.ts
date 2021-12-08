@@ -93,6 +93,7 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
             if (this.bannedList.includes(this.curruser.uname)) {
               // If the user has been banned from the room kick them to homepage
               this.router.navigateByUrl("/homepage");
+              this.toastr.error("Kicked out of room")
             }
             
             if (this.isMod && !this.userList.includes(this.curruser.uname)) {
