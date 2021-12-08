@@ -101,7 +101,8 @@ async function removeUser(user, RoomID, userList = 'userList') {
   if (item[userList].includes(user)) {
     index = item[userList].indexOf(user);
     item[userList].splice(index, 1);
-    await userActs.setCurrRoom(user, '')
+    if (userList === 'userList')
+      await userActs.setCurrRoom(user, '');
   }
 
   // This block should only be entered if a host is leaving their own room
