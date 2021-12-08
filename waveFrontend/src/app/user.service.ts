@@ -117,4 +117,8 @@ export class UserService {
     return this.http.post<any>("/auth/resetpassword", createBody);
   }
 
+  switchqueue(url: any): Observable<any> {
+    return this.http.post<Room>(url, null);
+  }
+
 }

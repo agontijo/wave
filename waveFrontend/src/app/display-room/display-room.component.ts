@@ -130,13 +130,12 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
           this.isHost = (this.curruser.uname == this.host)
           
           if (this.popularSort == true) {
-            console.log("hey")
             this.popqueue = this.queue
             this.popqueue.sort((a, b) => ((a.liked.length - a.disliked.length) > (b.liked.length - b.disliked.length) ? -1 : 1));
           }
       });
      
-      let timey = interval(60000);
+      let timey = interval(40000);
       this.timer= timey.subscribe(t=> {
         this.ngOnInit();}); 
     }
@@ -333,12 +332,9 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
       console.log("hey")
     }
 
-    public inorder() {
-      
-    }
-
-    public popular() {
-      
+    public switch() {
+      let _url = "/api/room/" + this.roomID + "/sortorder";
+      this._userServive.switchqueue(_url).subscribe();
     }
 
 }

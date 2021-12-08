@@ -15,7 +15,8 @@
   [errorCorrectionLevel]="correctionLevel"
   [value]="value"
   alt="Demo QR Code"
-  cssClass="bshadow"></ngx-qrcode>
+  cssClass="bshadow">
+</ngx-qrcode>
   
 <h2> USERS </h2>
 <div class = "row" *ngFor="let r of roomusers">  
@@ -70,10 +71,10 @@
 </div>
 <div class = "row" *ngIf="host == curruser.uname">  
   <div *ngIf="popularSort == false">  
-    <button mat-flat-button (click)="popular()" type="button clearbutton">Switch to Popular Sorted Queue</button>
+    <button mat-flat-button (click)="switch()" type="button clearbutton">Switch to Popular Sorted Queue</button>
   </div>
   <div class = "row" *ngIf="popularSort != false">  
-    <button mat-flat-button (click)="inorder()" type="button clearbutton">Switch to In-order Sorted Queue</button>
+    <button mat-flat-button (click)="switch()" type="button clearbutton">Switch to In-order Sorted Queue</button>
   </div>
 </div>
 
