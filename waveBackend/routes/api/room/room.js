@@ -324,9 +324,17 @@ router.post(
   '/:roomid/sortorder',
   isAuth.isLoggedIn,
   async (req, res) => {
-    console.log(`Setting popular sort order = ${req.body.popularSort}`)
-    res.status(501).send('Not Implemented');
+    try {
+      const data = await roomActions.togglePopularQueueSort(
+        req.params.roomid,
+        req.user.uname
+      );
+      res.send(data);
+    } catch (e) {
+      console.error(e);
+      res.status(500).send(e.message);
+    }
   }
-)
+);
 
 module.exports = router;

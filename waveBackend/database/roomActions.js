@@ -401,7 +401,10 @@ async function popSongFromQueue(RoomID) {
       room
         .queue
         .map(s => s.liked.length - s.disliked.length)
-        .reduce((maxi, curr, i, arr) => maxi = curr > arr[maxi] ? i : maxi)
+        .reduce(
+          (maxi, curr, i, arr) => maxi = curr > arr[maxi] ? i : maxi,
+          0
+        )
     );
   }
   return await removeSongAtIndex(room, 0);
@@ -520,7 +523,7 @@ async function downvoteSong(RoomID, song_id, user) {
 
 async function moveSongToPrev(RoomID, song, user) {
   const room = (await getRoom(RoomID)).Item;
-  const host = (await userActs.getUser(room.host)).Item;
+  // const host = (await userActs.getUser(room.host)).Item;
   // const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
   _checkHost(user, room);
@@ -561,6 +564,28 @@ async function moveSongToPrev(RoomID, song, user) {
   });
 }
 
+async function setPopQueueFiled(RoomID, host, isPop) {
+  const room = isString(RoomID) ? (await getRoom(RoomID)).Item : RoomID;
+  RoomID = room.RoomID;
+
+  _checkHost(host, room);
+
+  return await _updateRoom({
+    TableName: 'WVRooms',
+    Key: { RoomID },
+    UpdateExpression: 'set popularSort = :p',
+    ExpressionAttributeValues: {
+      ':p': isPop,
+    },
+    ReturnValues: 'UPDATED_NEW'
+  });
+}
+
+async function togglePopularQueueSort(RoomID, host) {
+  const room = isString(RoomID) ? (await getRoom(RoomID)).Item : RoomID;
+  return await setPopQueueFiled(room, host, !room.popularSort);
+}
+
 module.exports = {
   _getRoom,
   _updateRoom,
@@ -588,4 +613,5 @@ module.exports = {
   admitUser,
   denyUser,
   kickUser,
+  togglePopularQueueSort,
 }
