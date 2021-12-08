@@ -23,7 +23,7 @@
   <mat-card class="example-card">
     <mat-card-title-group>
       <mat-card-title>{{r}}</mat-card-title>
-        <button mat-icon-button style="color: rgb(255, 0, 0); background-color: transparent; border-color: transparent;" *ngIf="host == curruser.uname" >
+        <button mat-icon-button style="color: rgb(255, 0, 0); background-color: transparent; border-color: transparent;" *ngIf="host == curruser.uname && r != host" >
             <mat-icon (click)="kickUser(r)">remove_circle</mat-icon>
         </button>
     </mat-card-title-group>
