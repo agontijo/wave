@@ -610,13 +610,13 @@ async function removeSong(RoomID, listId) {
 
   for (let i = 0; i < room.queue.length; i++) {
     const s = room.queue[i];
-    // console.log(s.id == song_id);
-    if (s.listId === listId) {
+    console.log(s.listId == listId);
+    if (s.listId == listId) {
       // remove song
       let index = room.queue.indexOf(s)
-      s.disliked.splice(index, 1)
+      room.queue.splice(index, 1)
       
-      //console.log(s);
+      console.log(s);
       break;
 
     }
