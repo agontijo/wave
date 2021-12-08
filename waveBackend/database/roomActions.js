@@ -387,7 +387,7 @@ function _checkSongFilterMatch(songObj, genreString, roomObj) {
     // if the song has no genre, ignore
     if (genreString !== "") {
       // check if the genre string is allowed
-      if (genresAllowed.indexOf(genreString) == -1) {
+      if (roomObj.genresAllowed.indexOf(genreString) == -1) {
         // not found, do not allow song
         return -1;
       }
@@ -610,6 +610,16 @@ async function removeSong(RoomID, listId) {
 
     }
   }
+
+  return await _updateRoom({
+    TableName: 'WVRooms',
+    Key: { RoomID },
+    UpdateExpression: 'set queue = :q',
+    ExpressionAttributeValues: {
+      ':q': room.queue,
+    },
+    ReturnValues: 'UPDATED_NEW'
+  });
 }
 
 

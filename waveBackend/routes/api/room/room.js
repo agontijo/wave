@@ -191,7 +191,7 @@ router.post(
   async (req, res) => {
     try {
       const data = await roomActions.removeSong(req.params.roomid, req.body.listId);
-      console.log(data);
+      //console.log(data);
       res.send(data);
       
     } catch (err) {
