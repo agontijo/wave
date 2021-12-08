@@ -610,6 +610,9 @@ async function removeSong(RoomID, listId) {
 
     }
   }
+}
+
+
 async function setPopQueueFiled(RoomID, host, isPop) {
   const room = isString(RoomID) ? (await getRoom(RoomID)).Item : RoomID;
   RoomID = room.RoomID;
