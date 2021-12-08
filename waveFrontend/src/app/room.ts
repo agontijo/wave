@@ -12,4 +12,5 @@ export interface Room {
     bannedList: any[];
     popularSort: boolean;
     isMod: boolean;
+    listId: any;
 }

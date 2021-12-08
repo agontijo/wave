@@ -121,4 +121,8 @@ export class UserService {
     return this.http.post<Room>(url, null);
   }
 
+  removesong(createBody: any, url: any): Observable<any> {
+    return this.http.post<Room>(url, createBody);
+  }
+
 }

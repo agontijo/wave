@@ -337,6 +337,15 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
       this._userServive.switchqueue(_url).subscribe();
     }
 
+    public removesong(q:any) {
+      let _url = "/api/room/" + this.roomID + "/removeSong";
+      const remData = {
+        listId: q.listId
+      };
+      console.log(q.listId)
+      this._userServive.removesong(remData, _url).subscribe();
+    }
+
 }
 @Component({
   selector: 'liked',
