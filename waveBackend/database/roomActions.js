@@ -348,9 +348,10 @@ async function addSong(RoomID, song_id) {
 
   const host_tok = host.spotifyTok.accessToken;
   const song = await spotifyUtils.getTrack(song_id, host_tok);
-  const genre = (await spotifyUtils.getArtist(song.artists[0].id, host_tok)).genres[0];
+  const genres = (await spotifyUtils.getArtist(song.artists[0].id, host_tok)).genres;
+  const genre = genres[0];
 
-  let err = _checkSongFilterMatch(song, genre, room);
+  let err = _checkSongFilterMatch(song, genres, room);
   if (err < 0) return err;
 
   return await _updateRoom({
@@ -371,6 +372,7 @@ async function addSong(RoomID, song_id) {
         artists: song.artists.map(a => a.name),
         explicit: song.explicit,
         genre,
+        otherGenres: genres,
         listId: Date.now()
       }],
     },
@@ -381,16 +383,25 @@ async function addSong(RoomID, song_id) {
 // returns 0 if the song fits the filters
 // -1 : genre not allowed
 // -2 : explicit song not allowed
-function _checkSongFilterMatch(songObj, genreString, roomObj) {
+function _checkSongFilterMatch(songObj, genreList, roomObj) {
   // if the room has no genre filter, ignore
   if (roomObj.genresAllowed && roomObj.genresAllowed.length > 0) {
     // if the song has no genre, ignore
     if (genreString !== "") {
+      var found = false;
       // check if the genre string is allowed
-      if (roomObj.genresAllowed.indexOf(genreString) == -1) {
-        // not found, do not allow song
-        return -1;
+      for (var i = 0; i < genreList.length; i++) {
+        var genreString = genreList[i];
+        if (roomObj.genresAllowed.indexOf(genreString) != -1) {
+          // not found, do not allow song
+          found = true;
+          break;
+        }
       }
+      
+      // none of the genres could be found in the allowed genres list
+      if (!found) return -1;
+      
     }
   }
 
