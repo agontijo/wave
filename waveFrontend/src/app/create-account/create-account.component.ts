@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-create-account',
@@ -48,14 +50,14 @@ export class CreateAccountComponent implements OnInit {
       if (res.status === 409) {
         this.message = await res.text();
         console.log(this.message);
-        
+        this.toastr.error(this.message);
       }
   
       this._userServive.registerUser(user).subscribe(
         (data: any) => {
           console.log("at data")
           console.log(data)
-          this.router.navigate(['homepage']);
+          this.router.navigateByUrl('/');
   
         },
         (error) => {
@@ -68,8 +70,14 @@ export class CreateAccountComponent implements OnInit {
       this.openDialog();
     }
   }
-  constructor(private _userServive: UserService, private http: HttpClientModule,
-    private route: ActivatedRoute, private router: Router, public dialog: MatDialog) { }
+  constructor(
+    private _userServive: UserService, 
+    private http: HttpClientModule,
+    private route: ActivatedRoute, 
+    private router: Router, 
+    public dialog: MatDialog,
+    private toastr: ToastrService
+  ) { }
 
   ngOnInit(): void {
   }
