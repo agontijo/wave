@@ -22,6 +22,8 @@
     "@angular/router": "~12.2.0",
     "@aws-amplify/ui-angular": "^1.0.28",
     "angular-spotify": "^1.5.1",
+    "angular2-qrcode": "^2.0.3",
+    "angularjs-toast": "^4.0.1",
     "aws-amplify": "^4.3.1",
     "rxjs": "~6.6.0",
     "rxjs-compat": "^6.6.7",
