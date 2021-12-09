@@ -4,7 +4,7 @@ import { UserService } from '../user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { ToastrService } from 'ngx-toastr';
 
 
@@ -46,35 +46,44 @@ export class CreateAccountComponent implements OnInit {
         },
         body: JSON.stringify(user)
       });
-  
+
       if (res.status === 409) {
         this.message = await res.text();
         console.log(this.message);
         this.toastr.error(this.message);
       }
-  
-      this._userServive.registerUser(user).subscribe(
-        (data: any) => {
-          console.log("at data")
-          console.log(data)
-          this.router.navigateByUrl('/');
-  
-        },
-        (error) => {
-          console.log("at error")
-          console.log(error);
-          this.openDialog();
-        }
-      )
+
+      if (!res.ok) {
+        console.log("at error")
+        console.log(await res.text());
+        this.openDialog();
+      }
+
+      // this._userServive.registerUser(user).subscribe(
+      //   (data: any) => {
+      //     console.log("at data")
+      //     console.log(data)
+      //     this.router.navigateByUrl('/');
+
+      //   },
+      //   (error) => {
+      //     console.log("at error")
+      //     console.log(error);
+      //     this.openDialog();
+      //   }
+      // );
+      await fetch('/auth/logout');
+      this.toastr.info("Check Email to Verify");
+      this.router.navigateByUrl('/');
     } else {
       this.openDialog();
     }
   }
   constructor(
-    private _userServive: UserService, 
+    private _userServive: UserService,
     private http: HttpClientModule,
-    private route: ActivatedRoute, 
-    private router: Router, 
+    private route: ActivatedRoute,
+    private router: Router,
     public dialog: MatDialog,
     private toastr: ToastrService
   ) { }
@@ -84,7 +93,7 @@ export class CreateAccountComponent implements OnInit {
   openDialog() {
     if (this.message.includes('mail')) {
       this.dialog.open(DialogElementEmail);
-    } else if (this.message.includes('sername')){
+    } else if (this.message.includes('sername')) {
       this.dialog.open(DialogElementUname)
     } else {
       this.dialog.open(DialogElementCA);
