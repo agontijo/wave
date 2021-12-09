@@ -28,11 +28,28 @@ async function _deleteUser(params) {
   await dc.delete(params).promise();
 }
 
+async function _createVEntry(params) {
+  const dc = new AWS.DynamoDB.DocumentClient();
+  await dc.put(params).promise();
+}
+
+async function _getEntry(params) {
+  const dc = new AWS.DynamoDB.DocumentClient();
+  return await dc.get(params).promise();
+}
+
 // Getters
 async function getUser(uname) {
   return await _getUser({
     TableName: 'WVUsers',
     Key: { uname },
+  });
+}
+
+async function getEntry(email) {
+  return await _getEntry({
+    TableName: 'WVcodemap',
+    Key: { email }
   });
 }
 
@@ -61,6 +78,17 @@ async function setUserPassword(uname, pswd) {
   });
 }
 
+/*
+//Add vcode entry
+
+async function createVEntry (entry) {
+  await _createVEntry({
+    TableName: 'WVcodemap',
+    ConditionExpression: 'attribute_not_exists(email)',
+    Item: entry,
+  });
+}
+*/
 // Add New User
 async function createUser(params) {
   if (!(
@@ -81,11 +109,19 @@ async function createUser(params) {
     email: params.email,
     displayName: params.displayName || 'Wave User',
     spotifyTok: params.spotifyTok ?? {},
-    currRoom: params.currRoom ?? ""
+    currRoom: params.currRoom ?? "",
+    isVerified: false,
   };
 
   const existing = await getUser(user.uname);
   if (existing?.Item) { throw Error('Username is already in use!'); }
+  console.log(params.host);
+  try {
+    await sendVEmail(params.email, params.host);
+  }
+  catch(err) {
+    throw Error('Cannot verify email!')
+  }
 
   await emailMapActions.setEmailMap(user.email, user.uname);
   await _createUser({
@@ -167,7 +203,7 @@ async function deleteUser(uname) {
 async function sendEmail (uname) {
   console.log(uname);
   const auser = await getUser(uname);
-  if (auser?.Item == undefined) {throw Error('invalid_username')}
+  if (auser?.Item == undefined) {throw Error('invalid_username');}
   const email = auser.Item.email;
   console.log(email)
 
@@ -208,6 +244,94 @@ async function sendEmail (uname) {
 
 }
 
+async function sendVEmail (email, host) {
+  console.log(email);
+  let s4 = () => {
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+  }
+  let code = s4() + s4();
+  console.log(host);
+  console.log(code);
+  var link = "http://"+host+"/auth/verify?id="+code+"&email="+email;
+  console.log(link);
+
+  let mailTransporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'waveproject407@gmail.com',
+      pass: '407wave#project',
+    }
+  });
+
+  let email_body = "Please click the below link to verify your Wave account\n" + link;
+
+  let mailDetails = {
+    from: 'waveproject407@gmail.com',
+    to: email,
+    subject: "Verifying Your Wave Account",
+    text: email_body
+  };
+
+  const entry = {
+    email: email,
+    code: code
+  };
+
+
+  mailTransporter.sendMail(mailDetails, function (err, info) {
+    if (err) {
+      console.log(err);
+      throw Error("could_not");
+    }
+    else {
+      console.log(info.messageId);
+    }
+  });
+
+  await _createVEntry({
+    TableName: 'WVcodemap',
+    ConditionExpression: 'attribute_not_exists(email)',
+    Item: entry,
+  });
+
+}
+
+
+async function verifyCode (scode, temail) {
+  console.log(temail);
+  console.log("here123");
+
+  const tuser = await getEntry(temail);
+
+  const tentry = await emailMapActions.getEmailMap(temail);
+  if (!tentry?.Item) {
+    throw Error('emailMap_error');
+  }
+  const uname = tentry.Item.uname;
+  if (!tuser?.Item) {
+    throw Error('invalid email');
+  }
+
+  if (tuser.Item.code == scode) {
+      console.log("matched");
+      await _updateUser({
+        TableName: 'WVUsers',
+        Key: { uname },
+        UpdateExpression: 'set isVerified = :p',
+        ExpressionAttributeValues :{
+          ':p': true
+        },
+        ReturnValues: 'UPDATED_NEW'
+      });
+      return "success";
+  }
+  else {
+    throw Error("incorrect code");
+  }
+
+}
+
+
 
 module.exports = {
   _updateUser,
@@ -224,4 +348,6 @@ module.exports = {
   setCurrRoom,
   deleteUser,
   sendEmail,
+  sendVEmail,
+  verifyCode,
 };
