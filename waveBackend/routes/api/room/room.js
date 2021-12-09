@@ -170,7 +170,30 @@ router.post(
     try {
       const data = await roomActions.addSong(req.params.roomid, req.body.songID);
       console.log(data);
+      // check if addsong returned a specific error code and generate a message accordingly
+      if (data != null && data == -1) {
+        // genre not allowed error
+        res.status(403).send('Could not add song. Genre not allowed in room filters.');
+      } else if (data != null && data == -2) {
+        // explicit song not allowed error
+        res.status(403).send('Could not add song. Room does not allow explicit songs.');
+      }
       res.send(data);
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  }
+);
+
+router.post(
+  '/:roomid/removeSong',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    try {
+      const data = await roomActions.removeSong(req.params.roomid, req.body.listId);
+      //console.log(data);
+      res.send(data);
+      
     } catch (err) {
       res.status(500).send(err.message);
     }
@@ -191,7 +214,7 @@ router.get(
       return;
     }
     try {
-      const song = await roomActions.popSongFromQueue(room.RoomID);
+      const song = await roomActions.popSongFromQueue(room);
       if (song === -1) {
         res.status(404).send('No song avalible')
       } else {
@@ -240,6 +263,99 @@ router.post(
       res.send(data);
     } catch (err) {
       res.status(500).send(err.message);
+    }
+  }
+);
+
+router.post(
+  '/:roomid/waitlist',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    try {
+      const room = (await roomActions.getRoom(req.params.roomid)).Item;
+      if (room.bannedList.includes(req.user.uname)) {
+        res.status(403).send("User has been banned from this room");
+        return;
+      }
+      const data = await roomActions.addUser(
+        req.user.uname, req.params.roomid, 'waitingRoom'
+      );
+      if (data?.Attributes) { res.status(200).send(data); }
+      else { res.status(500).send(null); }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send(err.message);
+    }
+  }
+);
+
+router.post(
+  '/:roomid/kick/',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    try {
+      const data = await roomActions.kickUser(
+        req.params.roomid,
+        req.user.uname,
+        req.body.uname
+      );
+      res.send(data);
+    } catch (e) {
+      console.error(e);
+      res.status(500).send(e.message);
+    }
+  }
+);
+
+router.post(
+  '/:roomid/admit',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    try {
+      const data = await roomActions.admitUser(
+        req.params.roomid,
+        req.user.uname,
+        req.body.uname
+      );
+      res.send(data);
+    } catch (e) {
+      console.error(e);
+      res.status(500).send(e.message);
+    }
+  }
+);
+
+router.post(
+  '/:roomid/deny/',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    try {
+      const data = await roomActions.denyUser(
+        req.params.roomid,
+        req.user.uname,
+        req.body.uname
+      );
+      res.send(data);
+    } catch (e) {
+      console.error(e);
+      res.status(500).send(e.message);
+    }
+  }
+);
+
+router.post(
+  '/:roomid/sortorder',
+  isAuth.isLoggedIn,
+  async (req, res) => {
+    try {
+      const data = await roomActions.togglePopularQueueSort(
+        req.params.roomid,
+        req.user.uname
+      );
+      res.send(data);
+    } catch (e) {
+      console.error(e);
+      res.status(500).send(e.message);
     }
   }
 );

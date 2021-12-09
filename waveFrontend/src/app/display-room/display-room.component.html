@@ -59,36 +59,79 @@
       <!-- end search song -->
       <!-- queue  -->
       <h2 style="text-align: left;"> Queue</h2>
-      <div [style.overflow]="'auto'" [style.height]="'60rem'">
-        <div *ngFor="let q of queue">
-          <mat-card class="example-card">
-            <mat-card-title-group>
-              <mat-card-title>{{q.name}}</mat-card-title>
-              <mat-card-subtitle>{{q.artists}}</mat-card-subtitle>
-              <mat-card-subtitle>Explicit: {{q.explicit}}</mat-card-subtitle>
-              <mat-card-subtitle>Genre: {{q.genre}}</mat-card-subtitle>
-              <mat-card-subtitle>
-                <button mat-icon-button (click)="likesong(q.id)"
-                  style="color: black; background-color: transparent; border-color: transparent;">
-                  <mat-icon>thumb_up</mat-icon>
-                </button>
-              </mat-card-subtitle>
-              <mat-card-subtitle>
-                <button mat-icon-button (click)="dislikedsong(q.id)"
-                  style="color: black; background-color: transparent; border-color: transparent;">
-                  <mat-icon>thumb_down</mat-icon>
-                </button>
-              </mat-card-subtitle>
-            </mat-card-title-group>
-          </mat-card>
-          <br>
+      <h3 *ngIf="popularSort == false"></h3>>(In-order Sorted Queue)</h3>
+      <h3 *ngIf="popularSort != false">(Popular Sorted Queue)</h3>
+      <div *ngIf="host == curruser.uname">  
+        <div *ngIf="popularSort == false">  
+          <button mat-flat-button (click)="switch()" type="button clearbutton">Switch to Popular Sorted Queue</button>
+        </div>
+        <div *ngIf="popularSort != false">  
+          <button mat-flat-button (click)="switch()" type="button clearbutton">Switch to In-order Sorted Queue</button>
         </div>
       </div>
+
+      <!-- queue list -->
+      <div [style.overflow]="'auto'" [style.height]="'60rem'">    
+      <div *ngIf="popularSort == false"> 
+        <div class = "row" *ngFor="let q of queue">  
+            <mat-card class="example-card">
+                <mat-card-title-group>
+                  <mat-card-title>{{q.name}}</mat-card-title>
+                  <mat-card-subtitle>{{q.artists}}</mat-card-subtitle>
+                  <mat-card-subtitle>Explicit: {{q.explicit}}</mat-card-subtitle>
+                  <mat-card-subtitle>Genre: {{q.genre}}</mat-card-subtitle>
+                  <mat-card-subtitle>
+                    <button mat-icon-button (click)="likesong(q.id)"style="color: black; background-color: transparent; border-color: transparent;">
+                        <mat-icon >thumb_up</mat-icon>
+                    </button>
+                </mat-card-subtitle>
+                  <mat-card-subtitle>
+                    <button mat-icon-button (click)="dislikedsong(q.id)" style="color: black; background-color: transparent; border-color: transparent;">
+                        <mat-icon>thumb_down</mat-icon>
+                    </button>
+                    </mat-card-subtitle>
+                    <mat-card-subtitle>
+                      <button mat-icon-button style="color: rgb(255, 0, 0); background-color: transparent; border-color: transparent;" *ngIf="host == curruser.uname" >
+                        <mat-icon (click)="removesong(q)">remove_circle</mat-icon>
+                    </button>
+                    </mat-card-subtitle>
+                </mat-card-title-group>
+            </mat-card>     
+        </div>
+      </div>
+      
+      <div *ngIf="popularSort == true"> 
+        <div class = "row" *ngFor="let q of popqueue">  
+            <mat-card class="example-card">
+                <mat-card-title-group>
+                  <mat-card-title>{{q.name}}</mat-card-title>
+                  <mat-card-subtitle>{{q.artists}}</mat-card-subtitle>
+                  <mat-card-subtitle>Explicit: {{q.explicit}}</mat-card-subtitle>
+                  <mat-card-subtitle>Genre: {{q.genre}}</mat-card-subtitle>
+                  <mat-card-subtitle>
+                    <button mat-icon-button (click)="likesong(q.id)"style="color: black; background-color: transparent; border-color: transparent;">
+                        <mat-icon >thumb_up</mat-icon>
+                    </button>
+                </mat-card-subtitle>
+                  <mat-card-subtitle>
+                    <button mat-icon-button (click)="dislikedsong(q.id)" style="color: black; background-color: transparent; border-color: transparent;">
+                        <mat-icon>thumb_down</mat-icon>
+                    </button>
+                    </mat-card-subtitle>
+                    <mat-card-subtitle>
+                      <button mat-icon-button style="color: rgb(255, 0, 0); background-color: transparent; border-color: transparent;" *ngIf="host == curruser.uname" >
+                        <mat-icon (click)="removesong(q)">remove_circle</mat-icon>
+                    </button>
+                    </mat-card-subtitle>
+                </mat-card-title-group>
+            </mat-card>     
+        </div>
+      </div>
+    </div>
       <!-- end queue -->
       <!-- previously played -->
       <h2> Previous Played </h2>
       <mat-card-content [style.overflow]="'auto'" [style.height.px]="'300'">
-
         <div class="row" *ngFor="let p of previous">
           <mat-card class="example-card">
             <mat-card-title-group>
@@ -107,8 +150,36 @@
     <!-- User list -->
     <mat-card class="styling">
       <h2>There are currently {{len}} users in this room</h2>
-      <h2>users: {{roomusers}}</h2>
+      <div class = "row" *ngFor="let r of roomusers">  
+        <mat-card class="example-card">
+          <mat-card-title-group>
+            <mat-card-title>{{r}}</mat-card-title>
+              <button mat-icon-button style="color: rgb(255, 0, 0); background-color: transparent; border-color: transparent;" *ngIf="host == curruser.uname && r != host" >
+                  <mat-icon (click)="kickUser(r)">remove_circle</mat-icon>
+              </button>
+          </mat-card-title-group>
+        </mat-card>  
+      </div>
 
+      <!-- Waiting Room -->
+      <div class = "row" *ngIf="host == curruser.uname">  
+        <div class = "column" *ngIf="isMod == true"> 
+          <h2> Waiting List</h2>
+          <div class = "a" *ngFor="let w of waitingRoom">  
+            <mat-card class="example-card">
+              <mat-card-title-group>
+                <mat-card-title>{{w}}</mat-card-title>
+                  <button mat-icon-button style="color: rgb(1, 172, 24); background-color: transparent; border-color: transparent;">
+                      <mat-icon (click)="acceptUser(w)">check_circle</mat-icon>
+                  </button>
+                  <button mat-icon-button style="color: rgb(255, 0, 0); background-color: transparent; border-color: transparent;">
+                    <mat-icon (click)="denyUser(w)">block</mat-icon>
+                </button>
+              </mat-card-title-group>
+            </mat-card>  
+          </div>
+        </div>
+      </div>
     </mat-card>
   </mat-grid-tile>
   <mat-grid-tile *ngIf="host == curruser.uname">
@@ -118,7 +189,13 @@
       <br>
       <p>Using the roomID {{roomID}} on your homepage</p>
       <p>Using the QRCode:</p>
-
+      <ngx-qrcode *ngIf=isHost
+  [elementType]="elementType"
+  [errorCorrectionLevel]="correctionLevel"
+  [value]="value"
+  alt="Demo QR Code"
+  cssClass="bshadow">
+</ngx-qrcode>
     </mat-card>
   </mat-grid-tile>
 </mat-grid-list>

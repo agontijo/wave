@@ -20,9 +20,11 @@ router.post(
   loginPreProc.resolveUname,
   passport.authenticate('local'),
   (req, res) => {
+    console.log(req.body);
     if (!req.user) {
-      res.status(401).send("Username or password incorrect");
+      res.status(401).send("Username or password incorrect or email unverified");
     }
+    //if (req.user.isVerified == false) { res.status(401).send("Email not verified");}
     res.status(200).send(req.user);
   }
 );
@@ -102,10 +104,62 @@ router.get(
 // BORING STUFF
 router.get('/failure', (req, res) => res.status(401).send("Not Authenticated!"));
 router.get('/logout', (req, res) => {
-  console.log("in the be")
   req.session = null;
   req.logout();
   res.redirect('/');
 });
 
+router.post(
+  '/resetpassword',
+  async (req, res) => {
+    console.log(req.body.username);
+    try {
+      await userActions.sendEmail(req.body.username);
+      res.status(200).send("mailsent");
+      /*if (check == "error"){
+        res.status(500).send("error_in_send");
+        console.log("error_send");
+      }
+      else {
+        console.log("success_send");
+        res.status(200).send("success_send");
+      }*/
+      //res.redirect('/');
+    } catch (err) { 
+      console.log("someerror;");
+      console.log(err);
+      res.status(422).send(err);
+    }
+  }
+);
+
+router.post(
+  '/checkemail',
+  async (req, res) => {
+    console.log(req.body.username);
+    try {
+      await userActions.sendVEmail(req.body.username, req.get('host'));
+      res.status(200).send("sucess");
+    } catch (err) {
+      console.log(err);
+      res.status(422).send(err)
+    }
+  }
+);
+
+
+router.get(
+  '/verify',
+  async (req, res) => {
+    console.log(req.protocol+"://"+req.get('host'));
+    console.log(req.query.id, req.query.email);
+    try {
+      var check = await userActions.verifyCode(req.query.id, req.query.email);
+      console.log(check)
+      res.status(200).send(check);
+    } catch (err) {
+      res.status(422).send(err);
+    }
+  }
+)
 module.exports = router;

@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { Component, OnInit, OnDestroy} from '@angular/core';
+import { Component, OnInit, OnDestroy, VERSION} from '@angular/core';
 import { NONE_TYPE, ThrowStmt } from '@angular/compiler';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
@@ -15,7 +15,8 @@ import { SongCheck } from '../songcheck';
 import { SongI } from '../songI';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {interval} from 'rxjs'
-
+import { NgxQrcodeElementTypes, NgxQrcodeErrorCorrectionLevels } from '@techiediaries/ngx-qrcode';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-display-room',
@@ -23,7 +24,6 @@ import {interval} from 'rxjs'
   styleUrls: ['./display-room.component.css']
 })
 export class DisplayRoomComponent implements OnInit, OnDestroy {
-
   searchQuery = ""
   public curruser!: User;
   auth_tok = "";
@@ -33,12 +33,13 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
   public sc!: SongCheck;
   songArr = new Array<SongI>(0);
   len: number = 0;
-  roomusers = ""
+  roomusers: any;
   public roominfo!: Room;
   durationInSeconds = 5;
 
-  constructor(private _snackBar: MatSnackBar, private _spotifyServive: SpotifyService, private _userServive: UserService, private http:HttpClientModule ,
-    private route: ActivatedRoute,private router: Router) { }
+
+  constructor(private _snackBar: MatSnackBar, private _spotifyServive: SpotifyService, private _userServive: UserService, private http:HttpClientModule,
+    private route: ActivatedRoute,private router: Router, private toastr: ToastrService) { }
     host:string = ''
     queue: any[] = []
     previous: any[] = []
@@ -47,11 +48,20 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
     allowExplicit:boolean = true
     genresAllowed: string[] = []
     songThreshold: number | undefined
-    roomID:number | undefined
+    roomID:number | undefined = 0
+    waitingRoom: any[] = [];
+    bannedList: any[] = [];
+    popularSort: boolean | undefined;
     data: any
     timer: any
-    
+    isMod: boolean | undefined;
+    popqueue: any[] = []
+    isHost = false
     new_vol: string = '';
+    name = 'Angular ' + VERSION.major;
+    elementType = NgxQrcodeElementTypes.URL;
+    correctionLevel = NgxQrcodeErrorCorrectionLevels.HIGH;
+    value = 'http://localhost:4200/display-room?roomID=' + this.roomID;
 
     ngOnInit(): void {
       // this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
@@ -62,6 +72,7 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
         .subscribe(params => {
           console.log(params); // { order: "popular" }
           this.roomID = params.roomID
+          this.value='http://localhost:4200/display-room?roomID=' + this.roomID;
         }
       );
       
@@ -74,7 +85,34 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
           this.songThreshold = this.roominfo.songThreshold
           this.userList = this.roominfo.userList
           this.previous = this.roominfo.previous
+          this.bannedList = this.roominfo.bannedList
+          this.waitingRoom = this.roominfo.waitingRoom
+          this.popularSort = this.roominfo.popularSort
+          this.isMod = this.roominfo.isMod
           this._userServive.getCurrUser().subscribe(data => {this.curruser = data;
+            if (this.bannedList.includes(this.curruser.uname)) {
+              // If the user has been banned from the room kick them to homepage
+              this.router.navigateByUrl("/homepage");
+              this.toastr.error("Kicked out of room");
+              return; // Prevent request from sending to add user to room;
+            }
+            
+            if (this.isMod && !this.userList.includes(this.curruser.uname)) {
+              // User attempted to get arround the waiting list in moderating mode
+              // redirect them to the waiting screen
+              this.router.navigate(['../waiting-room'], { 
+                relativeTo: this.route,
+                queryParams: {
+                  roomID: this.roomID
+                }
+              });
+            }
+
+            if (this.isMod) {
+              // User has already joined the room by admin approval
+              return;
+            }
+            
             let _url = "/api/room/" + this.roomID + "/join";
             const joinData = {
               user: this.curruser,
@@ -84,16 +122,26 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
             this._userServive.addUserToRoom(joinData, _url).subscribe(data => {this.userList = data;
             });
             this.len = this.userList.length
-            this.roomusers = ""
-            for (let i = 0; i < this.len; i++) {
-              this.roomusers += this.userList[i] + ", "
-            }
+            this.roomusers = this.userList
+            // for (let i = 0; i < this.len; i++) {
+            //   this.roomusers += this.userList[i] + ", "
+            // }
           });
           this.len = this.userList.length
+          this.roomusers = this.userList
+          this.isHost = (this.curruser.uname == this.host)
           
+          if (this.popularSort == true) {
+            this.popqueue = this.queue
+            this.popqueue.sort((a, b) => ((a.liked.length - a.disliked.length) > (b.liked.length - b.disliked.length) ? -1 : 1));
+          }
+      },
+      () => {
+        this.router.navigateByUrl('/homepage');
+        this.toastr.error("Room has been disbanded");
       });
      
-      let timey = interval(60000);
+      let timey = interval(40000);
       this.timer= timey.subscribe(t=> {
         this.ngOnInit();}); 
     }
@@ -105,6 +153,49 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
       console.log("destroy");
       this.ngOnDestroy
     }
+    // kick user
+    public kickUser(k:any) {
+      let body = {
+        uname: k
+      }
+      this._userServive.kickUser(this.roomID, body).subscribe((data) => {
+        console.log("success kicking " + k);
+
+      },
+      (error) => {
+        console.log(" error kicking " + k + " out of the room")
+      },
+      );
+    } 
+    // deny user
+    public denyUser(w:any) {
+      let body = {
+        uname: w
+      }
+      this._userServive.denyUser(this.roomID, body).subscribe((data) => {
+        console.log("success denying " + w);
+
+      },
+      (error) => {
+        console.log(" error denying " + w + " out of the room")
+      },
+      );
+    } 
+
+        // deny user
+    public acceptUser(w:any) {
+      let body = {
+        uname: w
+      }
+      this._userServive.acceptUser(this.roomID, body).subscribe((data) => {
+       console.log("success accepting " + w);    
+      },
+      (error) => {
+        console.log(" error accepting " + w + " into the room")
+      },
+      );
+    } 
+
     //search track
     
     public searchTrack() {
@@ -241,6 +332,24 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
         });
       });
       this.router.navigate(['../homepage',], { relativeTo: this.route });
+    }
+
+    public reorder() {
+      console.log("hey")
+    }
+
+    public switch() {
+      let _url = "/api/room/" + this.roomID + "/sortorder";
+      this._userServive.switchqueue(_url).subscribe();
+    }
+
+    public removesong(q:any) {
+      let _url = "/api/room/" + this.roomID + "/removeSong";
+      const remData = {
+        listId: q.listId
+      };
+      console.log(q.listId)
+      this._userServive.removesong(remData, _url).subscribe();
     }
 
 }

@@ -30,7 +30,7 @@ export class CreateRoomComponent implements OnInit, OnDestroy {
   roomID: number | undefined
 
   playback: boolean = false;
-  waitForDevice: boolean = true; // TODO: Make this true durring sprint review so that phone can connect in real time
+  waitForDevice: boolean = false; // TODO: Make this true durring sprint review so that phone can connect in real time
 
   ngOnInit(): void {
     this.route.queryParams
@@ -63,7 +63,7 @@ export class CreateRoomComponent implements OnInit, OnDestroy {
       devices = (await (await fetch('/api/spotify/device')).json()).devices;
       device = devices.length ? devices[0] : null
     } catch (error) {
-      
+      console.error(error)
     }
     const waitTime = 5000;
     console.log(device);
@@ -74,7 +74,7 @@ export class CreateRoomComponent implements OnInit, OnDestroy {
         // Device not found at start, try to sync up
         devices = (await (await fetch('/api/spotify/device')).json()).devices;
         device = devices.length ? devices[0] : null;
-        timer(waitTime)
+        await timer(waitTime)
       } else if (this.roomID) {
         // There is a room, try to get a song and play it on the device
         let res = await fetch(`/api/room/${this.roomID}/nextsong`);

@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Room } from '../room';
 import { User } from '../user';
 import { UserService } from '../user.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-homepage',
@@ -14,7 +15,7 @@ import { UserService } from '../user.service';
 })
 export class HomepageComponent implements OnInit {
 
-  constructor(private _userServive: UserService, private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
+  constructor(private _userServive: UserService, private http: HttpClient, private route: ActivatedRoute, private router: Router, private toastr: ToastrService) { }
   title = 'Homepage';
   color = "#6fd8b8";
   
@@ -29,9 +30,10 @@ export class HomepageComponent implements OnInit {
   roomName = new FormControl('New Listening Room');
   explicitChecked = false;
   roomID = new FormControl();
+  isMod = false;
 
   genreSelected = new FormControl();
-  genreList = ["HipHop", "Rap", "Indie", "Pop"]
+  genreList = ["hip hop", "rap", "indie", "pop"]
 
     getErrorMessageEmail() {
       if (this.email.hasError('required')) {
@@ -70,7 +72,7 @@ export class HomepageComponent implements OnInit {
       allowExplicit: this.explicitChecked,
       genresAllowed: this.genreSelected.value,
       songThreshold: NONE_TYPE,
-
+      isMod: this.isMod,
     }
     this._userServive.createRoom(room).subscribe(
       (data) => {
@@ -93,17 +95,31 @@ export class HomepageComponent implements OnInit {
     this._userServive.getRoomFromID(this.roomID.value).subscribe(
       (data) => {
         console.log(data)
-        this.router.navigate(['display-room'], {queryParams: {
-          roomID: data.RoomID, 
-          allowExplicit: data.allowExplicit,
-          genresAllowed: data.genresAllowed,
-          host: data.host,
-          queue:data.queue,
-          roomname: data.roomname,
-          songThreshold:data.songThreshold,
-          userList:data.userList,
+        if (data.isMod == false) {
+          this.router.navigate(['display-room'], {queryParams: {
+            roomID: data.RoomID, 
+            allowExplicit: data.allowExplicit,
+            genresAllowed: data.genresAllowed,
+            host: data.host,
+            queue:data.queue,
+            roomname: data.roomname,
+            songThreshold:data.songThreshold,
+            userList:data.userList,
         }})
+        this.toastr.success("You Joined a Room")
+      }
+      else {
+        console.log("hello")
+        this.toastr.info("You are in the waiting room")
+        this.router.navigate(['../waiting-room'], { 
+          relativeTo: this.route,
+          queryParams: {
+            roomID: this.roomID.value
+          }
+        });
+      }
       },
       (error) => { console.log("unable to join room")})
+
   }
 }
