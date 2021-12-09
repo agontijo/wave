@@ -7,7 +7,14 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-
+  .button-top {
+    padding: 0.5em;
+    color: white;
+    font-size:40px;
+    border:transparent;
+    background:transparent;
+    font-family: 'Philosopher';
+  }
   mat-card {
     color: white;
     width: 85%;

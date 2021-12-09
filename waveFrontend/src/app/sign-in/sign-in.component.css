@@ -31,11 +31,19 @@
     text-align: center;
     font-size: 30px;
   }
+  /* mat-card {
+    width: 1vw;
+    height: 100vh;
+    padding: 0.5rem;
+    display: block;
+    margin-top: 0vh;
+    margin: auto;
+  } */
 
   mat-card {
     color: white;
-    width: 85%;
-    height: 80%;
+    width: 85vw;
+    height: 85vh;
     border-radius: 1em;
     padding: 1em;
     position: absolute;
@@ -45,13 +53,16 @@
     transform: translate(-50%, -50%);
     background-color:#25473c;
     font-family: 'Philosopher';
-
+    overflow: scroll;
   }
   h1 {
     /* margin-top:15%; */
     text-align:center;
     color:white;
-    font-size:90px;
+    font-size: 6rem;
+    margin:auto;
+    padding: auto;
+    padding-top: 1rem;
   }
   .material-icons {
     font-family: 'Material Icons';
@@ -80,28 +91,31 @@
   p{
     text-align:left;
     color:white;
-    margin-left:10%;
-    font-size: 40px;
+    font-size: 3rem;
+    padding: 1rem;
+    margin: 0.5rem 3rem 0.5rem;
   }
   mat-form-field {
       text-align:left;
       color:white;
-      width: 70vw;
-      margin-left:10%;
-      font-size: 20px;
+      width: 75vw;
+      margin-left: 3rem;
+      padding: 0.5rem;
+      font-size: 1rem;
   }
   button {
-    padding: 0.5em;
+    padding: 0.5rem;
     color:#6fd8b8;
-    margin-right: 8%;
-    font-size:30px;
+    margin-right: 1rem;
+    font-size:2rem;
     border:transparent;
     background:transparent;
   }
   .create-account {
-      font-size: 18px;
+      font-size: 2rem;
       display: flex;
-      width:65vw;
+      width:100%;
+      margin: 1rem;
       justify-content: center;
   }
 .center {
