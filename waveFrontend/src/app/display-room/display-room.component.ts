@@ -136,8 +136,9 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
             this.popqueue.sort((a, b) => ((a.liked.length - a.disliked.length) > (b.liked.length - b.disliked.length) ? -1 : 1));
           }
       },
-      err => {
+      () => {
         this.router.navigateByUrl('/homepage');
+        this.toastr.error("Room has been disbanded");
       });
      
       let timey = interval(40000);
