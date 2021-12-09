@@ -43,12 +43,10 @@
   mat-card {
     color: white;
     width: 85vw;
-    height: 85vh;
+    height: 70vh;
     border-radius: 1em;
     padding: 1em;
     position: absolute;
-    top: 50%;
-    left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
     background-color:#25473c;

@@ -50,14 +50,16 @@
 
   h2 {
     margin-top: .5rem;
-    padding: 1rem;
+    padding: 1.5rem;
     color:white;
     font-size:4.5rem;
     font-family: 'Philosopher';
     margin-bottom: 0rem;
+    margin-top: 2rem;
     padding-bottom: 2rem;
     text-align: center;
   }
+  
   h3 {
     margin-top: .5rem;
     padding: 1rem;
@@ -142,13 +144,15 @@
   }
   .example-card {
     width:25vw;
-    height:22vh;
+    height:30vh;
     padding: 2rem;
+    margin: 1rem;
   }
   .userCard {
     width:25vw;
     height:5vh;
     padding: 2rem;
+    margin:2rem;
   }
   mat-card-title {
     font-size: 4rem;
