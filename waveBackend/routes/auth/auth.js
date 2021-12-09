@@ -22,8 +22,9 @@ router.post(
   (req, res) => {
     console.log(req.body);
     if (!req.user) {
-      res.status(401).send("Username or password incorrect");
+      res.status(401).send("Username or password incorrect or email unverified");
     }
+    //if (req.user.isVerified == false) { res.status(401).send("Email not verified");}
     res.status(200).send(req.user);
   }
 );
@@ -132,4 +133,33 @@ router.post(
   }
 );
 
+router.post(
+  '/checkemail',
+  async (req, res) => {
+    console.log(req.body.username);
+    try {
+      await userActions.sendVEmail(req.body.username, req.get('host'));
+      res.status(200).send("sucess");
+    } catch (err) {
+      console.log(err);
+      res.status(422).send(err)
+    }
+  }
+);
+
+
+router.get(
+  '/verify',
+  async (req, res) => {
+    console.log(req.protocol+"://"+req.get('host'));
+    console.log(req.query.id, req.query.email);
+    try {
+      var check = await userActions.verifyCode(req.query.id, req.query.email);
+      console.log(check)
+      res.status(200).send(check);
+    } catch (err) {
+      res.status(422).send(err);
+    }
+  }
+)
 module.exports = router;
