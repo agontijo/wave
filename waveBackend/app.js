@@ -11,7 +11,7 @@ const authRouter = require('./routes/auth/auth.js');
 require('./middleware/passport.js');
 
 const app = express();
-const PORT = 3000;
+const PORT = 80;
 
 // parse things
 app.use(express.json());
@@ -40,10 +40,8 @@ app.use(passport.session());
 app.use('/api', apiRouter);
 app.use('/auth', authRouter);
 
-app.get('/', (req, res) => { 
-  // res.redirect('/api');
-  res.sendFile(path.join(__dirname, '../'));
-});
+// app.get('/', (req, res) => { res.redirect('/api'); });
+app.use('/', express.static(path.join(__dirname, '../waveFrontend/dist/waveFrontend')));
 
 module.exports = app;
 
