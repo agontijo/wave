@@ -4,6 +4,7 @@ const session = require('express-session');
 const passport = require('passport');
 const cookieSession = require('cookie-session');
 const CORS = require('cors');
+const path = require('path');
 
 const apiRouter = require('./routes/api/api.js');
 const authRouter = require('./routes/auth/auth.js');
@@ -39,7 +40,10 @@ app.use(passport.session());
 app.use('/api', apiRouter);
 app.use('/auth', authRouter);
 
-app.get('/', (req, res) => { res.redirect('/api'); })
+app.get('/', (req, res) => { 
+  // res.redirect('/api');
+  res.sendFile(path.join(__dirname, '../'));
+});
 
 module.exports = app;
 
