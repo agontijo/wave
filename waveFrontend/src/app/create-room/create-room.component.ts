@@ -52,6 +52,11 @@ export class CreateRoomComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.endSongPlayBackLoop();
   }
+  goToRoom () {
+    this.router.navigate(['display-room'], {queryParams: {
+      roomID: this.roomID, 
+    }})
+  }
 
   protected async startSongPlayBackLoop(itrs: number | null = null) {
     if (this.playback) { return; }

@@ -93,6 +93,9 @@ export class AccountSettingsComponent implements OnInit {
       });
       
     }
+    disconnect(){
+      this.router.navigate(['/auth/spotify/disconnect'])
+    }
 
     back() {
       this.router.navigate(['../homepage',], { relativeTo: this.route });
