@@ -33,7 +33,14 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
 import { LogoutComponent } from './logout/logout.component';
 import { SpotifyService } from './spotify.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+<<<<<<< Updated upstream
 
+=======
+import { NgxQRCodeModule } from '@techiediaries/ngx-qrcode';
+import { ToastrModule } from 'ngx-toastr';
+import { WaitingRoomComponent } from './waiting-room/waiting-room.component';
+import { TempDisplayRoomComponent } from './temp-display-room/temp-display-room.component';
+>>>>>>> Stashed changes
 
 
 
@@ -53,6 +60,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     AccountSettingsComponent,
     LogoutComponent,
     DisplayRoomComponent,
+<<<<<<< Updated upstream
+=======
+    WaitingRoomComponent,
+    TempDisplayRoomComponent,
+>>>>>>> Stashed changes
 
   ],
   imports: [
