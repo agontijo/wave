@@ -7,8 +7,20 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+  mat-grid-list {
+    margin-left: 3rem;
+    align-items: center;
+    justify-content: space-evenly;
+    width: auto;
+    height: auto;
+  }
   mat-card-content{
-    display: flex;
+    max-height: 100%;
+    position: absolute;
+    overflow: auto;
+  }
+  mat-grid-tile {
+    height:100vh;
   }
 
   .justify-inline {
@@ -59,16 +71,18 @@
   
   mat-card {
     width: 1vw;
-    height: 1vh;
+    height: 100vh;
     padding: 0.5rem;
     display: block;
     margin-top: 0vh;
     margin: auto;
   }
-  
+  .style-card {
+    height: 90% !important;
+  }
   .styling {
     width: 48rem;
-    height: 52rem;
+    height: 100%;
     min-height: 0.8vmax;
     color: white;
     border-radius: 2rem;
@@ -129,6 +143,11 @@
   .example-card {
     width:25vw;
     height:22vh;
+    padding: 2rem;
+  }
+  .userCard {
+    width:25vw;
+    height:5vh;
     padding: 2rem;
   }
   mat-card-title {
