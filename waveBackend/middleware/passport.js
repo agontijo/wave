@@ -23,6 +23,7 @@ passport.use(
       let found = null;
       try { found = await userActions.getUser(username); }
       catch (err) { return done(err, false); }
+      if(found?.Item.isVerified == false ) { return done(null, false);}
       if (found?.Item?.pswd === password) { return done(null, found.Item); }
       return done(null, false);
     }
@@ -45,6 +46,7 @@ passport.use(
           password,
           email: req?.body?.email,
           displayName: req?.body?.displayName,
+          host: req.get('host'),
         });
       } catch (err) {
         return done(err, false);

@@ -2,6 +2,7 @@ const AWS = require('./awsconfig.js');
 const userActs = require('./userActions.js');
 const generate = require('../utils/generators.js');
 const spotifyUtils = require('../utils/spotifyUtils');
+const { isString } = require('../utils/helpers');
 
 async function _getRoom(params) {
   const dc = new AWS.DynamoDB.DocumentClient();
@@ -32,8 +33,12 @@ async function createRoom(params) {
     previous: Array.isArray(params.previous) ? params.previous : [],    // Previously played songs
     roomname: params.name ?? "New Listening Room!",
     allowExplicit: params.allowExplicit ?? true,
+    popularSort: params.popularSort ?? false,
     genresAllowed: Array.isArray(params.genresAllowed) ? params.genresAllowed : [],
     songThreshold: isNaN(params.songThreshold) ? 0.5 : params.songThreshold,
+    waitingRoom: Array.isArray(params.waiting) ? params.waiting : [],
+    bannedList: Array.isArray(params.banned) ? params.banned : [],
+    isMod: params.isMod ? true : false
   };
 
   await _createRoom({
@@ -63,7 +68,7 @@ async function getRoom(RoomID) {
   });
 }
 
-async function addUser(user, RoomID) {
+async function addUser(user, RoomID, userList = 'userList') {
   let room = await _getRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
@@ -71,21 +76,21 @@ async function addUser(user, RoomID) {
 
   let item = room.Item;
 
-  if (item.userList && !item.userList.includes(user)) item.userList.push(user);
+  if (item[userList] && !item[userList].includes(user)) item[userList].push(user);
   // console.log(item);
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
-    UpdateExpression: 'set userList = :u',
+    UpdateExpression: `set ${userList} = :u`,
     ExpressionAttributeValues: {
-      ':u': item.userList,
+      ':u': item[userList],
     },
     ReturnValues: 'UPDATED_NEW'
   });
 
 }
 
-async function removeUser(user, RoomID) {
+async function removeUser(user, RoomID, userList = 'userList') {
   let room = await _getRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
@@ -93,34 +98,59 @@ async function removeUser(user, RoomID) {
 
   let item = room.Item;
 
-  if (item.userList.includes(user)) {
-    index = item.userList.indexOf(user);
-    item.userList.splice(index, 1);
-    await userActs.setCurrRoom(user, '')
+  if (item[userList].includes(user)) {
+    index = item[userList].indexOf(user);
+    item[userList].splice(index, 1);
+    if (userList === 'userList')
+      await userActs.setCurrRoom(user, '');
   }
 
-  if (item.host == user) {
-    item.userList.forEach(async function (auser) {
+  // This block should only be entered if a host is leaving their own room
+  if (item.host == user && userList === 'userList') {
+    item[userList].forEach(async function (auser) {
       await userActs.setCurrRoom(auser, '')
-    })
+    });
 
     return await _destroyRoom({
       TableName: 'WVRooms',
       Key: { RoomID }
     });
-
   }
 
   return await _updateRoom({
     TableName: 'WVRooms',
     Key: { RoomID },
-    UpdateExpression: 'set userList = :u',
+    UpdateExpression: `set ${userList} = :u`,
     ExpressionAttributeValues: {
-      ':u': item.userList,
+      ':u': item[userList],
     },
     ReturnValues: 'UPDATED_NEW'
   });
 
+}
+
+async function admitUser(RoomID, host, user) {
+  return await _adminMoveUser(RoomID, host, user, 'waitingRoom', 'userList');
+}
+
+async function denyUser(RoomID, host, user) {
+  return await _adminMoveUser(RoomID, host, user, 'waitingRoom', null);
+}
+
+async function kickUser(RoomID, host, user) {
+  return await _adminMoveUser(RoomID, host, user, 'userList', 'bannedList');
+}
+
+async function _adminMoveUser(RoomID, host, user, from, to) {
+  const room = (await getRoom(RoomID)).Item;
+  _checkHost(host, room);
+  if (room[from]?.includes(user)) {
+    const data = await removeUser(user, RoomID, from);
+    if (!to) return data;
+  } else {
+    throw Error(`Could not remove user '${user}' from list: ${from} in room: '${RoomID}'`);
+  }
+  return await addUser(user, RoomID, to)
 }
 
 async function destroyRoom(user, RoomID) {
@@ -319,7 +349,11 @@ async function addSong(RoomID, song_id) {
 
   const host_tok = host.spotifyTok.accessToken;
   const song = await spotifyUtils.getTrack(song_id, host_tok);
-  const genre = (await spotifyUtils.getArtist(song.artists[0].id, host_tok)).genres[0];
+  const genres = (await spotifyUtils.getArtist(song.artists[0].id, host_tok)).genres;
+  const genre = genres[0];
+
+  let err = _checkSongFilterMatch(song, genres, room);
+  if (err < 0) return err;
 
   return await _updateRoom({
     TableName: 'WVRooms',
@@ -338,15 +372,53 @@ async function addSong(RoomID, song_id) {
         name: song.name,
         artists: song.artists.map(a => a.name),
         explicit: song.explicit,
-        genre
+        genre,
+        otherGenres: genres,
+        listId: Date.now()
       }],
     },
     ReturnValues: 'UPDATED_NEW'
   });
 }
 
+// returns 0 if the song fits the filters
+// -1 : genre not allowed
+// -2 : explicit song not allowed
+function _checkSongFilterMatch(songObj, genreList, roomObj) {
+  // if the room has no genre filter, ignore
+  if (roomObj.genresAllowed && roomObj.genresAllowed.length > 0) {
+    // if the song has no genre, ignore
+    if (genreString !== "") {
+      var found = false;
+      // check if the genre string is allowed
+      for (var i = 0; i < genreList.length; i++) {
+        var genreString = genreList[i];
+        if (roomObj.genresAllowed.indexOf(genreString) != -1) {
+          // not found, do not allow song
+          found = true;
+          break;
+        }
+      }
+      
+      // none of the genres could be found in the allowed genres list
+      if (!found) return -1;
+      
+    }
+  }
+
+  // if the room allows explicit songs, ignore
+  if (!roomObj.allowExplicit) {
+    // if the song is explicit, do not allow
+    if (songObj.explicit) {
+      return -2;
+    }
+  }
+  return 0;
+}
+
 async function removeSongAtIndex(RoomID, index) {
-  const room = (await getRoom(RoomID)).Item;
+  const room = isString(RoomID) ? (await getRoom(RoomID)).Item : RoomID;
+  RoomID = room.RoomID;
 
   if (room.queue.length <= index) {
     return -1;
@@ -363,18 +435,32 @@ async function removeSongAtIndex(RoomID, index) {
 }
 
 async function popSongFromQueue(RoomID) {
-  return await removeSongAtIndex(RoomID, 0);
+  const room = isString(RoomID) ? (await getRoom(RoomID)).Item : RoomID;
+  RoomID = room.RoomID;
+  if (room.popularSort) {
+    return await removeSongAtIndex(
+      room,
+      room
+        .queue
+        .map(s => s.liked.length - s.disliked.length)
+        .reduce(
+          (maxi, curr, i, arr) => maxi = curr > arr[maxi] ? i : maxi,
+          0
+        )
+    );
+  }
+  return await removeSongAtIndex(room, 0);
 }
 
 async function upvoteSong(RoomID, song_id, user) {
   const room = (await getRoom(RoomID)).Item;
   //const host = (await userActs.getUser(room.host)).Item;
- // const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
+  // const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
   let thesong = undefined;
   // manually update song object
 
-console.log('camehere');
+  console.log('camehere');
 
   for (let i = 0; i < room.queue.length; i++) {
     const s = room.queue[i];
@@ -479,7 +565,7 @@ async function downvoteSong(RoomID, song_id, user) {
 
 async function moveSongToPrev(RoomID, song, user) {
   const room = (await getRoom(RoomID)).Item;
-  const host = (await userActs.getUser(room.host)).Item;
+  // const host = (await userActs.getUser(room.host)).Item;
   // const song = await spotifyUtils.getTrack(song_id, host.spotifyTok.accessToken);
 
   _checkHost(user, room);
@@ -520,6 +606,57 @@ async function moveSongToPrev(RoomID, song, user) {
   });
 }
 
+async function removeSong(RoomID, listId) {
+  const room = (await getRoom(RoomID)).Item;
+
+  for (let i = 0; i < room.queue.length; i++) {
+    const s = room.queue[i];
+    console.log(s.listId == listId);
+    if (s.listId == listId) {
+      // remove song
+      let index = room.queue.indexOf(s)
+      room.queue.splice(index, 1)
+      
+      console.log(s);
+      break;
+
+    }
+  }
+
+  return await _updateRoom({
+    TableName: 'WVRooms',
+    Key: { RoomID },
+    UpdateExpression: 'set queue = :q',
+    ExpressionAttributeValues: {
+      ':q': room.queue,
+    },
+    ReturnValues: 'UPDATED_NEW'
+  });
+}
+
+
+async function setPopQueueFiled(RoomID, host, isPop) {
+  const room = isString(RoomID) ? (await getRoom(RoomID)).Item : RoomID;
+  RoomID = room.RoomID;
+
+  _checkHost(host, room);
+
+  return await _updateRoom({
+    TableName: 'WVRooms',
+    Key: { RoomID },
+    UpdateExpression: 'set popularSort = :p',
+    ExpressionAttributeValues: {
+      ':p': isPop,
+    },
+    ReturnValues: 'UPDATED_NEW'
+  });
+}
+
+async function togglePopularQueueSort(RoomID, host) {
+  const room = isString(RoomID) ? (await getRoom(RoomID)).Item : RoomID;
+  return await setPopQueueFiled(room, host, !room.popularSort);
+}
+
 module.exports = {
   _getRoom,
   _updateRoom,
@@ -543,5 +680,10 @@ module.exports = {
   popSongFromQueue,
   upvoteSong,
   downvoteSong,
-  moveSongToPrev
+  moveSongToPrev,
+  admitUser,
+  denyUser,
+  kickUser,
+  removeSong,
+  togglePopularQueueSort,
 }

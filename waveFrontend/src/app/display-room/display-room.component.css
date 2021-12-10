@@ -1,5 +1,5 @@
 :host {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: 'Philosopher';
     font-size: 14px;
     color: #333;
     box-sizing: border-box;
@@ -7,25 +7,111 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+  mat-grid-list {
+    margin-left: 3rem;
+    align-items: center;
+    justify-content: space-evenly;
+    width: auto;
+    height: auto;
+  }
+  mat-card-content{
+    max-height: 100%;
+    position: absolute;
+    overflow: auto;
+  }
+  mat-grid-tile {
+    height:100vh;
+  }
 
-  mat-card {
-      max-width: 450px;
-      margin-bottom: 8px;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
+  .justify-inline {
+    width: 95vw;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    padding: 1rem;
   }
+
+  .buttonTop {
+    color: white;
+    border:transparent;
+    background:transparent;
+    font-family: 'Philosopher';
+  }
+
   h1 {
-    margin-top:15%;
-    text-align:center;
+    margin-top: .5rem;
+    padding: 1rem;
     color:white;
-    font-size:50px;
+    font-size:6rem;
+    font-family: 'Philosopher';
+    margin-bottom: 0rem;
+    padding-bottom: 2rem;
   }
+
+  h2 {
+    margin-top: .5rem;
+    padding: 1rem;
+    color:white;
+    font-size:3.5rem;
+    font-family: 'Philosopher';
+    margin-bottom: 0rem;
+    padding-bottom: 1rem;
+    text-align: center;
+  }
+  h3 {
+    margin-top: .5rem;
+    padding: 1rem;
+    color:white;
+    font-size:2rem;
+    font-family: 'Philosopher';
+    margin-bottom: 0rem;
+    padding-bottom: 0rem;
+    text-align: center;
+  }
+  
+  mat-card {
+    width: 30vw;
+    height: 100vh;
+    padding: 0.5rem;
+    display: block;
+    margin-top: 0vh;
+    margin: auto;
+  }
+  .style-card {
+    height: 90% !important;
+  }
+  .styling {
+    width: 30vw;
+    height: 100%;
+    min-height: 0.8vmax;
+    color: white;
+    border-radius: 2rem;
+    position: absolute;
+    background-color:#25473c;
+    font-family: 'Philosopher';
+  }
+
+  .buttonCard{
+    padding: 0.5rem;
+    text-align: center;
+    text-justify: distribute;
+    color: hsl(162, 57%, 64%);
+    font-size: 2rem;
+    border: transparent;
+    background: transparent;
+    font-family: 'Philosopher';
+    margin-left: 3rem;
+  }
+  .rowDisplay {
+    display: flex;
+    justify-content: space-between;
+  }
+
   .material-icons {
     font-family: 'Material Icons';
     font-weight: normal;
     font-style: normal;
-    font-size: 24px;  /* Preferred icon size */
+    font-size: 2rem;  /* Preferred icon size */
     display: inline-block;
     line-height: 1;
     text-transform: none;
@@ -33,30 +119,44 @@
     word-wrap: normal;
     white-space: nowrap;
     direction: ltr;
-
     /* Support for all WebKit browsers. */
     -webkit-font-smoothing: antialiased;
     /* Support for Safari and Chrome. */
     text-rendering: optimizeLegibility;
-
     /* Support for Firefox. */
     -moz-osx-font-smoothing: grayscale;
-
     /* Support for IE. */
     font-feature-settings: 'liga';
   }
   p{
     text-align:left;
     color:white;
-    margin-left:10%;
-    font-size: 40px;
+    margin:3rem;
+    font-size: 3rem;
+    font-family: 'Philosopher';
   }
   mat-form-field {
     text-align:left;
     color:white;
-    width: 70vw;
-    margin-left:10%;
-    font-size: 20px;
+    width: 45vw;
+    font-size: 2rem;
+  }
+  .example-card {
+    width:20vw;
+    height: 20vh;
+    padding: 2rem;
+    margin-bottom: 5rem;
+  }
+  .userCard {
+    width:25vw;
+    height:fit-content;
+    padding: 2rem;
+  }
+  mat-card-title {
+    font-size: 2rem;
+  }
+  mat-card-subtitle {
+    font-size: 1rem;
   }
   .button {
     background-color: black;
@@ -76,8 +176,11 @@
       width:65em;
       justify-content: center;
   }
+input{
+  margin-left: 3rem;
+  font-size: 2.5rem;
+  width:30rem;
+  background-color: transparent;
 
-.mat-form-field + .mat-form-field {
-  margin-left: 8px;
 }
 

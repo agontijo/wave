@@ -25,6 +25,7 @@ import { HomepageComponent } from './homepage/homepage.component';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Router } from '@angular/router';
+import { QRCodeModule } from 'angular2-qrcode';
 import { MatDialogModule} from '@angular/material/dialog';
 import { PasswordChangeComponent } from './password-change/password-change.component';
 import { CreateRoomComponent } from './create-room/create-room.component';
@@ -33,7 +34,9 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
 import { LogoutComponent } from './logout/logout.component';
 import { SpotifyService } from './spotify.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { NgxQRCodeModule } from '@techiediaries/ngx-qrcode';
+import { ToastrModule } from 'ngx-toastr';
+import { WaitingRoomComponent } from './waiting-room/waiting-room.component';
 
 
 
@@ -53,6 +56,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     AccountSettingsComponent,
     LogoutComponent,
     DisplayRoomComponent,
+    WaitingRoomComponent,
 
   ],
   imports: [
@@ -70,7 +74,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatGridListModule,
     MatSelectModule,
     MatSlideToggleModule,
+    QRCodeModule,
     MatSliderModule,
+    NgxQRCodeModule,
+    ToastrModule.forRoot(),
   ],
   providers: [UserService, SpotifyService,     MatSnackBar,],
   bootstrap: [AppComponent]
