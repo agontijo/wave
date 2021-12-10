@@ -16,10 +16,13 @@
       <mat-card-content>
         <div class="center">
           <div *ngIf="!isSpotifyConnected">
-            <p style="align-items: center; margin-left: 15rem;">
+            <button>
               Before creating a new Room, we need you to
-            </p>
-            <button mat-flat-button><a href="/auth/spotify">Connect Spotify</a></button>
+            </button>
+            <br>
+            <button mat-flat-button>
+              <a href="/auth/spotify">Connect Spotify</a>
+            </button>
           </div>
           <div *ngIf="isSpotifyConnected">
             <mat-form-field appearance="legacy" style="color:white;">
