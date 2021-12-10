@@ -8,12 +8,12 @@
     -moz-osx-font-smoothing: grayscale;
   }
   .button-top {
-    padding: 0.5em;
     color: white;
-    font-size:40px;
     border:transparent;
     background:transparent;
     font-family: 'Philosopher';
+    text-align: center !important;
+    justify-content: center !important;
   }
   mat-card {
     color: white;
@@ -31,10 +31,14 @@
 
   }
   h1 {
-    margin-top:15%;
-    text-align:center;
+    margin-top: 2rem;
+    padding: 1rem;
     color:white;
-    font-size:50px;
+    font-size: 6rem;
+    font-family: 'Philosopher';
+    margin-bottom: 0rem;
+    padding-bottom: 2rem;
+    text-align: center;
   }
   .material-icons {
     font-family: 'Material Icons';
@@ -61,33 +65,17 @@
     font-feature-settings: 'liga';
   }
   p{
-    text-align:left;
+    text-align: center;
     color:white;
-    margin-left:10%;
-    font-size: 40px;
-  }
-  mat-form-field {
-    text-align:left;
-    color:white;
-    width: 70vw;
-    margin-left:10%;
-    font-size: 20px;
+    margin-left:3rem;
+    font-size: 2rem;
   }
   button {
-    padding: 0.5em;
+    padding: 2rem;
+    text-align: center;
     color:#000000;
-    margin-right: 8%;
-    font-size:30px;
+    margin-right: 8rem;
+    font-size:2rem;
     border:transparent;
     background:transparent;
   }
-  .create-account {
-      font-size: 18px;
-      display: flex;
-      width:65em;
-      justify-content: center;
-  }
-
-.mat-form-field + .mat-form-field {
-  margin-left: 8px;
-}

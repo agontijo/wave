@@ -1,13 +1,10 @@
-<div class="justify-inline">
+<mat-card>
     <h1>Wave</h1>
-    <button routerLink="/account-settings" mat-flat-button>Account Settings</button>
-    <br> <button routerLink="/logout" mat-flat-button>Logout</button>
-    </div>
-
-<p>roomID: {{roomID}}</p>
-<p>host: {{host}}</p>
-<p>roomName: {{roomname}}</p>
-<button (click)="back()">Back</button>
+    <p>roomID: {{roomID}}</p>
+    <p>host: {{host}}</p>
+    <p>roomName: {{roomname}}</p>
+    <button (click)="back()">Back</button>
+</mat-card>
 <!-- <p>user: {{user}}</p> -->
 
 <!-- private route: ActivatedRoute,private router: Router) { }

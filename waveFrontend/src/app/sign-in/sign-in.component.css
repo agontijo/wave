@@ -53,8 +53,8 @@
     transform: translate(-50%, -50%);
     background-color:#25473c;
     font-family: 'Philosopher';
-    overflow: scroll;
   }
+  
   h1 {
     /* margin-top:15%; */
     text-align:center;
@@ -99,7 +99,7 @@
       color:white;
       width: 75vw;
       margin-left: 3rem;
-      font-size: 1rem;
+      font-size: 2rem;
   }
   button {
     padding: 0.5rem;

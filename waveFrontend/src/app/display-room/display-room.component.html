@@ -190,7 +190,7 @@
                 </button>
                 <button mat-icon-button
                   style="color: rgb(255, 0, 0); background-color: transparent; border-color: transparent;">
-                  <mat-icon (click)="denyUser(w)">block</mat-icon>
+                  <mat-icon (click6)="denyUser(w)">block</mat-icon>
                 </button>
               </mat-card-title-group>
             </mat-card>
@@ -201,8 +201,9 @@
   </mat-grid-tile>
   <mat-grid-tile *ngIf="host == curruser.uname">
     <mat-card class="styling">
-      <h3 style="font-size: 50px;">Ways to joing the listening room</h3>
-      <p>Through the link: http://localhost:4200/display-room?roomID={{roomID}}</p>
+      <h3 style="font-size: 4.5rem;">Ways to joing the listening room</h3>
+      <p>Through the link:</p>
+      <p> http://localhost:4200/display-room?roomID={{roomID}}</p>
       <br>
       <p>Using the roomID {{roomID}} on your homepage</p>
       <p>Using the QRCode:</p>
