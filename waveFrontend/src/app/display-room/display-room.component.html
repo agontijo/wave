@@ -76,7 +76,7 @@
         </div>
       </div>
       <!-- queue list -->
-      <div [style.overflow]="'auto'" [style.height]="'60rem'">
+      <div  [style.overflow]="'auto'" [style.height]="'60rem'">
         <div *ngIf="popularSort == false">
           <div class="row" *ngFor="let q of queue">
             <mat-card class="example-card">
@@ -166,11 +166,11 @@
         <div class="column" *ngIf="isMod == true">
           <h2> Waiting List</h2>
           <div class="a" *ngFor="let w of waitingRoom">
-            <mat-card class="example-card">
+            <mat-card class="userCard">
               <mat-card-title-group>
                 <mat-card-title>{{w}}</mat-card-title>
                 <button mat-icon-button
-                  style="color: rgb(1, 172, 24); background-color: transparent; border-color: transparent;">
+                  style="color: rgb(1, 172, 24); background-color: transparent; border-color: transp+arent;">
                   <mat-icon (click)="acceptUser(w)">check_circle</mat-icon>
                 </button>
                 <button mat-icon-button
