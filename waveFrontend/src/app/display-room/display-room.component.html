@@ -9,7 +9,7 @@
 </div>
 <mat-grid-list cols="3" [rowHeight]="'85vh'">
   <mat-grid-tile>
-    <mat-card class="styling">
+    <mat-card class="styling" [style.overflow]="'auto'" [style.height]="'80vh'">
       <mat-card-title>
         <h2>{{roomname}}</h2>
       </mat-card-title>
@@ -76,7 +76,7 @@
         </div>
       </div>
       <!-- queue list -->
-      <div [style.overflow]="'auto'" [style.height]="'60rem'">
+      <div *ngIf="queue.length > 0" [style.overflow]="'auto'" [style.height]="'60rem'">
         <div *ngIf="popularSort == false">
           <div class="row" *ngFor="let q of queue">
             <mat-card class="example-card">
@@ -181,7 +181,7 @@
         <div class="column" *ngIf="isMod == true">
           <h2> Waiting List</h2>
           <div class="a" *ngFor="let w of waitingRoom">
-            <mat-card class="example-card">
+            <mat-card class="userCard">
               <mat-card-title-group>
                 <mat-card-title>{{w}}</mat-card-title>
                 <button mat-icon-button
@@ -202,7 +202,7 @@
   <mat-grid-tile *ngIf="host == curruser.uname">
     <mat-card class="styling">
       <h3 style="font-size: 50px;">Ways to joing the listening room</h3>
-      <p>Trhough the link: http://localhost:4200/display-room?roomID={{roomID}}</p>
+      <p>Through the link: http://localhost:4200/display-room?roomID={{roomID}}</p>
       <br>
       <p>Using the roomID {{roomID}} on your homepage</p>
       <p>Using the QRCode:</p>

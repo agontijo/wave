@@ -61,6 +61,7 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
     name = 'Angular ' + VERSION.major;
     elementType = NgxQrcodeElementTypes.URL;
     correctionLevel = NgxQrcodeErrorCorrectionLevels.HIGH;
+    // value = 'http://eac7-2601-249-4380-9840-948f-1c92-cbf6-a672.ngrok.io/display-room?roomID=' + this.roomID;
     value = 'http://localhost:4200/display-room?roomID=' + this.roomID;
 
     ngOnInit(): void {
@@ -73,6 +74,7 @@ export class DisplayRoomComponent implements OnInit, OnDestroy {
           console.log(params); // { order: "popular" }
           this.roomID = params.roomID
           this.value='http://localhost:4200/display-room?roomID=' + this.roomID;
+          // this.value='http://eac7-2601-249-4380-9840-948f-1c92-cbf6-a672.ngrok.io/display-room?roomID=' + this.roomID;
         }
       );
       

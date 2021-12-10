@@ -30,7 +30,7 @@ export class CreateRoomComponent implements OnInit, OnDestroy {
   roomID: number | undefined
 
   playback: boolean = false;
-  waitForDevice: boolean = false; // TODO: Make this true durring sprint review so that phone can connect in real time
+  waitForDevice: boolean = true; // TODO: Make this true durring sprint review so that phone can connect in real time
 
   ngOnInit(): void {
     this.route.queryParams
