@@ -142,8 +142,9 @@
   }
   .example-card {
     width:25vw;
-    height:22vh;
+    height:30vh;
     padding: 2rem;
+    margin: 5rem,
   }
   .userCard {
     width:25vw;
